@@ -20,7 +20,7 @@ export default function Dashboard() {
     });
     return () => unsubscribe();
   }, [router]);
-  x``;
+  
 
   const handleLogout = async () => {
     await signOut(auth);

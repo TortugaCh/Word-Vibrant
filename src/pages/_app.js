@@ -1,6 +1,6 @@
 // src/pages/_app.js
 import "../styles/globals.css"; // This is the only place where global CSS should be imported
-import Layout from "./index";
+import Layout from "../components/Layout";
 
 export default function App({ Component, pageProps }) {
   return (
