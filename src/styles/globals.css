@@ -169,3 +169,73 @@ html {
   right: 15%;
   transform: rotate(15deg);
 }
+/* Authentication Page Styles */
+.auth-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.auth-heading {
+  font-size: 2rem;
+  color: #ff6b6b;
+  margin-bottom: 20px;
+  font-family: "Comic Sans MS", "Comic Sans", cursive;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 2px solid #ffbb54;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.auth-input:focus {
+  border-color: #ff6b6b;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 10px 0;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.auth-button.primary {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.auth-button.primary:hover {
+  background-color: #ff4a4a;
+  transform: scale(1.05);
+}
+
+.auth-button.secondary {
+  background-color: #ffd93d;
+  color: white;
+}
+
+.auth-button.secondary:hover {
+  background-color: #ffbb54;
+  transform: scale(1.05);
+}
+
+.auth-error {
+  color: #ff4a4a;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
