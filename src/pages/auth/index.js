@@ -28,25 +28,32 @@ export default function AuthPage() {
   };
 
   return (
-    <div>
-      <h2>{isLogin ? "Login" : "Sign Up"}</h2>
+    <div className="auth-container">
+      <h2 className="auth-heading">{isLogin ? "Login" : "Sign Up"}</h2>
       <input
         type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        className="auth-input"
       />
       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        className="auth-input"
       />
-      <button onClick={handleAuth}>{isLogin ? "Login" : "Sign Up"}</button>
-      <button onClick={() => setIsLogin(!isLogin)}>
+      <button onClick={handleAuth} className="auth-button primary">
+        {isLogin ? "Login" : "Sign Up"}
+      </button>
+      <button
+        onClick={() => setIsLogin(!isLogin)}
+        className="auth-button secondary"
+      >
         {isLogin ? "Switch to Sign Up" : "Switch to Login"}
       </button>
-      {error && <p>{error}</p>}
+      {error && <p className="auth-error">{error}</p>}
     </div>
   );
 }

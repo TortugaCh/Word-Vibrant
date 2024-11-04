@@ -1,7 +1,8 @@
-// src/pages/index.js
-import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function HomePage() {
+  const router = useRouter();
+
   return (
     <div className="container">
       <div className="hero-section">
@@ -9,15 +10,15 @@ export default function HomePage() {
         <p className="subheading">Select a curriculum and start learning!</p>
 
         <div className="button-container">
-          {/* Link to Login Page */}
-          <Link href="/auth">
-            <button className="button">Login or Sign Up</button>
-          </Link>
-
-          {/* Link to Dashboard */}
-          <Link href="/dashboard">
-            <button className="button dashboard-button">Go to Dashboard</button>
-          </Link>
+          <button className="button" onClick={() => router.push("/auth")}>
+            Login or Sign Up
+          </button>
+          <button
+            className="button dashboard-button"
+            onClick={() => router.push("/dashboard")}
+          >
+            Go to Dashboard
+          </button>
         </div>
       </div>
 
