@@ -24,8 +24,14 @@ export default function HomePage() {
       {/* Fun background decorations */}
       <div className="circle1"></div>
       <div className="circle2"></div>
+      <div className="circle3"></div>
       <div className="star1">⭐</div>
       <div className="star2">⭐</div>
+      <div className="star3">⭐</div>
+      <div className="triangle triangle1"></div>
+      <div className="triangle triangle2"></div>
+      <div className="chinese-word1">汉</div>
+      <div className="chinese-word2">字</div>
     </div>
   );
 }
