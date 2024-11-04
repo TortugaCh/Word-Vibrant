@@ -30,6 +30,7 @@ export default function AuthPage() {
   return (
     <div className="auth-container">
       <h2 className="auth-heading">{isLogin ? "Login" : "Sign Up"}</h2>
+      
       <input
         type="email"
         placeholder="Email"

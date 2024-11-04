@@ -1,17 +1,8 @@
-<<<<<<< HEAD
-// src/pages/index.js
-import Link from "next/link";
-import {useRouter} from "next/router";
-
-export default function HomePage() {
-  const router = useRouter();
-=======
 import { useRouter } from "next/router";
 
 export default function HomePage() {
   const router = useRouter();
 
->>>>>>> e4b9d87f43654e7b9366bce6ebe185f438949fa9
   return (
     <div className="container">
       <div className="hero-section">
@@ -19,17 +10,6 @@ export default function HomePage() {
         <p className="subheading">Select a curriculum and start learning!</p>
 
         <div className="button-container">
-<<<<<<< HEAD
-          {/* Link to Login Page */}
-          <Link href="/auth">
-            <button className="button" onClick={()=>console.log(router)}>Login or Sign Up</button>
-          </Link>
-
-          {/* Link to Dashboard */}
-          <Link href="/dashboard">
-            <button className="button dashboard-button">Go to Dashboard</button>
-          </Link>
-=======
           <button className="button" onClick={() => router.push("/auth")}>
             Login or Sign Up
           </button>
@@ -39,7 +19,6 @@ export default function HomePage() {
           >
             Go to Dashboard
           </button>
->>>>>>> e4b9d87f43654e7b9366bce6ebe185f438949fa9
         </div>
       </div>
 
