@@ -4,8 +4,11 @@ import { useRouter } from "next/router";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
-import { auth } from "../../lib/firebaseConfig";
+import { auth, googleProvider } from "../../lib/firebaseConfig";
+import { FcGoogle } from "react-icons/fc";
+import { format } from "path";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -16,12 +19,35 @@ export default function AuthPage() {
 
   const handleAuth = async () => {
     try {
+      let user = null;
       if (isLogin) {
-        await signInWithEmailAndPassword(auth, email, password);
+        user = await signInWithEmailAndPassword(auth, email, password);
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        user = await createUserWithEmailAndPassword(auth, email, password);
       }
-      router.push("/dashboard");
+      if (user) {
+        router.push({
+          pathname: "/dashboard",
+          query: { userData: JSON.stringify(user) },
+        });
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleGoogleAuth = async () => {
+    // Implement Google Authentication here
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      console.log(user);
+      if (user) {
+        router.push({
+          pathname: "/dashboard",
+          query: { userData: JSON.stringify(user) },
+        });
+      }
     } catch (err) {
       setError(err.message);
     }
@@ -30,7 +56,13 @@ export default function AuthPage() {
   return (
     <div className="auth-container">
       <h2 className="auth-heading">{isLogin ? "Login" : "Sign Up"}</h2>
-      
+      <button
+        onClick={() => handleGoogleAuth()}
+        className="auth-button secondary"
+      >
+        <FcGoogle size={24}/>
+        Continue With Google
+      </button>
       <input
         type="email"
         placeholder="Email"
@@ -45,7 +77,7 @@ export default function AuthPage() {
         onChange={(e) => setPassword(e.target.value)}
         className="auth-input"
       />
-      <button onClick={handleAuth} className="auth-button primary">
+      <button onClick={() => handleAuth()} className="auth-button primary">
         {isLogin ? "Login" : "Sign Up"}
       </button>
       <button
