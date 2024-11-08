@@ -22,18 +22,18 @@ class Person {
   }
 
 //   // Method to create Firestore document format
-//   toFirestore() {
-//     return {
-//       userId: this.userId,
-//       name: this.name,
-//       email: this.email,
-//       credits: this.credits,
-//       plan: this.plan,
-//       curriculum: this.curriculum,
-//       gradeLevel: this.gradeLevel,
-//       createdAt: this.createdAt,
-//     };
-//   }
+  toJSON() {
+    return {
+      userId: this.userId,
+      name: this.name,
+      email: this.email,
+      credits: this.credits,
+      plan: this.plan,
+      curriculum: this.curriculum,
+      gradeLevel: this.gradeLevel,
+      createdAt: this.createdAt,
+    };
+  }
 
   // Optional static method to validate data before creating user instance
   static validate(data) {

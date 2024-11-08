@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "canvg": "^4.0.2",
     "firebase": "^11.0.1",
     "hanzi-writer": "^3.7.1",
+    "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
     "next": "15.0.2",
     "react": "19.0.0-rc-02c0e824-20241028",

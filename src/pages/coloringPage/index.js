@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import wordData from "../../data/wordData";
 import HanziColoring from "../../components/HanziColoring";
 import html2canvas from "html2canvas";
+import HanziWriter from "hanzi-writer";
+import { useRouter } from "next/router";
 
 export default function ColoringPage() {
   const [messages, setMessages] = useState([
@@ -15,9 +17,12 @@ export default function ColoringPage() {
   const [semester, setSemester] = useState("");
   const [wordType, setWordType] = useState("");
   const [wordList, setWordList] = useState([]);
+  const router = useRouter();
+
   const [selectedWord, setSelectedWord] = useState(null);
   const coloringRef = useRef(null);
   const coloringContainerRef = useRef(null);
+  const downloadTargetRef = useRef(null);
 
   useEffect(() => {
     if (curriculum && grade && semester && wordType) {
@@ -42,13 +47,29 @@ export default function ColoringPage() {
     }, 200);
   };
 
+  // const handleDownload = async () => {
+  //   if (coloringContainerRef.current) {
+  //     const canvas = await html2canvas(coloringContainerRef.current);
+  //     const link = document.createElement("a");
+  //     link.download = `${selectedWord}_coloring.png`;
+  //     link.href = canvas.toDataURL("image/png");
+  //     link.click();
+  //   }
+  // };
+
   const handleDownload = async () => {
-    if (coloringContainerRef.current) {
-      const canvas = await html2canvas(coloringContainerRef.current);
-      const link = document.createElement("a");
-      link.download = `${selectedWord}_coloring.png`;
-      link.href = canvas.toDataURL("image/png");
-      link.click();
+    if (selectedWord) {
+      // Draw the outline in the hidden download container
+      // Capture the hidden outline-only div
+      drawOutlineOnly();
+      const downloadDiv = document.getElementById("download-target-div");
+      if (downloadDiv) {
+        const canvas = await html2canvas(downloadDiv);
+        const link = document.createElement("a");
+        link.download = `${selectedWord}_coloring.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      }
     }
   };
 
@@ -163,9 +184,14 @@ export default function ColoringPage() {
             </h3>
             <div className="flex justify-center" ref={coloringContainerRef}>
               <HanziColoring word={selectedWord} />
+              <div
+                ref={downloadTargetRef}
+                id="download-target-div"
+                className="hidden"
+              />
             </div>
             <button
-              onClick={handleDownload}
+              onClick={() => router.push(`/download/${selectedWord}`)}
               className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-800 transition duration-200"
             >
               Download Coloring Page
