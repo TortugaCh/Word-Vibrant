@@ -4,15 +4,15 @@ import { addDoc, collection } from "firebase/firestore";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
-      const module = Module.validate(req.body);
-      console.log(module);
-      const moduleData = Object.assign({}, module);
+      const moduleDetails = Module.validate(req.body);
+      console.log(moduleDetails);
+      const moduleData = Object.assign({}, moduleDetails);
 
-    //   const moduleData = module.toJSON();  // Convert to a plain object
+    //   const moduleData = moduleDetails.toJSON();  // Convert to a plain object
     //   console.log(moduleData);
       const moduleCollection = collection(db,"modules");
       const addedModule = await addDoc(moduleCollection, moduleData);
-      //   await moduleCollection.add(module.toFirestore());
+      //   await moduleCollection.add(moduleDetails.toFirestore());
       res
         .status(201)
         .json({ message: "Module created successfully", data: addedModule });

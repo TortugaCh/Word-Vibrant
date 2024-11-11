@@ -82,7 +82,7 @@ const DownloadPage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-indigo-100 via-purple-50 to-pink-50">
       <h1 className="text-3xl font-bold text-purple-700 mb-8">
-        Download Coloring Page for "{selectedWord}"
+        Download Coloring Page for {selectedWord}
       </h1>
       <div
         ref={downloadContainerRef}

@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import wordData from "../../data/wordData";
 import HanziStroke from "../../components/HanziStroke/HanziStroke";
+import { useRouter } from "next/router";
 
 export default function StrokeOrders() {
   const [messages, setMessages] = useState([
@@ -16,7 +17,7 @@ export default function StrokeOrders() {
   const [wordType, setWordType] = useState("");
   const [wordList, setWordList] = useState([]);
   const [selectedWord, setSelectedWord] = useState(null);
-
+  const router = useRouter();
   const strokeRef = useRef(null);
 
   useEffect(() => {
@@ -165,14 +166,16 @@ export default function StrokeOrders() {
         {selectedWord && (
           <div
             ref={strokeRef}
-            className="w-full max-w-2xl bg-gradient-to-r from-indigo-100 to-blue-100 p-6 rounded-3xl shadow-lg mt-10"
+            className="w-full max-w-2xl bg-gradient-to-r from-indigo-100 to-blue-100 p-6 rounded-3xl shadow-lg mt-10 flex justify-center"
           >
-            <h3 className="text-center text-2xl font-bold text-purple-600 mb-4">
-              Stroke Order for "{selectedWord}"
-            </h3>
-            <div className="flex justify-center">
-              <HanziStroke word={selectedWord} />
-            </div>
+            <button
+              onClick={() =>
+                router.push(`/strokeOrders/practice/${selectedWord}`)
+              }
+              className="bg-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-purple-700 transition duration-300 shadow-lg transform hover:scale-105"
+            >
+              Get Stroke For {selectedWord}
+            </button>
           </div>
         )}
       </main>

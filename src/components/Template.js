@@ -1,35 +1,3 @@
-// import Header from "./Header";
-
-// export default function Template({ children, title, userData, onLogout }) {
-//   return (
-//     <div className="relative min-h-screen flex flex-col items-center overflow-hidden">
-//       {/* Header */}
-//       <Header title={title} userData={userData} onLogout={onLogout} />
-
-//       {/* Decorative Background Elements */}
-//       <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
-//         {/* Bouncing Circles */}
-//         <div className="circle1 animate-bounce-slow"></div>
-//         <div className="circle2 animate-bounce-slow"></div>
-//         <div className="circle3 animate-bounce-slow"></div>
-//         {/* Spinning Stars */}
-//         <div className="star1 animate-spin-slow">⭐</div>
-//         <div className="star2 animate-spin-slow">⭐</div>
-//         {/* Triangles */}
-//         <div className="triangle triangle1"></div>
-//         <div className="triangle triangle2"></div>
-//         {/* Chinese Words */}
-//         <div className="chinese-word chinese-word1">汉</div>
-//         <div className="chinese-word chinese-word2">字</div>
-//       </div>
-
-//       {/* Main Content Area */}
-//       <main className="relative z-10 w-full max-w-7xl mx-auto px-6 py-24 flex flex-col items-center">
-//         {children}
-//       </main>
-//     </div>
-//   );
-// }
 import Header from "./Header";
 
 export default function Template({ children, title, userData, onLogout }) {

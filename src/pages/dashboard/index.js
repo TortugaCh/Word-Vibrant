@@ -1,7 +1,6 @@
 // src/pages/dashboard/index.js
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import Header from "../../components/Header";
 import DashboardOptionCard from "../../components/DashboardOptionCard";
 import { auth } from "../../lib/firebaseConfig";
 import Template from "../../components/Template";
