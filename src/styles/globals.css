@@ -238,3 +238,39 @@ html {
 .animate-slide-right {
   animation: slide-right 0.3s ease-out;
 }
+.shadow-xl {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.transition-colors {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.hover:shadow-2xl {
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+}
+.circle1,
+.circle2,
+.star1,
+.star2 {
+  animation: bounce 5s infinite, spin 10s linear infinite;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
