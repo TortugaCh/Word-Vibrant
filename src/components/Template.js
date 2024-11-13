@@ -20,7 +20,7 @@ export default function Template({ children, title, userData, onLogout }) {
       </div>
 
       {/* Main Content Area */}
-      <main className="container mx-auto px-6 py-24 relative z-10 flex flex-col items-center">
+      <main className="container mx-auto px-6 py-24 relative z-10 flex flex-col items-center my-auto">
         {children}
       </main>
     </div>

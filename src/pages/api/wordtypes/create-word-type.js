@@ -1,34 +1,33 @@
 import { db } from "../../../lib/firebaseConfig";
 import { addDoc, collection, getDocs, query, serverTimestamp, where } from "firebase/firestore";
-import Grade from "../../../models/GradeModel/GradeModel";
+import WordType from "../../../models/WordTypeModel/WordTypeModel";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
-      const grade = Grade.validate(req.body);
-      const gradeData = {
-        ...grade,
+      const wordType = WordType.validate(req.body);
+      const typeData = {
+        ...wordType,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       };
-      const gradeCollection = collection(db, "grades");
+      const wordTypesCollection = collection(db, "wordtypes");
       const q = query(
-        gradeCollection,
-        where("name", "==", "Grade 6"),
-        where("curriculumId", "==", "xORllVexHzFfQOS0dTBh")
+        wordTypesCollection,
+        where("type", "==", wordType.type),
       );
       const querySnapshot = await getDocs(q);
       if (!querySnapshot.empty) {
         throw new Error(`Document already exists`);
       }
-      const addedGrade = await addDoc(
-        gradeCollection,
-        gradeData
+      const addedType = await addDoc(
+        wordTypesCollection,
+        typeData
       );
       res
         .status(201)
         .json({
-          message: "Grade created successfully",
-          data: addedGrade,
+          message: "Word Type created successfully",
+          data: addedType,
         });
     } catch (err) {
       res.status(500).json({ error: err.message });

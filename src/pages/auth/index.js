@@ -8,27 +8,45 @@ import {
 } from "firebase/auth";
 import { auth, googleProvider } from "../../lib/firebaseConfig";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
 
 export default function AuthPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState("");
-
+  const API_LINK = process.env.NEXT_PUBLIC_API_LINK;
   const handleAuth = async () => {
     try {
       let user = null;
-      if (isLogin) {
-        user = await signInWithEmailAndPassword(auth, email, password);
-      } else {
-        user = await createUserWithEmailAndPassword(auth, email, password);
-      }
-      if (user) {
-        router.push({
-          pathname: "/dashboard",
-          query: { userData: JSON.stringify(user) },
-        });
+      if (email && password) {
+        if (isLogin) {
+          user = await signInWithEmailAndPassword(auth, email, password);
+        } else {
+          if (username)
+            user = await createUserWithEmailAndPassword(auth, email, password);
+          console.log(user);
+          const resp = await axios.post(`${API_LINK}/person/create-person`, {
+            email,
+            name: username,
+            userId: user.user.uid,
+          });
+          if (resp.status === 200 && user)
+            router.push({
+              pathname: "/dashboard",
+            });
+          else {
+            await user.user.delete();
+            setError("Failed to create user in the system; user deleted.");
+          }
+        }
+        if (user && isLogin) {
+          router.push({
+            pathname: "/dashboard",
+          });
+        }
       }
     } catch (err) {
       setError(err.message);
@@ -39,14 +57,36 @@ export default function AuthPage() {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      if (user) {
+      if (!checkUserExists(user.email)) {
+        const resp = await axios.post(`${API_LINK}/person/create-person`, {
+          email: user.email,
+          name: user.displayName,
+          userId: user.uid,
+        });
+        if (resp.status === 200 && user)
+          router.push({
+            pathname: "/admin",
+          });
+        else {
+          await user.delete();
+          setError("Failed to create user in the system; user deleted.");
+        }
+      } else {
         router.push({
-          pathname: "/dashboard",
-          query: { userData: JSON.stringify(user) },
+          pathname: "/admin",
         });
       }
     } catch (err) {
       setError(err.message);
+    }
+  };
+
+  const checkUserExists = async (email) => {
+    const resp = await axios.get(`${API_LINK}/person/get-person/${email}`);
+    if (resp.status === 200) {
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -79,6 +119,16 @@ export default function AuthPage() {
         </button>
 
         {/* Email Input */}
+        {isLogin ? null : (
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="auth-input mb-4"
+          />
+        )}
+
         <input
           type="email"
           placeholder="Email"

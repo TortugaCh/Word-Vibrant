@@ -5,19 +5,13 @@ class Person {
     userId,
     name,
     email,
-    credits = 0,
-    plan = "Free",
-    curriculum = null,
-    gradeLevel = null,
+    credits = 5,
     createdAt = new Date(),
   }) {
     this.userId = userId; // required
     this.name = name; // required
     this.email = email; // required
     this.credits = credits;
-    this.plan = plan;
-    this.curriculum = curriculum;
-    this.gradeLevel = gradeLevel;
     this.createdAt = createdAt;
   }
 
@@ -28,9 +22,6 @@ class Person {
       name: this.name,
       email: this.email,
       credits: this.credits,
-      plan: this.plan,
-      curriculum: this.curriculum,
-      gradeLevel: this.gradeLevel,
       createdAt: this.createdAt,
     };
   }

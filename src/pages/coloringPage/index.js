@@ -177,24 +177,13 @@ export default function ColoringPage() {
         {selectedWord && (
           <div
             ref={coloringRef}
-            className="w-full max-w-2xl bg-gradient-to-r from-indigo-100 to-blue-100 p-6 rounded-3xl shadow-lg mt-10"
+            className="w-full max-w-2xl mt-10 flex justify-center"
           >
-            <h3 className="text-center text-2xl font-bold text-purple-600 mb-4">
-              Coloring Outline for "{selectedWord}"
-            </h3>
-            <div className="flex justify-center" ref={coloringContainerRef}>
-              <HanziColoring word={selectedWord} />
-              <div
-                ref={downloadTargetRef}
-                id="download-target-div"
-                className="hidden"
-              />
-            </div>
             <button
               onClick={() => router.push(`/download/${selectedWord}`)}
               className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-800 transition duration-200"
             >
-              Download Coloring Page
+              Download Coloring Page for "{selectedWord}"
             </button>
           </div>
         )}

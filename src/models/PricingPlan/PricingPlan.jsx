@@ -1,5 +1,6 @@
 class PricingPlan {
-  constructor({name, priceId, cost = 0, credits = 5, features = {}}) {
+  constructor({productId,name, priceId, cost = 0, credits = 5, features = {}}) {
+    this.productId = productId;
     this.name = name;
     this.priceId = priceId;
     this.cost = cost;
@@ -9,6 +10,7 @@ class PricingPlan {
 
   toJSON() {
     return {
+      productId: this.productId,
       name: this.name,
       priceId: this.priceId,
       cost: this.cost,

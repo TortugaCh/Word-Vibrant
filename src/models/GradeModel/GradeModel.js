@@ -1,21 +1,21 @@
 // models/Grade.js
 
 class Grade {
-  constructor({ name, words }) {
+  constructor({ name, curriculumId }) {
     this.name = name; // required
-    this.words = words;
+    this.curriculumId = curriculumId;
   }
 
   toJSON() {
     return {
       name: this.name,
-      words: this.words,
+      curriculumId: this.curriculumId,
     };
   }
 
   static validate(data) {
-    if (!data.words || !data.name) {
-      throw new Error("Missing required fields: words or name");
+    if (!data.curriculumId || !data.name) {
+      throw new Error("Missing required fields: curriculumId or name");
     }
     return new Grade(data);
   }

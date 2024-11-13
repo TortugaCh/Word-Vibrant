@@ -25,12 +25,12 @@ const DownloadPage = () => {
           width: 500,
           height: 500,
           padding: 5,
-          strokeColor: "#000",
+          strokeColor: "#dddddd",
           showCharacter: false,
           showOutline: true,
         }
       );
-      writer.quiz();
+      writer.showCharacter();
 
       // Add a background to the SVG after rendering
       setTimeout(() => {

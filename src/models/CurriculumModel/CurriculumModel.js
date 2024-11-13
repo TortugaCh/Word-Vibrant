@@ -1,21 +1,21 @@
 // models/Curriculum.js
 
 class Curriculum {
-  constructor({ name, gradeId }) {
+  constructor({ name }) {
     this.name = name; // required
-    this.gradeId = gradeId; // e.g., { grade1: ["word1", "word2"], grade2: [...] }
+    this.description = `for curriculum ${name}`; // e.g., { grade1: ["word1", "word2"], grade2: [...] }
   }
 
   toJSON() {
     return {
       name: this.name,
-      gradeId: this.gradeId,
+      description: this.description,
     };
   }
 
   static validate(data) {
-    if (!data.gradeId || !data.name) {
-      throw new Error("Missing required fields: curriculumId or name");
+    if (!data.name) {
+      throw new Error("Missing required fields: name");
     }
     return new Curriculum(data);
   }
