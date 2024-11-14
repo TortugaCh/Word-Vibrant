@@ -1,8 +1,10 @@
 // src/pages/strokeOrders/index.js
 import { useState, useEffect, useRef } from "react";
-import wordData from "../../data/wordData";
-import HanziStroke from "../../components/HanziStroke/HanziStroke";
 import { useRouter } from "next/router";
+import { fetchAllLookupData } from "../../lib/utils";
+import { wordInputs } from "../../constants/constants";
+import ReusableInput from "../../components/ReusableInput/ReusableInput";
+import Words from "../../components/Words/Words";
 
 export default function StrokeOrders() {
   const [messages, setMessages] = useState([
@@ -11,25 +13,46 @@ export default function StrokeOrders() {
       sender: "bot",
     },
   ]);
-  const [curriculum, setCurriculum] = useState("");
-  const [grade, setGrade] = useState("");
-  const [semester, setSemester] = useState("");
-  const [wordType, setWordType] = useState("");
-  const [wordList, setWordList] = useState([]);
+
   const [selectedWord, setSelectedWord] = useState(null);
+  const [curriculums, setCurriculums] = useState([]);
+  const [grades, setGrades] = useState([]);
+  const [semesters, setSemesters] = useState([]);
+  const [wordTypes, setWordTypes] = useState([]);
+
+  const [values, setValues] = useState({});
   const router = useRouter();
   const strokeRef = useRef(null);
 
+  const handleChange = (name, value) => {
+    setValues((prev) => ({ ...prev, [name]: value }));
+  };
+
   useEffect(() => {
-    if (curriculum && grade && semester && wordType) {
-      const words = wordData[curriculum]?.[grade]?.[semester]?.[wordType];
-      setWordList(words || []);
-      addMessage(
-        `Here are the available words for ${grade} - ${semester} (${wordType}). Click a word to view its stroke order.`,
-        "bot"
-      );
-    }
-  }, [curriculum, grade, semester, wordType]);
+    const fetchData = async () => {
+      try {
+        const res = await fetchAllLookupData();
+        if (res) {
+          console.log("Fetched Lookup Data:", res);
+          res.sort((a, b) => a.createdAt - b.createdAt);
+          const curriculumsData = res.filter(
+            (item) => item.type === "curriculum"
+          );
+          setCurriculums(curriculumsData);
+          const gradesData = res.filter((item) => item.type === "grade");
+          setGrades(gradesData);
+          const semestersData = res.filter((item) => item.type === "semester");
+          setSemesters(semestersData);
+          const wordTypesData = res.filter((item) => item.type === "wordType");
+          setWordTypes(wordTypesData);
+        }
+      } catch (error) {
+        console.error("Error fetching lookup data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const addMessage = (text, sender) => {
     setMessages((prev) => [...prev, { text, sender }]);
@@ -96,44 +119,15 @@ export default function StrokeOrders() {
             Select Options for Stroke Order
           </h2>
           <div className="flex flex-col gap-4">
-            <select
-              onChange={(e) => setCurriculum(e.target.value)}
-              className="p-3 rounded-full border border-purple-300 shadow-sm focus:outline-none focus:border-purple-500 transition"
-            >
-              <option value="">Select Curriculum</option>
-              {Object.keys(wordData).map((curriculum) => (
-                <option key={curriculum} value={curriculum}>
-                  {curriculum}
-                </option>
-              ))}
-            </select>
-            <select
-              onChange={(e) => setGrade(e.target.value)}
-              className="p-3 rounded-full border border-purple-300 shadow-sm focus:outline-none focus:border-purple-500 transition"
-            >
-              <option value="">Select Grade</option>
-              {Array.from({ length: 6 }, (_, i) => (
-                <option key={i} value={`Grade ${i + 1}`}>
-                  {`Grade ${i + 1}`}
-                </option>
-              ))}
-            </select>
-            <select
-              onChange={(e) => setSemester(e.target.value)}
-              className="p-3 rounded-full border border-purple-300 shadow-sm focus:outline-none focus:border-purple-500 transition"
-            >
-              <option value="">Select Semester</option>
-              <option value="Semester 1">Semester 1</option>
-              <option value="Semester 2">Semester 2</option>
-            </select>
-            <select
-              onChange={(e) => setWordType(e.target.value)}
-              className="p-3 rounded-full border border-purple-300 shadow-sm focus:outline-none focus:border-purple-500 transition"
-            >
-              <option value="">Select Word Type</option>
-              <option value="New Words">New Words</option>
-              <option value="Sight Words">Sight Words</option>
-            </select>
+            {wordInputs(curriculums, grades, semesters, wordTypes)?.map(
+              (input, index) => (
+                <ReusableInput
+                  input={input}
+                  handleChange={handleChange}
+                  index={index}
+                />
+              )
+            )}
           </div>
 
           {/* Word Grid */}
@@ -141,24 +135,13 @@ export default function StrokeOrders() {
             <div className="font-bold text-lg text-purple-700">
               Available Words:
             </div>
-            {wordList.length > 0 ? (
-              <div className="grid grid-cols-3 gap-3 text-blue-600">
-                {wordList.map((word, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleGetStroke(word)}
-                    className="cursor-pointer text-center bg-gradient-to-br from-purple-200 to-blue-300 p-2 rounded-full hover:shadow-lg transition-transform transform hover:scale-105 text-lg font-semibold"
-                  >
-                    {word}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500 italic">
-                Select a curriculum, grade, semester, and word type to get
-                stroke.
-              </p>
-            )}
+            <Words
+              curriculum={values["curriculum"]}
+              grade={values["grade"]}
+              wordType={values["wordType"]}
+              semester={values["semester"]}
+              handleFunc={handleGetStroke}
+            />
           </div>
         </div>
 

@@ -50,32 +50,59 @@ const Pricing = () => {
     },
   };
 
-  const handleCheckout = async (priceId, planId, userId) => {
-    const stripe = await stripePromise;
-    if (!stripe) {
-      console.error("Stripe failed to initialize");
-      return;
-    }
+  // const handleCheckout = async (priceId, planId, userId) => {
+  //   const stripe = await stripePromise;
+  //   if (!stripe) {
+  //     console.error("Stripe failed to initialize");
+  //     return;
+  //   }
 
-    try {
-      const response = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId, userId, priceId }),
+  //   try {
+  //     const response = await fetch("/api/create-checkout-session", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ planId, userId, priceId }),
+  //     });
+
+  //     const session = await response.json();
+
+  //     if (response.ok) {
+  //       await stripe.redirectToCheckout({ sessionId: session.id });
+  //     } else {
+  //       console.error("Error creating checkout session:", session.error);
+  //     }
+  //   } catch (err) {
+  //     console.error("Checkout error:", err);
+  //   }
+  // };
+
+  const handleSubscribe= async (plan,userId) => {
+    const res = await fetch('/api/payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ plan, userId }),
+    });
+
+    const { paymentUrl, formData } = await res.json();
+    if (paymentUrl) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = paymentUrl;
+      console.log(Object.keys(formData))
+      Object.keys(formData).forEach(key => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = formData[key];
+        form.appendChild(input);
       });
 
-      const session = await response.json();
-
-      if (response.ok) {
-        await stripe.redirectToCheckout({ sessionId: session.id });
-      } else {
-        console.error("Error creating checkout session:", session.error);
-      }
-    } catch (err) {
-      console.error("Checkout error:", err);
+      document.body.appendChild(form);
+      console.log('Submitting form to:', paymentUrl);
+      console.log('Form Data:', formData);
+      form.submit();
     }
   };
-
   const PlanItem = ({ plan }) => {
     const { name, cost, credits, priceId } = plan;
     const additional = additionalInfo[name];
@@ -93,7 +120,7 @@ const Pricing = () => {
         <button
           className={`mt-4 bg-${additional.color}-500 text-white px-6 py-3 rounded-full hover:bg-${additional.color}-700 transition`}
           onClick={() =>
-            handleCheckout(priceId, plan.planId, "eQ0KZTNfoxRrhxagJjvrYvNzsL53")
+            handleSubscribe(plan, "eQ0KZTNfoxRrhxagJjvrYvNzsL53")
             // router.push(`/checkout/${plan.planId}`)
           }
         >

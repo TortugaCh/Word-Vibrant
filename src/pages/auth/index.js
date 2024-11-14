@@ -65,7 +65,7 @@ export default function AuthPage() {
         });
         if (resp.status === 200 && user)
           router.push({
-            pathname: "/admin",
+            pathname: "/dashboard",
           });
         else {
           await user.delete();
@@ -73,7 +73,7 @@ export default function AuthPage() {
         }
       } else {
         router.push({
-          pathname: "/admin",
+          pathname: "/dashboard",
         });
       }
     } catch (err) {

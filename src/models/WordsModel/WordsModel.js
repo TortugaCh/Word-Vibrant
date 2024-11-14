@@ -1,23 +1,35 @@
 // models/Word.js
 
 class Word {
-  constructor({ wordTypeId, semesterId, name }) {
-    this.wordTypeId = wordTypeId; // required
-    this.semesterId = semesterId;
+  constructor({ name, curriculum, semester, grade, wordType }) {
     this.name = name; // required
+    this.curriculum = curriculum; // required
+    this.semester = semester; // required
+    this.grade = grade; // required
+    this.wordType = wordType; // required
   }
 
   toJSON() {
     return {
-      semesterId: this.semesterId,
-      wordTypeId: this.wordTypeId,
       name: this.name,
+      curriculum: this.curriculum,
+      semester: this.semester,
+      grade: this.grade,
+      wordType: this.wordType,
     };
   }
 
   static validate(data) {
-    if (!data.name || !data.wordTypeId || !data.semesterId ) {
-      throw new Error("Missing required fields: wordTypeId or name or semesterId");
+    if (
+      !data.name ||
+      !data.curriculum ||
+      !data.semester ||
+      !data.grade ||
+      !data.wordType
+    ) {
+      throw new Error(
+        "Missing required fields: name or curriculum or semester or grade or wordType"
+      );
     }
     return new Word(data);
   }

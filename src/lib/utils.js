@@ -1,14 +1,35 @@
 import { db } from "./firebaseConfig";
-import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 // Fetch all lookup data based on type
 export async function fetchLookupData(type) {
   const lookupCollection = collection(db, "lookup");
   const q = query(lookupCollection, where("type", "==", type));
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({
+  return querySnapshot.docs.map((doc) => ({
     id: doc.id,
-    ...doc.data()
+    ...doc.data(),
+  }));
+}
+
+// Fetch All lookup data
+
+export async function fetchAllLookupData() {
+  const lookupCollection = collection(db, "lookup");
+  const querySnapshot = await getDocs(lookupCollection);
+  return querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
   }));
 }
 
@@ -37,4 +58,38 @@ export async function updateLookupItem(id, data) {
 export async function deleteLookupItem(id) {
   const docRef = doc(db, "lookup", id);
   await deleteDoc(docRef);
+}
+
+// Fetch all words
+
+export async function fetchWords() {
+  const wordsCollection = collection(db, "words");
+  const querySnapshot = await getDocs(wordsCollection);
+  return querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+}
+
+// Fetch all words based on curriculum, grade, semester, and word type
+
+export async function fetchWordsByFilters(
+  curriculum,
+  grade,
+  semester,
+  wordType
+) {
+  const wordsCollection = collection(db, "words");
+  const q = query(
+    wordsCollection,
+    where("curriculum", "==", curriculum),
+    where("grade", "==", grade),
+    where("semester", "==", semester),
+    where("wordType", "==", wordType)
+  );
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 }
