@@ -19,7 +19,6 @@ const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
       };
       fetchData();
     }
-    return () => {};
   }, [curriculum, grade, semester, wordType]);
 
   if (!words.length) {
@@ -36,7 +35,7 @@ const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
         {words?.map((word, index) => (
           <div
             key={index}
-            onClick={() => handleFunc(word.name)}
+            onClick={() => handleFunc(word)}
             className="cursor-pointer text-center bg-gradient-to-br from-purple-200 to-blue-300 p-2 rounded-full hover:shadow-lg transition-transform transform hover:scale-105 text-lg font-semibold"
           >
             {word.name}

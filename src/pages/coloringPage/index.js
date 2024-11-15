@@ -65,7 +65,7 @@ export default function ColoringPage() {
 
   const handleSelectWord = (word) => {
     setSelectedWord(word);
-    addMessage(`Displaying coloring outline for "${word}".`, "bot");
+    addMessage(`Displaying coloring outline for "${word.name}".`, "bot");
     setTimeout(() => {
       coloringRef.current.scrollIntoView({ behavior: "smooth" });
     }, 200);
@@ -138,10 +138,10 @@ export default function ColoringPage() {
             className="w-full max-w-2xl mt-10 flex justify-center"
           >
             <button
-              onClick={() => router.push(`/download/${selectedWord}`)}
+              onClick={() => router.push(`/download/${selectedWord.name}`)}
               className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-800 transition duration-200"
             >
-              Download Coloring Page for "{selectedWord}"
+              Download Coloring Page for "{selectedWord.name}"
             </button>
           </div>
         )}

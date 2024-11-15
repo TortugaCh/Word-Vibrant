@@ -1,63 +1,46 @@
 import { db } from "../../../lib/firebaseConfig";
-import { collection, query, where, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
-import Semester from "../../../models/SemesterModel/SemesterModel";
+import {
+  collection,
+  doc,
+  query,
+  where,
+  getDocs,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
 export default async function handler(req, res) {
   if (req.method === "POST") {
+    const semesterCollection = collection(db, "lookup");
+    const name = "Semester 1";
+    const id = "YhimHVA4W0bNP400EVq7"; // Custom document ID
+    const type = "semester";
     try {
-      const names = ["Semester 1", "Semester 2"];
-      const gradeIds = [
-        "jgx7kWIX11a1A3W3kmiU",
-        "Kp9YsVcvle62cfVXcRRT",
-        "7KkQaQyHDVIvkmwVXTLk",
-        "vDAeyvqJFNtDE6mvcOc6",
-        "1Rzai1MFWcCrKdnZiqpx",
-        "y1orzsNfOvsVJNU2jxcC",
-      ];
+      const q = query(semesterCollection, where("name", "==", name));
+      const querySnapshot = await getDocs(q);
 
-      const semesterArr = [];
+      if (querySnapshot.empty) {
+        // Reference to the document with the custom ID
+        const docRef = doc(semesterCollection, id);
 
-      for (let i = 0; i < gradeIds.length; i++) {
-        const semesterCollection = collection(db, "semesters");
+        const newSemester = {
+          name: name,
+          type: type,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        };
 
-        for (let j = 0; j < names.length; j++) {
-          const semesterName = names[j];
-          const gradeId = gradeIds[i];
-
-          // Check if the document already exists
-          const q = query(
-            semesterCollection,
-            where("name", "==", semesterName),
-            where("gradeId", "==", gradeId)
-          );
-          const querySnapshot = await getDocs(q);
-
-          // If the document exists, skip creation
-          if (!querySnapshot.empty) {
-            console.log(`Document with name "${semesterName}" and gradeId "${gradeId}" already exists`);
-            continue;
-          }
-
-          // Prepare new semester data
-          const newSemester = {
-            name: semesterName,
-            gradeId,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          };
-
-          // Add new document
-          const addedSemester = await addDoc(semesterCollection, newSemester);
-          semesterArr.push(addedSemester.id);
-        }
+        // Set the document with the custom ID
+        await setDoc(docRef, newSemester);
+        console.log(`Added semester with ID "${id}" and name "${name}"`);
+        res.status(201).json({ message: "Semester added successfully" });
+      } else {
+        console.log(`Semester "${name}" already exists`);
+        res.status(200).json({ message: "Semester already exists" });
       }
-
-      res.status(201).json({
-        message: "Semesters created successfully",
-        data: semesterArr,
-      });
     } catch (err) {
-      console.error("Error creating semesters:", err);
-      res.status(500).json({ error: err.message });
+      console.error("Error adding semester:", err);
+      res.status(500).json({ error: "Internal server error" });
     }
   } else {
     res.setHeader("Allow", "POST");

@@ -93,3 +93,38 @@ export async function fetchWordsByFilters(
     ...doc.data(),
   }));
 }
+
+// export async function fetchWordsByFilters(curriculum, grade, semester, wordType) {
+//   const wordsCollection = collection(db, "words");
+
+//   // Fetch documents matching the original curriculum
+//   const q = query(
+//     wordsCollection,
+//     where("curriculum", "==", "NanYi")
+//   );
+//   const querySnapshot = await getDocs(q);
+
+//   // Update the curriculum field for each matching document
+//   const updatePromises = querySnapshot.docs.map((docSnapshot) =>
+//     updateDoc(doc(db, "words", docSnapshot.id), { curriculum: "kD9EBxwuoe3a9yWRKm7d" })
+//   );
+
+//   await Promise.all(updatePromises);
+
+//   // Fetch the documents again with the updated curriculum
+//   const updatedQuery = query(
+//     wordsCollection,
+//     where("curriculum", "==", "kD9EBxwuoe3a9yWRKm7d"),
+//     where("grade", "==", grade),
+//     where("semester", "==", semester),
+//     where("wordType", "==", wordType)
+//   );
+
+//   const updatedSnapshot = await getDocs(updatedQuery);
+
+//   // Return the updated documents
+//   return updatedSnapshot.docs.map((doc) => ({
+//     id: doc.id,
+//     ...doc.data(),
+//   }));
+// }

@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       MerchantID: process.env.NEXT_PUBLIC_NEWEBPAY_MERCHANT_ID,
       RespondType: "JSON",
       TimeStamp: timeStamp,
-      Version: "1.6",
+      Version: "2.0",
       LangType: "zh-tw",
       MerchantOrderNo: merchantOrderNo,
       Amt: cost,
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
       TradeLimit: 300,
       planId,
       userId,
-    },"String");
+    });
 
     console.log("TradeInfo:", tradeInfo);
     // Generate encrypted TradeInfo and TradeSha using the library's built-in methods
