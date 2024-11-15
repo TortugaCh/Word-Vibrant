@@ -41,15 +41,15 @@ const Page = () => {
       <div className="flex gap-10">
         <div className="flex flex-col items-center space-y-6">
           <div className="font-bold text-2xl text-purple-700">Preview</div>
-          <HanziStroke word={"朋友"} draw={false} />
+          <HanziStroke word={selectedWord} draw={false} />
         </div>
         <div className="flex flex-col items-center space-y-6">
           <div className="font-bold text-2xl text-purple-700">Practice</div>
-          <HanziStroke word={"朋友"} draw={true} />
+          <HanziStroke word={selectedWord} draw={true} />
         </div>
       </div>
       <button
-        onClick={() => speakTaiwanese("朋友")}
+        onClick={() => speakTaiwanese(selectedWord)}
         className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
         disabled={!voiceLoaded}
       >
