@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     // Update the word document
     const updatedWord = {
       ...wordDoc.data(),
-      word: word,
+      name: word,
       updatedAt: serverTimestamp(),
     };
 
