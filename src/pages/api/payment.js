@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       MerchantID: process.env.NEXT_PUBLIC_NEWEBPAY_MERCHANT_ID,
       RespondType: "JSON",
       TimeStamp: timeStamp,
-      Version: "2.0",
+      Version: "1.6",
       LangType: "zh-tw",
       MerchantOrderNo: merchantOrderNo,
       Amt: cost,

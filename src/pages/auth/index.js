@@ -9,6 +9,8 @@ import {
 import { auth, googleProvider } from "../../lib/firebaseConfig";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
+import { useTranslations } from "next-intl";
+import { withMessages } from "../../lib/getMessages";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -17,6 +19,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState("");
+  const t=useTranslations("auth");
   const API_LINK = process.env.NEXT_PUBLIC_API_LINK;
   const handleAuth = async () => {
     try {
@@ -106,7 +109,7 @@ export default function AuthPage() {
 
       <div className="auth-container relative z-10 max-w-md w-full bg-white rounded-lg shadow-lg p-8">
         <h2 className="text-3xl font-extrabold text-center text-purple-700 mb-6">
-          {isLogin ? "Login" : "Sign Up"}
+          {t(isLogin ? "login" : "signUp")}
         </h2>
 
         {/* Google Sign-In Button */}
@@ -115,14 +118,14 @@ export default function AuthPage() {
           className="flex items-center justify-center w-full mb-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition duration-300"
         >
           <FcGoogle className="mr-2" size={24} />
-          Continue with Google
+          {t("Google")}
         </button>
 
         {/* Email Input */}
         {isLogin ? null : (
           <input
             type="text"
-            placeholder="Username"
+            placeholder={t("userName")}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="auth-input mb-4"
@@ -131,7 +134,7 @@ export default function AuthPage() {
 
         <input
           type="email"
-          placeholder="Email"
+          placeholder={t("email")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="auth-input mb-4"
@@ -140,7 +143,7 @@ export default function AuthPage() {
         {/* Password Input */}
         <input
           type="password"
-          placeholder="Password"
+          placeholder={t("password")}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="auth-input mb-4"
@@ -151,7 +154,7 @@ export default function AuthPage() {
           onClick={handleAuth}
           className="auth-button primary w-full mb-4"
         >
-          {isLogin ? "Login" : "Sign Up"}
+          {t(isLogin ? "login" : "signUp")}
         </button>
 
         {/* Toggle Login/Signup */}
@@ -159,7 +162,7 @@ export default function AuthPage() {
           onClick={() => setIsLogin(!isLogin)}
           className="auth-button secondary w-full"
         >
-          {isLogin ? "Switch to Sign Up" : "Switch to Login"}
+          {t(isLogin ? "switchToSignUp" : "switchToLogin")}
         </button>
 
         {/* Error Message */}
@@ -168,3 +171,5 @@ export default function AuthPage() {
     </div>
   );
 }
+
+export const getServerSideProps = withMessages('auth');
