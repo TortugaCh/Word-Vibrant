@@ -3,8 +3,10 @@ import HanziStroke from "../../../../components/HanziStroke/HanziStroke";
 import Template from "../../../../components/Template";
 import { useSpeechSynthesis } from "react-speech-kit";
 import { useEffect, useState } from "react";
+import { withMessages } from "../../../../lib/getMessages";
+import { useTranslations } from "next-intl";
 
-const Page = () => {
+export default function Page () {
   const router = useRouter();
   const { speak, voices } = useSpeechSynthesis();
   const { selectedWord } = router.query;
@@ -12,6 +14,7 @@ const Page = () => {
   // State to ensure voices are loaded before attempting to find one
   const [voiceLoaded, setVoiceLoaded] = useState(false);
   const [taiwaneseVoice, setTaiwaneseVoice] = useState(null);
+  const t=useTranslations("strokeOrder");
 
   useEffect(() => {
     if (voices.length > 0) {
@@ -40,11 +43,11 @@ const Page = () => {
     <Template title="Stroke Orders">
       <div className="flex gap-10">
         <div className="flex flex-col items-center space-y-6">
-          <div className="font-bold text-2xl text-purple-700">Preview</div>
+          <div className="font-bold text-2xl text-purple-700">{t("practice.prev")}</div>
           <HanziStroke word={selectedWord} draw={false} />
         </div>
         <div className="flex flex-col items-center space-y-6">
-          <div className="font-bold text-2xl text-purple-700">Practice</div>
+          <div className="font-bold text-2xl text-purple-700">{t("practice.prac")}</div>
           <HanziStroke word={selectedWord} draw={true} />
         </div>
       </div>
@@ -53,10 +56,10 @@ const Page = () => {
         className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
         disabled={!voiceLoaded}
       >
-        Listen to Word
+        {t("practice.listen")}
       </button>
     </Template>
   );
 };
 
-export default Page;
+export const getServerSideProps = withMessages("strokeOrder");

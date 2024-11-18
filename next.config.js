@@ -1,6 +1,13 @@
 // next.config.js
 
-module.exports = {
+const nextConfig= {
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      stream: require.resolve("stream-browserify"),
+    };
+    return config;
+  },
   i18n: {
     defaultLocale: "en",
     locales: ["en", "zh"],
@@ -9,3 +16,5 @@ module.exports = {
     ignoreDuringBuilds: true,
   },
 };
+
+module.exports = nextConfig;

@@ -30,7 +30,6 @@ const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
   }
   return (
     <div className="mt-6 flex flex-col gap-2">
-      <div className="font-bold text-lg text-purple-700">Available Words:</div>
       <div className="grid grid-cols-3 gap-3 text-blue-600">
         {words?.map((word, index) => (
           <div
