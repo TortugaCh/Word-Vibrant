@@ -13,7 +13,7 @@ export default async function handler(req, res) {
   if (req.method !== "PUT") {
     return res.status(405).json({ message: "Method not allowed" });
   }
-  const { token, action } = req.body;
+  const { token, action, word } = req.body;
 
   if (!token) {
     return res.status(401).json({ success: false, message: "No token found" });
@@ -37,7 +37,11 @@ export default async function handler(req, res) {
     // Assuming userId is unique, get the first document
     const userDoc = querySnapshot.docs[0];
     const userData = userDoc.data();
-    console.log(userData);
+    // Check if credits are already deducted for this action and word
+    const actionKey = `${action}-${word}`; // Unique key for this action and word
+    if (userData.deductedActions?.includes(actionKey)) {
+      return res.status(200).json({ valid: true, creditsDeducted: true,success:true });
+    }
 
     // Check if user has enough credits
     if (userData.credits <= 0) {
@@ -49,14 +53,12 @@ export default async function handler(req, res) {
     const modules = collection(db, "modules");
     const q1 = query(modules, where("value", "==", action));
     const querySnapshot1 = await getDocs(q1);
-    console.log(querySnapshot1);
     if (querySnapshot1.empty) {
       return res
         .status(404)
         .json({ success: false, message: "Module not found" });
     }
     const moduleDoc = querySnapshot1.docs[0];
-    console.log(moduleDoc);
     const moduleData = moduleDoc.data();
     const creditsToDeduct = moduleData.creditCost;
     console.log(moduleData);
@@ -64,10 +66,20 @@ export default async function handler(req, res) {
 
     // Deduct credits based on action
     const remainingCredits = userData.credits - creditsToDeduct;
+    const updatedActions = [...(userData.deductedActions || []), actionKey];
+
+    if (remainingCredits < 0) {
+      return res
+        .status(403)
+        .json({ success: false, message: "Insufficient credits" });
+    }
     console.log(remainingCredits);
     // Update user credits in Firestore
     const userDocRef = doc(db, "persons", userDoc.id);
-    await updateDoc(userDocRef, { credits: remainingCredits });
+    await updateDoc(userDocRef, {
+      credits: remainingCredits,
+      deductedActions: updatedActions,
+    });
 
     return res.status(200).json({ success: true, remainingCredits });
   } catch (error) {

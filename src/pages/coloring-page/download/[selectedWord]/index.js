@@ -8,12 +8,12 @@ const DownloadPage = () => {
   const { selectedWord } = router.query;
   const downloadContainerRef = useRef(null);
   const canvasRef = useRef(null);
-
+  const { locale } = router;
   useEffect(() => {
     if (selectedWord) {
       renderHanziCharacter();
     }
-  }, [selectedWord]);
+  }, [selectedWord,locale]);
 
   const renderHanziCharacter = () => {
     if (downloadContainerRef.current) {
