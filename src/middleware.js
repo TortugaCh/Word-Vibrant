@@ -5,7 +5,14 @@ export async function middleware(req) {
   const { pathname } = req.nextUrl;
 
   // Allow access to public routes (e.g., /auth and /)
-  const publicRoutes = ["/auth", "/"];
+  const publicRoutes = [
+    "/auth",
+    "/",
+    "/pricing",
+    "/no-credits",
+    "about-us",
+    "privacy",
+  ];
   if (publicRoutes.includes(pathname)) {
     return NextResponse.next();
   }
