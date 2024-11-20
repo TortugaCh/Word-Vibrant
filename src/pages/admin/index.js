@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import AdminLookupManager from "../../components/AdminHandler/AdminHandler";
 
 const AdminPage = () => {

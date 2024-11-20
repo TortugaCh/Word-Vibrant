@@ -1,48 +1,47 @@
 import React, { useEffect, useRef } from "react";
 import HanziWriter from "hanzi-writer";
+import { useRouter } from "next/router";
 
 const HanziStroke = ({ word, draw }) => {
   const containerRef = useRef(null);
-
+  const writerRef = useRef(null);
+  const router = useRouter();
+  const { locale } = router;
   useEffect(() => {
     if (!containerRef.current) return;
 
     // Clear the container's innerHTML to avoid re-initialization issues
-    containerRef.current.innerHTML = "";
+    if (!writerRef.current || writerRef.current.character !== word) {
+      containerRef.current.innerHTML = "";
 
-    // Initialize HanziWriter instance with traditional characters support
-    if (word.length > 1) {
-      word = word[0];
-    }
-    const writer = HanziWriter.create(containerRef.current, word, {
-      width: 250,
-      height: 250,
-      padding: 10,
-      showOutline: true,
-      charDataLoader: (char) => {
-        // Force using traditional character data
-        return HanziWriter.loadCharacterData(char, { traditional: true });
-      },
-    });
+      // Initialize HanziWriter instance with traditional characters support
+      const writer = HanziWriter.create(containerRef.current, word, {
+        width: 250,
+        height: 250,
+        padding: 10,
+        showOutline: true,
+        charDataLoader: (char) => {
+          // Force using traditional character data
+          return HanziWriter.loadCharacterData(char, { traditional: true });
+        },
+      });
 
-    if (draw) {
-      writer.quiz();
-    } else {
-      function startLoopedAnimation() {
-        writer.animateCharacter({
-          onComplete: () => {
-            setTimeout(startLoopedAnimation, 500);
-          },
-        });
+      writerRef.current = writer;
+
+      if (draw) {
+        writer.quiz();
+      } else {
+        function startLoopedAnimation() {
+          writer.animateCharacter({
+            onComplete: () => {
+              setTimeout(startLoopedAnimation, 500);
+            },
+          });
+        }
+        startLoopedAnimation();
       }
-      startLoopedAnimation();
     }
-
-    // Cleanup on component unmount or when `word` changes
-    return () => {
-      if (containerRef.current) containerRef.current.innerHTML = "";
-    };
-  }, [word, draw]);
+  }, [word, draw, locale]);
 
   return (
     <div
