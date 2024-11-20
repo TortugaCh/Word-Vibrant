@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       MerchantID: process.env.NEXT_PUBLIC_NEWEBPAY_MERCHANT_ID,
       RespondType: "JSON",
       TimeStamp: timeStamp,
-      Version: "2.0",
+      Version: "1.6",
       LangType: "zh-tw",
       MerchantOrderNo: merchantOrderNo,
       Amt: cost,
@@ -54,12 +54,12 @@ export default async function handler(req, res) {
     //     TradeSha,
     //     Version: tradeInfo.Version,
     //   }
-      console.log(postData)
+    console.log(postData);
 
     // Return the payment URL and form data to the frontend
     return res.status(200).json({
       paymentUrl,
-      formData:postData
+      formData: postData,
     });
   } catch (error) {
     console.error("Error generating NewebPay trade info:", error);
