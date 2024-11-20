@@ -54,12 +54,12 @@ export default async function handler(req, res) {
     //     TradeSha,
     //     Version: tradeInfo.Version,
     //   }
-      console.log(postData)
+    console.log(postData);
 
     // Return the payment URL and form data to the frontend
     return res.status(200).json({
       paymentUrl,
-      formData:postData
+      formData: postData,
     });
   } catch (error) {
     console.error("Error generating NewebPay trade info:", error);
