@@ -12,6 +12,8 @@ const AdminPanel = ({
   formConfig,
   handleSave,
   handleDelete,
+  columnsToFilter,
+  modalTitle,
 }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
@@ -31,7 +33,7 @@ const AdminPanel = ({
           setColumns(columnsConfig);
         } else if (result.length > 0) {
           const dynamicColumns = Object.keys(result[0])
-            .filter((key) => key !== "updatedAt" && key !== "createdAt")
+            .filter((key) => !columnsToFilter.includes(key))
             .map((key) => ({
               title: key.charAt(0).toUpperCase() + key.slice(1),
               dataIndex: key,
@@ -67,7 +69,11 @@ const AdminPanel = ({
       setConfirmLoading(true);
       const values = await form.validateFields();
       await handleSave(editingItem, values);
-      message.success(editingItem ? "Item updated successfully" : "Item added successfully");
+      message.success(
+        editingItem
+          ? `${modalTitle}  updated successfully`
+          : `${modalTitle}  added successfully`
+      );
 
       // Refresh data after saving
       const updatedData = await fetchData();
@@ -80,23 +86,40 @@ const AdminPanel = ({
       setConfirmLoading(false);
     }
   };
-console.log(formConfig);
+  const onDelete = async (id) => {
+    try {
+      await handleDelete(id);
+      message.success(`${modalTitle} deleted successfully`);
+
+      // Refresh data after deleting
+      const updatedData = await fetchData();
+      setData(updatedData);
+    } catch (error) {
+      message.error("Failed to delete the item");
+    }
+  };
+  console.log(formConfig);
   return (
     <div style={{ padding: "20px" }}>
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
 
-      <CustomTable columns={columns} data={data} onEdit={openModal} onDelete={handleDelete} />
+      <CustomTable
+        columns={columns}
+        data={data}
+        onEdit={openModal}
+        onDelete={onDelete}
+      />
 
       <FloatingButton onClick={() => openModal()} />
 
       <CustomModal
         visible={isModalVisible}
-        title={editingItem ? "Edit Item" : "Add Item"}
+        title={editingItem ? `Edit ${modalTitle}` : `Add ${modalTitle}`}
         onOk={onSave}
         onCancel={closeModal}
         confirmLoading={confirmLoading}
       >
-        <CustomForm form={form} inputs={formConfig} />
+        <CustomForm form={form} inputs={formConfig} editingItem={editingItem} />
       </CustomModal>
     </div>
   );

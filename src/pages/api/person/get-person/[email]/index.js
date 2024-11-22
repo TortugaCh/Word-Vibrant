@@ -1,7 +1,5 @@
-import Person from "../../../../models/PersonModel/PersonModel";
-import { db } from "../../../../lib/firebaseConfig";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { useParams } from "next/navigation";
+import { db } from "../../../../../lib/firebaseConfig";
+import { collection, getDocs, query, where } from "firebase/firestore";
 export default async function handler(req, res) {
   // Only allow GET requests
   if (req.method !== "GET") {
@@ -10,7 +8,7 @@ export default async function handler(req, res) {
 
   // Extract the email from the query parameter
   //   const params=useParams();
-    const { email } = req.query;
+  const { email } = req.query;
   console.log(req.query);
 
   if (!email) {

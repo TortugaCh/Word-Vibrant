@@ -164,14 +164,22 @@ export async function fetchWordsByFilters(
 
 // Function to check if a user already exists in the database
 export const checkUserExists = async (email) => {
+  console.log("Checking user existence for email:", email);
+
   try {
     const response = await axios.get(`${API_LINK}/person/get-person/${email}`);
     return response.status === 200;
   } catch (error) {
-    console.error("Error checking user:", error);
-    return false;
+    if (error.response && error.response.status === 404) {
+      console.warn("User not found for email:", email);
+      return false;
+    } else {
+      console.error("Unexpected error:", error);
+      throw error; // Re-throw for unexpected errors
+    }
   }
 };
+
 
 // Function to create a new user in the database
 export const createUserInDB = async (email, name, userId) => {
@@ -243,6 +251,26 @@ export const handleGoogleAuth = async () => {
   const token = await result.user.getIdToken();
   await setAuthCookie(token);
   return result.user;
+};
+
+// Update user data
+export const updateUserData = async (email, data) => {
+  try {
+    await axios.put(`${API_LINK}/person/update-person/${email}`, {
+      ...data,
+    });
+  } catch (error) {
+    console.error("Error updating user data:", error);
+  }
+};
+
+// Delete user data
+export const deleteUserData = async (email) => {
+  try {
+    await axios.delete(`${API_LINK}/person/delete-person/${email}`);
+  } catch (error) {
+    console.error("Error deleting user data:", error);
+  }
 };
 
 // Function to log out the user
