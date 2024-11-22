@@ -43,3 +43,27 @@ export const wordInputs = (
     },
   ];
 };
+
+
+export const adminMenuItems = [
+  {
+    name: "Home",
+    link: "/admin/dashboard",
+  },
+  {
+    name: "Users",
+    link: "/admin/users",
+  },
+  {
+    name: "Pricing Plans",
+    link: "/admin/pricing",
+  },
+  {
+    name: "Handler",
+    link: "/admin/handler",
+  },
+  {
+    name: "Words",
+    link: "/admin/words",
+  },
+]

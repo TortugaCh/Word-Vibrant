@@ -1,6 +1,9 @@
 // next.config.js
 
-const nextConfig= {
+const withTM = require("next-transpile-modules")([
+  "rc-util","rc-pagination","rc-picker","@ant-design/icons","@ant-design/icons-svg","rc-tree","rc-table","rc-input"
+]);
+const nextConfig= withTM({
   webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -15,6 +18,9 @@ const nextConfig= {
   eslint: {
     ignoreDuringBuilds: true,
   },
-};
+  experimental: {
+    esmExternals: true,
+  },
+});
 
 module.exports = nextConfig;

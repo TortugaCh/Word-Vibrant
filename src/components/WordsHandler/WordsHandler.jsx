@@ -242,8 +242,6 @@ const WordsHandler = () => {
   };
 
   return (
-    <Template>
-      {/* Main Content */}
       <main className="container mx-auto px-6 py-32 mt-16 relative z-10 flex flex-col items-center">
         <div className="max-w-2xl w-full bg-white rounded-3xl shadow-xl p-8 flex flex-col space-y-4">
           <h2 className="text-center text-2xl font-extrabold text-purple-700 mb-4">
@@ -338,7 +336,6 @@ const WordsHandler = () => {
           </button>
         )}
       </main>
-    </Template>
   );
 };
 

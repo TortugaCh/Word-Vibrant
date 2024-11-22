@@ -7,8 +7,9 @@ export default async function handler(req, res) {
       const q = query(planCollection, orderBy("createdAt", "desc")); // Sort by creation date in descending order
       const planSnapshot = await getDocs(q);
       const planData = planSnapshot.docs.map((doc) => {
-        return { planId: doc.id, ...doc.data() };
+        return { id: doc.id, ...doc.data() };
       });
+      
 
       res
         .status(201)

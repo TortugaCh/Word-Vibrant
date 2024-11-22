@@ -58,6 +58,7 @@ export async function addLookupItem(data) {
 
 // Update existing lookup entry
 export async function updateLookupItem(id, data) {
+  console.log(id, data);
   const docRef = doc(db, "lookup", id);
   await updateDoc(docRef, {
     ...data,
@@ -187,6 +188,28 @@ export const createUserInDB = async (email, name, userId) => {
   }
 };
 
+// Function to get the user's data from the database
+export const getUserData = async (email) => {
+  try {
+    const response = await axios.get(`${API_LINK}/person/get-person/${email}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting user data:", error);
+    return null;
+  }
+};
+
+// Function to get users
+export const getUsers = async () => {
+  try {
+    const response = await axios.get(`${API_LINK}/person/get-person`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting users:", error);
+    return [];
+  }
+};
+
 // Function to set the cookie
 const setAuthCookie = async (token) => {
   await axios.post("/api/auth/setCookie", { token });
@@ -199,6 +222,7 @@ export const handleEmailAuth = async (email, password, isLogin, username) => {
     user = await signInWithEmailAndPassword(auth, email, password);
   } else {
     user = await createUserWithEmailAndPassword(auth, email, password);
+    await createUserInDB(email, username, user.user.uid);
   }
   const token = await user.user.getIdToken();
   await setAuthCookie(token);
@@ -208,6 +232,14 @@ export const handleEmailAuth = async (email, password, isLogin, username) => {
 // Handle Google Authentication
 export const handleGoogleAuth = async () => {
   const result = await signInWithPopup(auth, googleProvider);
+  const userExists = await checkUserExists(result.user.email);
+  if (!userExists) {
+    await createUserInDB(
+      result.user.email,
+      result.user.displayName,
+      result.user.uid
+    );
+  }
   const token = await result.user.getIdToken();
   await setAuthCookie(token);
   return result.user;
@@ -228,38 +260,3 @@ export const handleLogout = async () => {
     console.error("Error logging out:", error);
   }
 };
-
-// export async function fetchWordsByFilters(curriculum, grade, semester, wordType) {
-//   const wordsCollection = collection(db, "words");
-
-//   // Fetch documents matching the original curriculum
-//   const q = query(
-//     wordsCollection,
-//     where("curriculum", "==", "NanYi")
-//   );
-//   const querySnapshot = await getDocs(q);
-
-//   // Update the curriculum field for each matching document
-//   const updatePromises = querySnapshot.docs.map((docSnapshot) =>
-//     updateDoc(doc(db, "words", docSnapshot.id), { curriculum: "kD9EBxwuoe3a9yWRKm7d" })
-//   );
-
-//   await Promise.all(updatePromises);
-
-//   // Fetch the documents again with the updated curriculum
-//   const updatedQuery = query(
-//     wordsCollection,
-//     where("curriculum", "==", "kD9EBxwuoe3a9yWRKm7d"),
-//     where("grade", "==", grade),
-//     where("semester", "==", semester),
-//     where("wordType", "==", wordType)
-//   );
-
-//   const updatedSnapshot = await getDocs(updatedQuery);
-
-//   // Return the updated documents
-//   return updatedSnapshot.docs.map((doc) => ({
-//     id: doc.id,
-//     ...doc.data(),
-//   }));
-// }
