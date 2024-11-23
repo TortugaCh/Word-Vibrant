@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
-import HanziStroke from "../../../../components/HanziStroke/HanziStroke";
-import Template from "../../../../components/Template";
+import HanziStroke from "../../../../../components/HanziStroke/HanziStroke";
+import Template from "../../../../../components/Template";
 import { useSpeechSynthesis } from "react-speech-kit";
 import { useEffect, useState } from "react";
-import { withMessages } from "../../../../lib/getMessages";
+import { withMessages } from "../../../../../lib/getMessages";
 import { useTranslations } from "next-intl";
+import { PiEar } from "react-icons/pi";
+import { MdReplay } from "react-icons/md";
 
-export default function Page () {
+export default function Page() {
   const router = useRouter();
   const { speak, voices } = useSpeechSynthesis();
   const { selectedWord } = router.query;
@@ -14,12 +16,12 @@ export default function Page () {
   // State to ensure voices are loaded before attempting to find one
   const [voiceLoaded, setVoiceLoaded] = useState(false);
   const [taiwaneseVoice, setTaiwaneseVoice] = useState(null);
-  const t=useTranslations("strokeOrder");
+  const t = useTranslations("strokeOrder");
 
   useEffect(() => {
     if (voices.length > 0) {
       // Try to find a Taiwanese Mandarin voice, with fallback to zh-CN if unavailable
-      const voice = voices.filter((v) => v.lang === "zh-TW")[2]
+      const voice = voices.filter((v) => v.lang === "zh-TW")[2];
       console.log(voices.filter((v) => v.lang === "zh-TW"));
       console.log("Voice", voice);
       setTaiwaneseVoice(voice);
@@ -43,23 +45,20 @@ export default function Page () {
     <Template title="Stroke Orders">
       <div className="flex gap-10">
         <div className="flex flex-col items-center space-y-6">
-          <div className="font-bold text-2xl text-purple-700">{t("practice.prev")}</div>
-          <HanziStroke word={selectedWord} draw={false} />
+          <div className="font-bold text-2xl text-purple-700">
+            {t("practice.prev")}
+          </div>
+          <HanziStroke word={selectedWord} draw={false} t={t} />
         </div>
         <div className="flex flex-col items-center space-y-6">
-          <div className="font-bold text-2xl text-purple-700">{t("practice.prac")}</div>
-          <HanziStroke word={selectedWord} draw={true} />
+          <div className="font-bold text-2xl text-purple-700">
+            {t("practice.prac")}
+          </div>
+          <HanziStroke word={selectedWord} draw={true} t={t} voiceLoaded={voiceLoaded} speakTaiwanese={speakTaiwanese}/>
         </div>
       </div>
-      <button
-        onClick={() => speakTaiwanese(selectedWord)}
-        className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-        disabled={!voiceLoaded}
-      >
-        {t("practice.listen")}
-      </button>
     </Template>
   );
-};
+}
 
 export const getServerSideProps = withMessages("strokeOrder");

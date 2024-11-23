@@ -10,5 +10,6 @@ export default {
     prac: "Practice",
     prev: "Preview",
     listen: "Listen To Word",
+    replay: "Replay",
   },
 };

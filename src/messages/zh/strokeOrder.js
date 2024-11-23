@@ -10,5 +10,6 @@ export default {
     prac: "練習",
     prev: "預覽",
     listen: "聆聽單詞",
+    replay: "重播",
   },
 };
