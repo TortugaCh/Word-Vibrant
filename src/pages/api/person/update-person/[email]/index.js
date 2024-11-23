@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Email is required" });
   }
 
-//   try {
+  try {
     // Reference to the "persons" collection
     const usersRef = collection(db, "persons");
 
@@ -31,8 +31,8 @@ export default async function handler(req, res) {
     await updateDoc(doc(db, "persons", userDoc.id), updatedData);
     const userData = { id: userDoc.id, ...updatedData };
     return res.status(200).json(userData);
-//   } catch (error) {
-//     console.error("Error fetching user:", error);
-//     return res.status(500).json({ error: "Internal server error" });
-//   }
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 }

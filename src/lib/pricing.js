@@ -1,23 +1,3 @@
-import { db } from "./firebaseConfig";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  serverTimestamp,
-} from "firebase/firestore";
-
-import {
-  signInWithPopup,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
-import { auth, googleProvider } from "./firebaseConfig";
 import axios from "axios";
 
 const API_LINK = process.env.NEXT_PUBLIC_API_LINK;
@@ -26,6 +6,55 @@ const API_LINK = process.env.NEXT_PUBLIC_API_LINK;
 export async function fetchPricingPlans() {
   try {
     const response = await axios.get(`${API_LINK}/plans/get-pricing-plans`);
+    return response.data.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+// Creare new pricing plan
+
+export async function createPricingPlan(data) {
+  try {
+    const response = await axios.post(
+      `${API_LINK}/plans/create-pricing-plan`,
+      data
+    );
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+// Update pricing plan
+
+export async function updatePricingPlan(id,data) {
+  console.log(id,data)
+  try {
+
+    const response = await axios.put(
+      `${API_LINK}/plans/update-pricing-plan/${id}`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+// Delete pricing plan
+
+export async function deletePricingPlan(id) {
+  try {
+    const response = await axios.delete(
+      `${API_LINK}/plans/delete-pricing-plan/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
