@@ -6,22 +6,25 @@ class Person {
     name,
     email,
     credits = 5,
+    role = "User",
     createdAt = new Date(),
   }) {
     this.userId = userId; // required
     this.name = name; // required
     this.email = email; // required
     this.credits = credits;
+    this.role = role;
     this.createdAt = createdAt;
   }
 
-//   // Method to create Firestore document format
+  //   // Method to create Firestore document format
   toJSON() {
     return {
       userId: this.userId,
       name: this.name,
       email: this.email,
       credits: this.credits,
+      role: this.role,
       createdAt: this.createdAt,
     };
   }

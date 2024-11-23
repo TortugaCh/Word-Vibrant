@@ -168,18 +168,17 @@ export const checkUserExists = async (email) => {
 
   try {
     const response = await axios.get(`${API_LINK}/person/get-person/${email}`);
-    return response.status === 200;
+    return response.data;
   } catch (error) {
     if (error.response && error.response.status === 404) {
       console.warn("User not found for email:", email);
-      return false;
+      return null;
     } else {
       console.error("Unexpected error:", error);
       throw error; // Re-throw for unexpected errors
     }
   }
 };
-
 
 // Function to create a new user in the database
 export const createUserInDB = async (email, name, userId) => {
@@ -189,10 +188,10 @@ export const createUserInDB = async (email, name, userId) => {
       name,
       userId,
     });
-    return response.status === 200;
+    return response.data.data;
   } catch (error) {
     console.error("Error creating user:", error);
-    return false;
+    return null;
   }
 };
 
@@ -226,23 +225,24 @@ const setAuthCookie = async (token) => {
 // Handle email and password authentication
 export const handleEmailAuth = async (email, password, isLogin, username) => {
   let user;
+  let userData;
   if (isLogin) {
     user = await signInWithEmailAndPassword(auth, email, password);
   } else {
     user = await createUserWithEmailAndPassword(auth, email, password);
-    await createUserInDB(email, username, user.user.uid);
+    userData = await createUserInDB(email, username, user.user.uid);
   }
   const token = await user.user.getIdToken();
   await setAuthCookie(token);
-  return user;
+  return userData;
 };
 
 // Handle Google Authentication
 export const handleGoogleAuth = async () => {
   const result = await signInWithPopup(auth, googleProvider);
-  const userExists = await checkUserExists(result.user.email);
+  let userExists = await checkUserExists(result.user.email);
   if (!userExists) {
-    await createUserInDB(
+    userExists = await createUserInDB(
       result.user.email,
       result.user.displayName,
       result.user.uid
@@ -250,7 +250,7 @@ export const handleGoogleAuth = async () => {
   }
   const token = await result.user.getIdToken();
   await setAuthCookie(token);
-  return result.user;
+  return userExists;
 };
 
 // Update user data

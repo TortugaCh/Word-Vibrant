@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import DashboardOptionCard from "../../components/DashboardOptionCard";
-import { auth } from "../../lib/firebaseConfig";
-import Template from "../../components/Template";
+import DashboardOptionCard from "../../../components/DashboardOptionCard";
+import { auth } from "../../../lib/firebaseConfig";
+import Template from "../../../components/Template";
 import { useTranslations } from "next-intl";
-import { withMessages } from "../../lib/getMessages";
-import { fetchModules } from "../../lib/utils";
+import { withMessages } from "../../../lib/getMessages";
+import { fetchModules } from "../../../lib/utils";
 
 export default function Dashboard() {
   const [userData, setUserData] = useState(null);

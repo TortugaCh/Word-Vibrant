@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import ReusableHandler from "../../components/ReusableHandler/ReusableHandler";
+import ReusableHandler from "../../../components/ReusableHandler/ReusableHandler";
 import { useTranslations } from "next-intl";
-import { withMessages } from "../../lib/getMessages";
+import { withMessages } from "../../../lib/getMessages";
 
 export default function ColoringPage() {
   const [messages, setMessages] = useState([

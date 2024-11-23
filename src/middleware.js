@@ -4,14 +4,14 @@ export async function middleware(req) {
   const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;
 
-  // Allow access to public routes (e.g., /auth and /)
+  // Public routes (accessible to everyone)
   const publicRoutes = [
     "/auth",
     "/",
     "/pricing",
     "/no-credits",
-    "about-us",
-    "privacy",
+    "/about-us",
+    "/privacy",
   ];
   if (publicRoutes.includes(pathname)) {
     return NextResponse.next();
@@ -22,16 +22,56 @@ export async function middleware(req) {
     return NextResponse.redirect(new URL("/auth", req.url));
   }
 
-  // Define protected routes that require credit deduction
+  // Validate the token and get the user's role
+  let userRole = null;
+  try {
+    const response = await fetch(`${req.nextUrl.origin}/api/auth/verifyToken`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+
+    const data = await response.json();
+
+    if (!data.valid) {
+      // If the token is invalid, redirect to /auth
+      return NextResponse.redirect(new URL("/auth", req.url));
+    }
+
+    userRole = data.userData.role; // Assume `verifyToken` API returns the user's role
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    return NextResponse.redirect(new URL("/auth", req.url));
+  }
+
+  // Define route groups
+  const adminRoutes = ["/admin"];
+  const userRoutes = ["/user"];
+
+  // Redirect based on role and route
+  if (
+    adminRoutes.some((route) => pathname.startsWith(route)) &&
+    userRole !== "Admin"
+  ) {
+    return NextResponse.redirect(new URL("/auth", req.url));
+  }
+
+  if (
+    userRoutes.some((route) => pathname.startsWith(route)) &&
+    userRole !== "User"
+  ) {
+    return NextResponse.redirect(new URL("/auth", req.url));
+  }
+
+  // Protected routes requiring credits
   const creditRequiredRoutes = [
-    "/stroke-order/practice",
-    "/coloring-page/download",
+    "/user/stroke-order/practice",
+    "/user/coloring-page/download",
   ];
   const requiresCredits = creditRequiredRoutes.some((route) =>
     pathname.startsWith(route)
   );
 
-  // If the route requires credits, deduct them
   if (requiresCredits) {
     try {
       const creditResponse = await fetch(
@@ -51,7 +91,6 @@ export async function middleware(req) {
 
       const creditData = await creditResponse.json();
 
-      // If the user doesn't have enough credits, redirect to an error page
       if (!creditData.success) {
         return NextResponse.redirect(new URL("/no-credits", req.url));
       }
@@ -61,29 +100,10 @@ export async function middleware(req) {
     }
   }
 
-  // Continue with token validation
-  try {
-    const response = await fetch(`${req.nextUrl.origin}/api/auth/verifyToken`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }),
-    });
-
-    const data = await response.json();
-
-    // If the token is invalid, redirect to /auth
-    if (!data.valid) {
-      return NextResponse.redirect(new URL("/auth", req.url));
-    }
-
-    // If the token is valid, continue to the requested route
-    return NextResponse.next();
-  } catch (error) {
-    console.error("Error in middleware:", error);
-    return NextResponse.redirect(new URL("/auth", req.url));
-  }
+  // Allow access to the requested route
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!api).*)"], // Apply the middleware to all routes except API routes
+  matcher: ["/((?!api).*)"], // Apply middleware to all routes except API routes
 };

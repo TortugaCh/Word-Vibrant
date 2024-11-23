@@ -1,5 +1,6 @@
 import { adminAuth } from "../../../lib/firebaseAdmin";
-
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../../lib/firebaseConfig";
 export default async function handler(req, res) {
   const { token } = req.body;
 
@@ -10,7 +11,17 @@ export default async function handler(req, res) {
   try {
     // Verify the Firebase ID token using the admin SDK
     const decodedToken = await adminAuth.verifyIdToken(token);
-    return res.status(200).json({ valid: true, uid: decodedToken.uid });
+    const { uid } = decodedToken;
+    const usersRef = collection(db, "persons");
+    const q = query(usersRef, where("userId", "==", uid));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      return res.status(404).json({ error: "Person not found" });
+    }
+    const userDoc = querySnapshot.docs[0];    
+    const userData = { id: userDoc.id, ...userDoc.data() };
+    return res.status(200).json({ valid: true, uid: decodedToken.uid,userData });
+
   } catch (error) {
     console.error("Invalid token:", error);
     return res.status(401).json({ valid: false, message: "Unauthorized" });

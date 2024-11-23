@@ -2,8 +2,8 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { useTranslations } from "next-intl"; // Importing the translations hook
 
-import { withMessages } from "../../lib/getMessages";
-import ReusableHandler from "../../components/ReusableHandler/ReusableHandler";
+import { withMessages } from "../../../lib/getMessages";
+import ReusableHandler from "../../../components/ReusableHandler/ReusableHandler";
 
 export default function StrokeOrders() {
   const t = useTranslations("strokeOrder"); // Access translations for strokeOrders page
