@@ -48,7 +48,7 @@ export const wordInputs = (
 export const adminMenuItems = [
   {
     name: "Home",
-    link: "/admin/dashboard",
+    link: "/admin/",
   },
   {
     name: "Users",
@@ -58,10 +58,10 @@ export const adminMenuItems = [
     name: "Pricing Plans",
     link: "/admin/pricing",
   },
-  {
-    name: "Handler",
-    link: "/admin/handler",
-  },
+  // {
+  //   name: "Handler",
+  //   link: "/admin/handler",
+  // },
   {
     name: "Words",
     link: "/admin/words",
