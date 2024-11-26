@@ -12,6 +12,7 @@ const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
           semester,
           wordType
         );
+        console.log(curriculum, grade, semester, wordType);
         console.log(res);
         if (res) {
           setWords(res);
