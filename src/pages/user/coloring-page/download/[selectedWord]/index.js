@@ -208,6 +208,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import HanziWriter from "hanzi-writer";
 import { Canvg } from "canvg";
+import DashboardLayout from "../../../layout";
 
 const DownloadPage = () => {
   const router = useRouter();
@@ -299,12 +300,11 @@ const DownloadPage = () => {
     // Serialize the SVG content
     const svgData = new XMLSerializer().serializeToString(svgElement);
 
-    
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     canvas.width = size;
     canvas.height = size;
-    
+
     // Use Canvg to render the SVG onto the canvas
     const v = Canvg.fromString(ctx, svgData);
     await v.render();
@@ -316,51 +316,53 @@ const DownloadPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-indigo-100 via-purple-50 to-pink-50">
-      <h1 className="text-3xl font-bold text-purple-700 mb-8">
-        Coloring Page for {selectedWord}
-      </h1>
-      <div className="flex gap-4 md:flex-row flex-col">
-        <div>
-          <div
-            ref={downloadContainerRef}
-            className="p-4 rounded-lg shadow-lg mb-6 bg-white bg-cover bg-center"
-          />
-          <canvas ref={canvasRef} style={{ display: "none" }} />
-          <button
-            onClick={() =>
-              handleDownloadImage(downloadContainerRef, canvasRef, 500)
-            }
-            className="px-6 py-2 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-800 transition duration-200 w-[500px] h-[500px]"
-          >
-            Download Word
-          </button>
-        </div>
-        <div>
-          <div
-            ref={coloringPageContainerRef}
-            className="p-4 rounded-lg shadow-lg mb-6 bg-white w-[500px]
+    <DashboardLayout>
+      <div className="flex flex-col items-center">
+        <h1 className="text-3xl font-bold text-purple-700 mb-8">
+          Coloring Page for {selectedWord}
+        </h1>
+        <div className="flex gap-4 md:flex-row flex-col">
+          <div>
+            <div
+              ref={downloadContainerRef}
+              className="p-4 rounded-lg shadow-lg mb-6 bg-white bg-cover bg-center"
+            />
+            <canvas ref={canvasRef} style={{ display: "none" }} />
+            <button
+              onClick={() =>
+                handleDownloadImage(downloadContainerRef, canvasRef, 500)
+              }
+              className="px-6 py-2 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-800 transition duration-200 w-[500px] h-[500px]"
+            >
+              Download Word
+            </button>
+          </div>
+          <div>
+            <div
+              ref={coloringPageContainerRef}
+              className="p-4 rounded-lg shadow-lg mb-6 bg-white w-[500px]
             h-[500px] bg-contain"
-          />
-          <canvas ref={colorCanvasRef} style={{ display: "none" }} />
-          <a
-            href={backgroundImage}
-            target=""
-            download={`${selectedWord}_coloring_page.png`}
-            className="px-6 py-2 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-800 transition duration-200"
-          >
-            Download Coloring Page
-          </a>
+            />
+            <canvas ref={colorCanvasRef} style={{ display: "none" }} />
+            <a
+              href={backgroundImage}
+              target=""
+              download={`${selectedWord}_coloring_page.png`}
+              className="px-6 py-2 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-800 transition duration-200"
+            >
+              Download Coloring Page
+            </a>
+          </div>
         </div>
-      </div>
 
-      <button
-        onClick={() => router.back()}
-        className="mt-4 px-6 py-2 bg-gray-500 text-white rounded-full font-semibold hover:bg-gray-700 transition duration-200"
-      >
-        Go Back
-      </button>
-    </div>
+        <button
+          onClick={() => router.back()}
+          className="mt-4 px-6 py-2 bg-gray-500 text-white rounded-full font-semibold hover:bg-gray-700 transition duration-200"
+        >
+          Go Back
+        </button>
+      </div>
+    </DashboardLayout>
   );
 };
 

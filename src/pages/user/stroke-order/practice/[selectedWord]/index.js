@@ -7,6 +7,7 @@ import { withMessages } from "../../../../../lib/getMessages";
 import { useTranslations } from "next-intl";
 import { PiEar } from "react-icons/pi";
 import { MdReplay } from "react-icons/md";
+import DashboardLayout from "../../../layout";
 
 export default function Page() {
   const router = useRouter();
@@ -42,8 +43,8 @@ export default function Page() {
   }
 
   return (
-    <Template title="Stroke Orders">
-      <div className="flex gap-10">
+    <DashboardLayout >
+      <div className="flex gap-10 items-center justify-center h-full">
         <div className="flex flex-col items-center space-y-6">
           <div className="font-bold text-2xl text-purple-700">
             {t("practice.prev")}
@@ -63,7 +64,7 @@ export default function Page() {
           />
         </div>
       </div>
-    </Template>
+    </DashboardLayout>
   );
 }
 

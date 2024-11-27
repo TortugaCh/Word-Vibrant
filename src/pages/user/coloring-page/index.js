@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import ReusableHandler from "../../../components/ReusableHandler/ReusableHandler";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../../lib/getMessages";
+import Dashboard from "../dashboard";
+import DashboardLayout from "../layout";
 
 export default function ColoringPage() {
   const [messages, setMessages] = useState([
@@ -32,15 +34,7 @@ export default function ColoringPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-indigo-100 via-purple-50 to-pink-50 flex flex-col items-center overflow-hidden">
-      <header className="bg-white shadow-md w-full fixed top-0 z-20 py-4">
-        <div className="container mx-auto px-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-purple-600">
-            Hanzi Coloring Page
-          </h1>
-        </div>
-      </header>
-
+    <DashboardLayout>
       <div className="fixed top-24 right-8 w-72 max-w-full bg-white rounded-3xl shadow-lg p-4 z-30">
         <h3 className="text-lg font-semibold text-purple-600 mb-2">
           Notifications
@@ -80,7 +74,7 @@ export default function ColoringPage() {
           </div>
         )}
       </main>
-    </div>
+    </DashboardLayout>
   );
 }
 export const getServerSideProps = withMessages("strokeOrder");

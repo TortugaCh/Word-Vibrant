@@ -77,20 +77,24 @@ export const adminMenuItems = [
 
 export const UserMenuItems = [
   {
-    name: "Hanzi coloring page",
-    link: "/user/coloring-page",
+    name: "🏠 Home",
+    link: "/user/dashboard",
   },
   {
-    name: "Hanzi Stroke Order",
+    name: "✍️ Stroke Order",
     link: "/user/stroke-order",
+  },
+  {
+    name: "🎨 Hanzi coloring page",
+    link: "/user/coloring-page",
   },
 
   {
-    name: "Create a dialogue",
+    name: "📖 Create a dialogue",
     link: "/admin/hanzi-stroke-coloring",
   },
   {
-    name: "Create a short story",
+    name: "💬 Create a short story",
     link: "/admin/module-1",
   },
 ];

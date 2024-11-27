@@ -3,7 +3,7 @@ import { adminMenuItems, UserMenuItems } from "../../constants/constants";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-const SideBar = () => {
+const SideBar = ({setMenuOpeb}) => {
   const router = useRouter();
   const Menu = ({ options }) => (
     <ul className="flex flex-col gap-4">

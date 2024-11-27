@@ -7,6 +7,7 @@ import { withMessages } from "../../../lib/getMessages";
 import { fetchModules } from "../../../lib/utils";
 import DashboardLayout from "../layout";
 import { useRouter } from "next/router";
+import Progress from "../../../components/Progress/Progress";
 
 export default function Dashboard() {
   const [userData, setUserData] = useState(null);
@@ -52,38 +53,41 @@ export default function Dashboard() {
   };
 
   return (
-    <DashboardLayout>
-      {/* Header */}
-      <header className="flex justify-between items-center bg-gray-200 px-2 py-4 shadow-md mb-4">
-        <div>
-          <h1 className="text-2xl font-bold text-purple-700">
-            {t("dashboardTitle")}
-          </h1>
-          <p>{t("welcome", { user: userData ? userData.email : "User" })}</p>
-        </div>
-      </header>
+    // <DashboardLayout>
+    //   {/* Header */}
+    //   <header className="flex justify-between items-center bg-gray-200 px-2 py-4 shadow-md mb-4">
+    //     <div>
+    //       <h1 className="text-2xl font-bold text-purple-700">
+    //         {t("dashboardTitle")}
+    //       </h1>
+    //       <p>{t("welcome", { user: userData ? userData.email : "User" })}</p>
+    //     </div>
+    //   </header>
 
-      {/* Loader or Content */}
-      {loading ? (
-        <div className="flex justify-center items-center h-[70vh]">
-          <div className="w-16 h-16 border-4 border-purple-400 border-dashed rounded-full animate-spin"></div>
-        </div>
-      ) : (
-        <main className="container mx-auto px-6 py-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {modules.map((module) => (
-              <DashboardOptionCard
-                key={module.id}
-                title={module.name}
-                description={module.description}
-                color={module.color}
-                icon={module.icon}
-                route={module.value}
-              />
-            ))}
-          </div>
-        </main>
-      )}
+    //   {/* Loader or Content */}
+    //   {loading ? (
+    //     <div className="flex justify-center items-center h-[70vh]">
+    //       <div className="w-16 h-16 border-4 border-purple-400 border-dashed rounded-full animate-spin"></div>
+    //     </div>
+    //   ) : (
+    //     <main className="container mx-auto px-6 py-3">
+    //       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    //         {modules.map((module) => (
+    //           <DashboardOptionCard
+    //             key={module.id}
+    //             title={module.name}
+    //             description={module.description}
+    //             color={module.color}
+    //             icon={module.icon}
+    //             route={module.value}
+    //           />
+    //         ))}
+    //       </div>
+    //     </main>
+    //   )}
+    // </DashboardLayout>
+    <DashboardLayout>
+      {userData && <Progress userId={userData?.uid} />}
     </DashboardLayout>
   );
 }
