@@ -54,7 +54,13 @@ export default function Page() {
           <div className="font-bold text-2xl text-purple-700">
             {t("practice.prac")}
           </div>
-          <HanziStroke word={selectedWord} draw={true} t={t} voiceLoaded={voiceLoaded} speakTaiwanese={speakTaiwanese}/>
+          <HanziStroke
+            word={selectedWord}
+            draw={true}
+            t={t}
+            voiceLoaded={voiceLoaded}
+            speakTaiwanese={speakTaiwanese}
+          />
         </div>
       </div>
     </Template>

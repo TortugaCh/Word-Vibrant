@@ -4,6 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../lib/getMessages";
 import { handleEmailAuth, handleGoogleAuth } from "../../lib/utils";
+import Loader from "../../components/Loader"; // Import the reusable loader
 
 export default function AuthPage() {
   const router = useRouter();
@@ -16,6 +17,7 @@ export default function AuthPage() {
   });
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
 
   // Handle form inputs
   const handleInputChange = (e) => {
@@ -25,24 +27,37 @@ export default function AuthPage() {
 
   const handleAuth = async () => {
     const { email, password, username } = formData;
+    setLoading(true); // Start loading
+    setError(""); // Clear any previous errors
     try {
       const user = await handleEmailAuth(email, password, isLogin, username);
       if (user.role === "Admin") router.push("/admin");
       else router.push("/user/dashboard");
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   const handleGoogleSignIn = async () => {
+    setLoading(true); // Start loading
+    setError(""); // Clear any previous errors
     try {
       const user = await handleGoogleAuth();
       if (user.role === "Admin") router.push("/admin");
       else router.push("/user/dashboard");
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
+
+  // Show loader if loading
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="auth-page bg-gradient-to-b from-indigo-50 to-purple-50 min-h-screen flex justify-center items-center">

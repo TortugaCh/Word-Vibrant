@@ -1,5 +1,5 @@
 import React from "react";
-import { adminMenuItems } from "../../constants/constants";
+import { adminMenuItems, UserMenuItems } from "../../constants/constants";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -24,7 +24,7 @@ const SideBar = () => {
         >
           Dashboard
         </h1>
-        <Menu options={adminMenuItems} />
+        <Menu options={UserMenuItems} />
       </div>
     </div>
   );

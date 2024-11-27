@@ -44,7 +44,6 @@ export const wordInputs = (
   ];
 };
 
-
 export const adminMenuItems = [
   {
     name: "Home",
@@ -58,12 +57,40 @@ export const adminMenuItems = [
     name: "Pricing Plans",
     link: "/admin/pricing",
   },
-  // {
-  //   name: "Handler",
-  //   link: "/admin/handler",
-  // },
   {
     name: "Words",
     link: "/admin/words",
   },
-]
+  {
+    name: "Hanzi Stroke Coloring",
+    link: "/admin/hanzi-stroke-coloring",
+  },
+  {
+    name: "Module 1",
+    link: "/admin/module-1",
+  },
+  {
+    name: "Module 2",
+    link: "/admin/module-2",
+  },
+];
+
+export const UserMenuItems = [
+  {
+    name: "Hanzi coloring page",
+    link: "/user/coloring-page",
+  },
+  {
+    name: "Hanzi Stroke Order",
+    link: "/user/stroke-order",
+  },
+
+  {
+    name: "Create a dialogue",
+    link: "/admin/hanzi-stroke-coloring",
+  },
+  {
+    name: "Create a short story",
+    link: "/admin/module-1",
+  },
+];
