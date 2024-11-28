@@ -36,12 +36,20 @@ export async function middleware(req) {
     });
 
     const data = await response.json();
+    console.log(data)
     const userRole = data?.userData?.role || null;
 
     if (!data.valid) {
       return NextResponse.redirect(new URL("/auth", req.url));
     }
 
+    if (pathname === "/") {
+      if (userRole === "Admin") {
+        return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+      } else {
+        return NextResponse.redirect(new URL("/user/dashboard", req.url));
+      }
+    }
     // Role-based routing
     if (pathname.startsWith("/admin") && userRole !== "Admin") {
       return NextResponse.redirect(new URL("/auth", req.url));

@@ -225,14 +225,16 @@ const setAuthCookie = async (token) => {
 // Handle email and password authentication
 export const handleEmailAuth = async (email, password, isLogin, username) => {
   let user;
-  let userData;
+  let userData = await checkUserExists(email);
   if (isLogin) {
     user = await signInWithEmailAndPassword(auth, email, password);
+    console.log("User logged in:", user);
   } else {
     user = await createUserWithEmailAndPassword(auth, email, password);
     userData = await createUserInDB(email, username, user.user.uid);
   }
   const token = await user.user.getIdToken();
+  console.log("Token:", token);
   await setAuthCookie(token);
   return userData;
 };

@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     res.setHeader("Allow", "GET");
     return res.status(405).end("Method Not Allowed");
   }
-  //   try {
+    try {
   const { userId } = req.query;
 
   if (!userId) {
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
   // Process the actions to group words by module
   const groupedWords = {};
 
-  userProgress.forEach((action) => {
+  userProgress?.forEach((action) => {
     // Find the position of the first '%'
     const percentIndex = action.indexOf("%");
   
@@ -55,10 +55,10 @@ export default async function handler(req, res) {
   return res
     .status(201)
     .json({ message: "Progress fetched successfully", data: groupedWords });
-  //   } catch (error) {
-  //     console.error("Error adding word:", error);
-  //     return res
-  //       .status(500)
-  //       .json({ message: "Internal Server Error", status: 500 });
-  //   }
+    } catch (error) {
+      console.error("Error adding word:", error);
+      return res
+        .status(500)
+        .json({ message: "Internal Server Error", status: 500 });
+    }
 }
