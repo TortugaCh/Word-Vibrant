@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { checkCredits, getAction } from "./lib/utils";
 
 export async function middleware(req) {
   const token = req.cookies.get("token")?.value;
@@ -54,28 +55,36 @@ export async function middleware(req) {
     const creditRequiredRoutes = [
       "/user/stroke-order/practice",
       "/user/coloring-page/download",
+      "/user/create-a-story/view",
+      "/user/create-a-dialogue/view",
     ];
     const requiresCredits = creditRequiredRoutes.some((route) =>
       pathname.startsWith(route)
     );
 
     if (requiresCredits && userRole === "User") {
-      const creditResponse = await fetch(
-        `${origin}/api/auth/checkCredits`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            token,
-            action: pathname.includes("stroke-order")
-              ? "stroke-order"
-              : "coloring-page",
-            word: pathname.split("/").pop(),
-          }),
-        }
-      );
+      // const creditResponse = await fetch(
+      //   `${origin}/api/auth/checkCredits`,
+      //   {
+      //     method: "PUT",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify({
+      //       token,
+      //       action: pathname.includes("stroke-order")
+      //         ? "stroke-order"
+      //         : "coloring-page",
+      //       word: pathname.split("/").pop(),
+      //     }),
+      //   }
+      // );
+      const action = getAction(pathname);
 
-      const creditData = await creditResponse.json();
+      // const creditData = await creditResponse.json();
+      const creditData = await checkCredits(
+        token,
+        action,
+        pathname.split("/").pop()
+      );
 
       if (!creditData.success) {
         return NextResponse.redirect(new URL("/no-credits", req.url));

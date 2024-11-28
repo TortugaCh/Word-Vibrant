@@ -288,3 +288,39 @@ export const handleLogout = async () => {
     console.error("Error logging out:", error);
   }
 };
+
+// check route
+
+export const checkCredits = async (token, action, word) => {
+  try {
+    const response = await fetch(`${API_LINK}/auth/checkCredits`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token,
+        action,
+        word,
+      }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error checking route:", error);
+    return null;
+  }
+};
+
+// Get action based on pathname
+
+export const getAction = (pathname) => {
+  if (pathname.includes("stroke-order")) {
+    return "stroke-order";
+  } else if (pathname.includes("coloring-page")) {
+    return "coloring-page";
+  } else if (pathname.includes("create-a-story")) {
+    return "create-a-story";
+  } else if (pathname.includes("create-a-dialogue")) {
+    return "create-a-dialogue";
+  }
+};

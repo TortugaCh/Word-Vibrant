@@ -91,10 +91,10 @@ export const UserMenuItems = [
 
   {
     name: "📖 Create a dialogue",
-    link: "/admin/hanzi-stroke-coloring",
+    link: "/user/create-a-dialogue",
   },
   {
     name: "💬 Create a short story",
-    link: "/admin/module-1",
+    link: "/user/create-a-story",
   },
 ];

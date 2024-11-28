@@ -245,9 +245,12 @@ export default function DashboardLayout({ children, userData, onLogout }) {
       {!mobile && (
         <Sider
           style={{
-            background: "#ffffff",
-            boxShadow: "2px 0 10px rgba(0, 0, 0, 0.1)",
+            // background: "rgba(255, 255, 255, 0.1)", // Slightly transparent white background
+            backdropFilter: "blur(10px)", // Apply the blur effect for the glass effect
+            boxShadow: "2px 0 10px rgba(0, 0, 0, 0.1)", // Add shadow for depth
             position: "sticky", // Make it fixed for better UX
+            zIndex: 10, // Ensure it sits above content
+            background: "#ffffff",
           }}
           width={300}
         >
@@ -306,7 +309,7 @@ export default function DashboardLayout({ children, userData, onLogout }) {
             <h1 className="text-bold font-bold text-2xl mb-10 ml-3">
               Dashboard
             </h1> */}
-            {children}
+          {children}
           {/* </div> */}
         </Content>
       </Layout>

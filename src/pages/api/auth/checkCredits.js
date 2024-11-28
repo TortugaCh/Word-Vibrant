@@ -14,7 +14,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
   const { token, action, word } = req.body;
-
   if (!token) {
     return res.status(401).json({ success: false, message: "No token found" });
   }
@@ -40,7 +39,9 @@ export default async function handler(req, res) {
     // Check if credits are already deducted for this action and word
     const actionKey = `${action}-${word}`; // Unique key for this action and word
     if (userData.deductedActions?.includes(actionKey)) {
-      return res.status(200).json({ valid: true, creditsDeducted: true,success:true });
+      return res
+        .status(200)
+        .json({ valid: true, creditsDeducted: true, success: true });
     }
 
     // Check if user has enough credits
@@ -61,8 +62,6 @@ export default async function handler(req, res) {
     const moduleDoc = querySnapshot1.docs[0];
     const moduleData = moduleDoc.data();
     const creditsToDeduct = moduleData.creditCost;
-    console.log(moduleData);
-    console.log(creditsToDeduct);
 
     // Deduct credits based on action
     const remainingCredits = userData.credits - creditsToDeduct;

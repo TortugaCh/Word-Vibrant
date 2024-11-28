@@ -73,7 +73,7 @@ const App = ({ Component, pageProps }) => {
             {/* Render the component */}
             <Component {...pageProps} />
             {/* Language Switcher */}
-            <div className="fixed bottom-4 right-4 flex gap-4">
+            <div className="fixed bottom-4 right-4 flex gap-4 z-10">
               <button
                 onClick={() => changeLanguage("en")}
                 className="px-4 py-2 bg-gray-200 rounded"
