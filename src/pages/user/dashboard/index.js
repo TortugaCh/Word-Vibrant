@@ -21,7 +21,7 @@ export default function Dashboard() {
       if (user) {
         setUserData(user);
       } else {
-        router.push("/login"); // Redirect if no user is authenticated
+        router.push("/auth"); // Redirect if no user is authenticated
       }
     });
     return unsubscribe;

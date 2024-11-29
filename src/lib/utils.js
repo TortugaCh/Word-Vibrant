@@ -220,6 +220,8 @@ export const getUsers = async () => {
 // Function to set the cookie
 const setAuthCookie = async (token) => {
   await axios.post("/api/auth/setCookie", { token });
+  localStorage.setItem("tokenExists", true);
+
 };
 
 // Handle email and password authentication
@@ -234,7 +236,6 @@ export const handleEmailAuth = async (email, password, isLogin, username) => {
     userData = await createUserInDB(email, username, user.user.uid);
   }
   const token = await user.user.getIdToken();
-  console.log("Token:", token);
   await setAuthCookie(token);
   return userData;
 };
@@ -282,8 +283,11 @@ export const handleLogout = async () => {
     await signOut(auth);
 
     // Clear the session cookie by calling the API route
-    await axios.post("/api/auth/logout");
-
+    const resp=await axios.post("/api/auth/logout");
+    if(resp.status===200){
+      console.log("Logged out successfully");
+      localStorage.removeItem("tokenExists")
+    }
     // Optionally, redirect the user to the login page
     window.location.href = "/auth";
   } catch (error) {
@@ -304,7 +308,7 @@ export const checkCredits = async (token, action, word) => {
         word,
       }),
     });
-
+    console.log("Response:", response);
     const data = await response.json();
     return data;
   } catch (error) {

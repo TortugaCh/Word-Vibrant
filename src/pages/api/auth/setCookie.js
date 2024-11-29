@@ -1,5 +1,9 @@
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { adminAuth } from "../../../lib/firebaseAdmin";
 import { serialize } from "cookie";
+import { db } from "../../../lib/firebaseConfig";
+import jwt from "jsonwebtoken";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -16,14 +20,48 @@ export default async function handler(req, res) {
     // Verify the Firebase ID token using the Firebase Admin SDK
     const decodedToken = await adminAuth.verifyIdToken(token);
     const uid = decodedToken.uid;
+    const usersRef = collection(db, "persons");
+    const q = query(usersRef, where("userId", "==", uid));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Person not found" });
+    }
 
-    // Set an HTTP-only cookie with the token
-    const cookie = serialize("token", token, {
+    // Assuming userId is unique, get the first document
+    const userDoc = querySnapshot.docs[0];
+    const userData = userDoc.data();
+    const encodedToken = jwt.sign(
+      { userId: uid, role: userData.role },
+      JWT_SECRET,
+      { expiresIn: "1h" } // Token expires in 1 hour
+    );
+    const cookie = serialize("token", encodedToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: "/",
     });
+
+    // // Set an HTTP-only cookie with the token
+    // const cookie = serialize(
+    //   "userData",
+    //   JSON.stringify({
+    //     userId: userData.userId,
+    //     role: userData.role,
+    //     credits: userData.credits,
+    //     token,
+    //     email: userData.email,
+    //     // deductedActions: userData.deductedActions,
+    //   }),
+    //   {
+    //     httpOnly: true,
+    //     secure: process.env.NODE_ENV === "production",
+    //     maxAge: 60 * 60 * 24 * 7, // 1 week
+    //     path: "/",
+    //   }
+    // );
 
     res.setHeader("Set-Cookie", cookie);
     return res.status(200).json({ message: "Cookie set successfully", uid });
@@ -32,4 +70,3 @@ export default async function handler(req, res) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 }
-

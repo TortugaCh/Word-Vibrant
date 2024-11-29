@@ -20,12 +20,9 @@ export default async function handler(req, res) {
 
   try {
     // Verify the Firebase token
-    const decodedToken = await adminAuth.verifyIdToken(token);
-    const userId = decodedToken.uid;
-    console.log(userId);
     // Fetch user data from Firestore
     const usersRef = collection(db, "persons");
-    const q = query(usersRef, where("userId", "==", userId));
+    const q = query(usersRef, where("userId", "==", token));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
       return res

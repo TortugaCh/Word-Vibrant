@@ -4,23 +4,23 @@ import Link from "next/link";
 import React from "react";
 import { handleLogout } from "../../lib/utils";
 
-const Navbar = ({ mobile, setIsMenuOpen, credits = 5, plan = "Basic" }) => {
+const Navbar = ({ mobile, setIsMenuOpen, userData }) => {
   const items = [
     {
       key: "1",
       label: (
-        <Link href="/" onClick={() => handleLogout}>
+        <Link href="/" onClick={() => handleLogout()}>
           <LogoutOutlined /> Logout
         </Link>
       ),
     },
     {
       key: "2",
-      label: <h2>Credits: {credits}</h2>,
+      label: <h2>Credits: {userData?.credits || 5}</h2>,
     },
     {
       key: "3",
-      label: <h2>Plan: {plan}</h2>,
+      label: <h2>Plan: {userData?.plan || "Basic"}</h2>,
     },
   ];
   return (

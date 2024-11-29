@@ -222,13 +222,14 @@ import { Drawer, Layout } from "antd";
 import SideBar from "../../components/SideBar/UserSidebar";
 import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
+import { useUserContext } from "../../context/UserContext";
 
 const { Header, Sider, Content } = Layout;
 
-export default function DashboardLayout({ children, userData, onLogout }) {
+export default function DashboardLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
-
+  const { userData } = useUserContext();
   // Handle responsive behavior
   useEffect(() => {
     const handleResize = () => {
@@ -297,7 +298,11 @@ export default function DashboardLayout({ children, userData, onLogout }) {
           <div className="chinese-word2">字</div>
         </div>
         <Header className="bg-transparent">
-          <Navbar mobile={mobile} setIsMenuOpen={setMenuOpen} />
+          <Navbar
+            mobile={mobile}
+            setIsMenuOpen={setMenuOpen}
+            userData={userData}
+          />
         </Header>
         <Content
           style={{

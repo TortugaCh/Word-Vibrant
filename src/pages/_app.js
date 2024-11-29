@@ -48,6 +48,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { useRouter } from "next/router";
 import { ConfigProvider } from "antd";
 import theme from "../theme/themeConfig";
+import { UserState } from "../context/UserContext";
 
 const App = ({ Component, pageProps }) => {
   const { locale, push, asPath, pathname } = useRouter(); // Get router methods and current path
@@ -66,29 +67,31 @@ const App = ({ Component, pageProps }) => {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <ConfigProvider theme={theme}>
-        {isStandalonePage ? (
-          <Component {...pageProps} />
-        ) : (
-          <Layout>
-            {/* Render the component */}
+        <UserState>
+          {isStandalonePage ? (
             <Component {...pageProps} />
-            {/* Language Switcher */}
-            <div className="fixed bottom-4 right-4 flex gap-4 z-10">
-              <button
-                onClick={() => changeLanguage("en")}
-                className="px-4 py-2 bg-gray-200 rounded"
-              >
-                EN
-              </button>
-              <button
-                onClick={() => changeLanguage("zh")}
-                className="px-4 py-2 bg-gray-200 rounded"
-              >
-                中文
-              </button>
-            </div>
-          </Layout>
-        )}
+          ) : (
+            <Layout>
+              {/* Render the component */}
+              <Component {...pageProps} />
+              {/* Language Switcher */}
+              <div className="fixed bottom-4 right-4 flex gap-4 z-10">
+                <button
+                  onClick={() => changeLanguage("en")}
+                  className="px-4 py-2 bg-gray-200 rounded"
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => changeLanguage("zh")}
+                  className="px-4 py-2 bg-gray-200 rounded"
+                >
+                  中文
+                </button>
+              </div>
+            </Layout>
+          )}
+        </UserState>
       </ConfigProvider>
     </NextIntlClientProvider>
   );
