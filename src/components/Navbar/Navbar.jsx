@@ -47,7 +47,7 @@ const Navbar = ({ mobile, setIsMenuOpen, userData }) => {
             Logout
           </h1> */}
         </Dropdown>
-        <h3 className="ml-2 text-black">User</h3>
+        <h3 className="ml-2 text-black">{userData.name}</h3>
       </div>
     </div>
   );

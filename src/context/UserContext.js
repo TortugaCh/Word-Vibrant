@@ -1,74 +1,88 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { parse } from "cookie";
-import { useRouter } from "next/router"; // Import useRouter to track route changes
+import { useRouter } from "next/router";
 
-// Creating UserContext to hold the user data and the setter function
 const UserContext = createContext();
 
 export const useUserContext = () => useContext(UserContext);
 
 export const UserState = ({ children }) => {
-  const [userData, setUserData] = useState({});
-  const [tokenExists, setTokenExists] = useState(false); // Manage tokenExists in state
-  const router = useRouter(); // Use the useRouter hook to get the current path
-
+  const [userData, setUserData] = useState(null);
+  const [tokenExists, setTokenExists] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false); // Track initialization state
+  const router = useRouter();
+  
   const protectedPaths = [
     "/user/stroke-order/practice",
     "/user/coloring-page/download",
     "/user/create-a-story/view",
     "/user/create-a-dialogue/view",
-  ]; // List of protected paths
+  ];
 
   useEffect(() => {
-    // Check if running on the client-side (browser)
     if (typeof window !== "undefined") {
-      const tokenExistsInStorage = localStorage.getItem("tokenExists");
-      setTokenExists(!!tokenExistsInStorage); // Set tokenExists based on localStorage
+      const tokenExistsInStorage = !!localStorage.getItem("tokenExists");
+      setTokenExists(tokenExistsInStorage);
+      setIsInitialized(true); // Mark as initialized after checking token
     }
-  }, []); // Runs only once when the component mounts
+  }, []);
 
   useEffect(() => {
-    // Only fetch user data if token exists
-    const config = {
-      headers: { "Content-Type": "application/json" },
-      withCredentials: true,
-      credentials: "include",
-    };
-
     const fetchUserData = async () => {
-      if (tokenExists) {
+      if (!tokenExists) return; // Exit early if no token
+
+      try {
+        const config = {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        };
+
         const res = await axios.post("/api/auth/verifyToken", {}, config);
         if (res?.data?.valid) {
           setUserData(res.data.userData);
+          router.push(`${res.data.userData.role.toLowerCase()}/dashboard`); // Refresh the page to update the user data
+        } else {
+          setUserData(null);
+          localStorage.removeItem("tokenExists"); // Remove invalid token
+          setTokenExists(false);
         }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setUserData(null);
       }
     };
 
     fetchUserData();
-  }, [tokenExists]); // Fetch data when tokenExists changes
+  }, [tokenExists]);
 
   useEffect(() => {
-    // Re-fetch user data if the path changes to a protected route
-    if (protectedPaths.some((path) => router.pathname.startsWith(path))) {
-      const config = {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-        credentials: "include",
-      };
-
+    if (
+      isInitialized &&
+      tokenExists &&
+      protectedPaths.some((path) => router.pathname.startsWith(path))
+    ) {
       const fetchUserData = async () => {
-        if (tokenExists) {
+        try {
+          const config = {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          };
+
           const res = await axios.post("/api/auth/verifyToken", {}, config);
           if (res?.data?.valid) {
             setUserData(res.data.userData);
+          } else {
+            setUserData(null);
+            router.push("/login"); // Redirect to login if token is invalid
           }
+        } catch (error) {
+          console.error("Error refetching user data:", error);
         }
       };
 
       fetchUserData();
     }
-  }, [router.pathname, tokenExists]); // Run when the path changes
+  }, [router.pathname, tokenExists, isInitialized]);
 
   return (
     <UserContext.Provider value={{ userData, setUserData }}>

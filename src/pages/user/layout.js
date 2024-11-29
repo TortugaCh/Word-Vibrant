@@ -243,6 +243,7 @@ export default function DashboardLayout({ children }) {
   return (
     <Layout className="relative min-h-screen bg-gradient-to-b from-indigo-100 via-purple-50 to-pink-50  overflow-hidden">
       {/* Sidebar for desktop */}
+      
       {!mobile && (
         <Sider
           style={{
