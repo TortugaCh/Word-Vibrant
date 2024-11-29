@@ -1,4 +1,3 @@
-import { adminAuth } from "../../../lib/firebaseAdmin";
 import { db } from "../../../lib/firebaseConfig";
 import {
   collection,
@@ -7,13 +6,17 @@ import {
   getDocs,
   updateDoc,
   doc,
+  getDoc,
 } from "firebase/firestore";
+import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
   if (req.method !== "PUT") {
     return res.status(405).json({ message: "Method not allowed" });
   }
-  const { token, action, word } = req.body;
+  const { token } = req.cookies;
+  const { action, word } = req.body;
+  console.log(req.body);
   if (!token) {
     return res.status(401).json({ success: false, message: "No token found" });
   }
@@ -22,7 +25,9 @@ export default async function handler(req, res) {
     // Verify the Firebase token
     // Fetch user data from Firestore
     const usersRef = collection(db, "persons");
-    const q = query(usersRef, where("userId", "==", token));
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    const q = query(usersRef, where("userId", "==", decodedToken.userId));
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
       return res
@@ -38,7 +43,7 @@ export default async function handler(req, res) {
     if (userData.deductedActions?.includes(actionKey)) {
       return res
         .status(200)
-        .json({ valid: true, creditsDeducted: true, success: true });
+        .json({ valid: true, creditsDeducted: true, success: true, userData });
     }
 
     // Check if user has enough credits
@@ -77,7 +82,13 @@ export default async function handler(req, res) {
       deductedActions: updatedActions,
     });
 
-    return res.status(200).json({ success: true, remainingCredits });
+    // Fetch the updated user data correctly
+    const updatedUserDoc = await getDoc(userDocRef); // Use getDoc instead of getDocs
+    const updatedUserData = updatedUserDoc.data(); // Get the document data
+
+    return res
+      .status(200)
+      .json({ success: true, remainingCredits, userData: updatedUserData });
   } catch (error) {
     console.error("Error in deductCredits:", error);
     return res.status(500).json({ success: false, message: "Server error" });

@@ -221,7 +221,6 @@ export const getUsers = async () => {
 const setAuthCookie = async (token) => {
   await axios.post("/api/auth/setCookie", { token });
   localStorage.setItem("tokenExists", true);
-
 };
 
 // Handle email and password authentication
@@ -283,10 +282,10 @@ export const handleLogout = async () => {
     await signOut(auth);
 
     // Clear the session cookie by calling the API route
-    const resp=await axios.post("/api/auth/logout");
-    if(resp.status===200){
+    const resp = await axios.post("/api/auth/logout");
+    if (resp.status === 200) {
       console.log("Logged out successfully");
-      localStorage.removeItem("tokenExists")
+      localStorage.removeItem("tokenExists");
     }
     // Optionally, redirect the user to the login page
     window.location.href = "/auth";
@@ -297,20 +296,21 @@ export const handleLogout = async () => {
 
 // check route
 
-export const checkCredits = async (token, action, word) => {
+export const checkCredits = async ( action, word) => {
   try {
-    const response = await fetch(`${API_LINK}/auth/checkCredits`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        token,
+    console.log("Checking credits for:", action, word);
+    const response = await axios.put(
+      "/api/auth/checkCredits",
+      {
         action,
         word,
-      }),
-    });
+      },
+      {
+        withCredentials: true,
+      }
+    );
     console.log("Response:", response);
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
     console.error("Error checking route:", error);
     return null;

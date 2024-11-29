@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { checkCredits, getAction } from "../lib/utils";
 
 const UserContext = createContext();
 
@@ -11,7 +12,7 @@ export const UserState = ({ children }) => {
   const [tokenExists, setTokenExists] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false); // Track initialization state
   const router = useRouter();
-  
+
   const protectedPaths = [
     "/user/stroke-order/practice",
     "/user/coloring-page/download",
@@ -40,7 +41,8 @@ export const UserState = ({ children }) => {
         const res = await axios.post("/api/auth/verifyToken", {}, config);
         if (res?.data?.valid) {
           setUserData(res.data.userData);
-          router.push(`${res.data.userData.role.toLowerCase()}/dashboard`); // Refresh the page to update the user data
+          if (router.pathname === "/")
+            router.push(`${res.data.userData.role.toLowerCase()}/dashboard`); // Refresh the page to update the user data
         } else {
           setUserData(null);
           localStorage.removeItem("tokenExists"); // Remove invalid token
@@ -63,18 +65,19 @@ export const UserState = ({ children }) => {
     ) {
       const fetchUserData = async () => {
         try {
-          const config = {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          };
+          const action = getAction(router.pathname);
+          console.log("Action:", action);
+          const creditData = await checkCredits(
+            action,
+            router.query.selectedWord
+          );
+          console.log(creditData);
 
-          const res = await axios.post("/api/auth/verifyToken", {}, config);
-          if (res?.data?.valid) {
-            setUserData(res.data.userData);
-          } else {
-            setUserData(null);
-            router.push("/login"); // Redirect to login if token is invalid
-          }
+          // if (!creditData.success) {
+          //   router.push("/no-credits"); // Redirect if credits are insufficient
+          // }
+
+          setUserData(creditData.userData);
         } catch (error) {
           console.error("Error refetching user data:", error);
         }
