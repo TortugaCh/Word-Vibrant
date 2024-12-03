@@ -3,7 +3,7 @@ import { Form, message } from "antd";
 import CustomTable from "../CustomTable/CustomTable";
 import CustomModal from "../CustomModal/CustomModal";
 import FloatingButton from "../FloatingButton/FloatingButton";
-import CustomForm from "../Customform/Customform";
+import CustomForm from "../CustomForm/CustomForm";
 
 const AdminPanel = ({
   title,

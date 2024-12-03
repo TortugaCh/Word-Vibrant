@@ -30,27 +30,43 @@ export default async function handler(req, res) {
   // Process the actions to group words by module
   const groupedWords = {};
 
+  console.log("User Progress:", userProgress);
+  // userProgress?.forEach((action) => {
+  //   // Find the position of the first '%'
+  //   const percentIndex = action.indexOf("%");
+  
+  //   if (percentIndex !== -1) {
+  //     // Split the string into module name and the URL-encoded word
+  //     const moduleName = action.substring(0, percentIndex-1); // Everything before the '%'
+  //     const encodedWord = action.substring(percentIndex); // Everything after the '%'
+  
+  //     // Initialize the module in the groupedWords object if it doesn't exist
+  //     if (!groupedWords[moduleName]) {
+  //       groupedWords[moduleName] = [];
+  //     }
+  
+  //     // Decode the URL-encoded word and add it to the corresponding module
+  //     groupedWords[moduleName].push(decodeURIComponent(encodedWord));
+  //   } else {
+  //     console.error("Invalid format: No '%' found in action", action);
+  //   }
+  // });
   userProgress?.forEach((action) => {
-    // Find the position of the first '%'
-    const percentIndex = action.indexOf("%");
-  
-    if (percentIndex !== -1) {
-      // Split the string into module name and the URL-encoded word
-      const moduleName = action.substring(0, percentIndex-1); // Everything before the '%'
-      const encodedWord = action.substring(percentIndex); // Everything after the '%'
-  
-      // Initialize the module in the groupedWords object if it doesn't exist
-      if (!groupedWords[moduleName]) {
-        groupedWords[moduleName] = [];
-      }
-  
-      // Decode the URL-encoded word and add it to the corresponding module
-      groupedWords[moduleName].push(decodeURIComponent(encodedWord));
-    } else {
-      console.error("Invalid format: No '%' found in action", action);
+    // Split by the last '-' to separate the action from the character
+    const lastDashIndex = action.lastIndexOf('-');
+    const actionName = action.substring(0, lastDashIndex); // Everything before the last '-'
+    const character = action.substring(lastDashIndex + 1); // Everything after the last '-'
+
+    // Initialize the module group if it doesn't exist
+    if (!groupedWords[actionName]) {
+      groupedWords[actionName] = [];
     }
+
+    // Add the character to the action group
+    groupedWords[actionName].push(decodeURIComponent(character));
   });
 
+  console.log("Grouped Words:", decodeURI(groupedWords));  
   // Return the grouped words by module
   return res
     .status(201)
