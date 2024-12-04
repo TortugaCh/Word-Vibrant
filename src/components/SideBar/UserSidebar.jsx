@@ -12,7 +12,8 @@ const SideBar = ({ setMenuOpeb }) => {
     <ul className="flex flex-col gap-4">
       {options.map((option, index) => {
         // Check if current path matches the option link or if it's a submenu
-        const isActive = currentPath === option.link || currentPath.startsWith(option.link);
+        const isActive =
+          currentPath === option.link || currentPath.startsWith(option.link);
 
         return (
           <li
@@ -46,7 +47,7 @@ const SideBar = ({ setMenuOpeb }) => {
         <h1 className="text-4xl font-extrabold text-purple-600 cursor-default mb-6 text-center">
           Dashboard
         </h1>
-        {/* Render Menu */}
+        {/* Render Menuer */}
         <Menu options={UserMenuItems} />
       </div>
     </div>
