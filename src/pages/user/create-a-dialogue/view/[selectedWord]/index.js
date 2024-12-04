@@ -43,23 +43,22 @@ export default function Page() {
     //   { "traditionalChinese": "我叫小明。你呢？", "english": "My name is Xiao Ming. And you?" }
     // ]
     // Make sure the dialogue is simple enough for beginners to understand, using appropriate vocabulary.`;
-    const prompt=`Create a dialogue using the word "${selectedWord}". Include both the Traditional Chinese and the English translation for each line. Format the response as a list of objects with 'traditionalChinese' and 'english' keys.
+    const prompt = `Create a dialogue using the word "${selectedWord}". Include both the Traditional Chinese and the English translation for each line. Format the response as a list of objects with 'traditionalChinese' and 'english' keys.
       Example:
      [
        { "traditionalChinese": "你好！你叫什麼名字？", "english": "Hello! What is your name?" },
        { "traditionalChinese": "我叫小明。你呢？", "english": "My name is Xiao Ming. And you?" }
      ]
      Make sure the dialogue is simple enough for beginners to understand, using appropriate vocabulary
-    `
-          
+    `;
+
     const resp = await axios.post("/api/getDialogue", { prompt });
     if (resp.status === 200) {
       message.success(t("dialogueSuccess"));
       console.log(JSON.parse(resp.data.data));
       setLoading(false);
       setDialogue(JSON.parse(resp.data.data));
-      if(dialogue)
-        console.log(dialogue);
+      if (dialogue) console.log(dialogue);
     }
     // } catch (error) {
     //   setLoading(false);
