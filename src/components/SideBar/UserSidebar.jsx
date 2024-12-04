@@ -1,16 +1,19 @@
 import React from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { UserMenuItems } from "../../constants/constants"; 
+import { UserMenuItems } from "../../constants/constants";
 
 const SideBar = ({ setMenuOpeb }) => {
   const router = useRouter();
-  const currentPath = router.pathname; 
+  const currentPath = router.pathname;
 
+  // Menu item component for recursive rendering
   const Menu = ({ options }) => (
     <ul className="flex flex-col gap-4">
       {options.map((option, index) => {
-        const isActive = currentPath === option.link; 
+        // Check if current path matches the option link or if it's a submenu
+        const isActive = currentPath === option.link || currentPath.startsWith(option.link);
+
         return (
           <li
             key={index}
@@ -38,12 +41,9 @@ const SideBar = ({ setMenuOpeb }) => {
 
   return (
     <div className="w-full h-screen py-8 px-4">
-      <div className="flex flex-col gap-8 items-center"> {/* Changed items-start to items-center */}
+      <div className="flex flex-col gap-8 items-center">
         {/* Dashboard Title */}
-        <h1
-          className="text-4xl font-extrabold text-purple-600 cursor-default mb-6 text-center" 
-         
-        >
+        <h1 className="text-4xl font-extrabold text-purple-600 cursor-default mb-6 text-center">
           Dashboard
         </h1>
         {/* Render Menu */}
