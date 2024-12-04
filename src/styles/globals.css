@@ -293,3 +293,255 @@ html {
   scrollbar-width: thin; /* Firefox scrollbar width */
   scrollbar-color: #cbd5e0 #f1f1f1; /* Firefox thumb and track */
 }
+
+/* Balloons Styling */
+/* Balloon Styling */
+.balloon {
+  position: absolute;
+  height: auto;
+  /* Maintain aspect ratio */
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation: flyUp 6s infinite linear;
+  /* Default animation */
+}
+
+/* Specific positions, sizes, and animations for each balloon */
+.balloon1 {
+  top: 100%;
+  left: 5%;
+  width: 100px;
+  /* Bigger size */
+  animation: flyUp1 8s infinite linear;
+}
+
+.balloon2 {
+  top: 100%;
+  left: 15%;
+  width: 50px;
+  /* Smaller size */
+  animation: flyUp2 7s infinite linear;
+}
+
+.balloon3 {
+  top: 100%;
+  left: 30%;
+  width: 80px;
+  /* Medium size */
+  animation: flyUp3 9s infinite linear;
+}
+
+.balloon4 {
+  top: 100%;
+  left: 50%;
+  width: 60px;
+  /* Smaller size */
+  animation: flyUp4 10s infinite linear;
+}
+
+.balloon5 {
+  top: 100%;
+  left: 70%;
+  width: 120px;
+  /* Bigger size */
+  animation: flyUp5 6s infinite linear;
+}
+
+.balloon6 {
+  top: 100%;
+  left: 85%;
+  width: 110px;
+  /* Larger size */
+  animation: flyUp6 8s infinite linear;
+}
+
+/* Animation for Balloon 1 */
+@keyframes flyUp1 {
+  0% {
+    top: 100%;
+    transform: translateX(0);
+  }
+
+  25% {
+    top: 75%;
+    transform: translateX(-25px);
+    /* Move left more */
+  }
+
+  50% {
+    top: 50%;
+    transform: translateX(30px);
+    /* Move right more */
+  }
+
+  75% {
+    top: 25%;
+    transform: translateX(-25px);
+    /* Move left more */
+  }
+
+  100% {
+    top: -10%;
+    transform: translateX(20px);
+  }
+}
+
+/* Animation for Balloon 2 */
+@keyframes flyUp2 {
+  0% {
+    top: 100%;
+    transform: translateX(0);
+  }
+
+  25% {
+    top: 75%;
+    transform: translateX(15px);
+    /* Slight move right */
+  }
+
+  50% {
+    top: 50%;
+    transform: translateX(-15px);
+    /* Slight move left */
+  }
+
+  75% {
+    top: 25%;
+    transform: translateX(10px);
+    /* Slight move right */
+  }
+
+  100% {
+    top: -10%;
+    transform: translateX(-10px);
+    /* Slight move left */
+  }
+}
+
+/* Animation for Balloon 3 */
+@keyframes flyUp3 {
+  0% {
+    top: 100%;
+    transform: translateX(0);
+  }
+
+  25% {
+    top: 75%;
+    transform: translateX(-30px);
+    /* Move left more */
+  }
+
+  50% {
+    top: 50%;
+    transform: translateX(40px);
+    /* Move right more */
+  }
+
+  75% {
+    top: 25%;
+    transform: translateX(-30px);
+    /* Move left more */
+  }
+
+  100% {
+    top: -10%;
+    transform: translateX(25px);
+    /* Move right */
+  }
+}
+
+/* Animation for Balloon 4 */
+@keyframes flyUp4 {
+  0% {
+    top: 100%;
+    transform: translateX(0);
+  }
+
+  25% {
+    top: 70%;
+    transform: translateX(10px);
+    /* Slight move right */
+  }
+
+  50% {
+    top: 50%;
+    transform: translateX(-10px);
+    /* Slight move left */
+  }
+
+  75% {
+    top: 30%;
+    transform: translateX(15px);
+    /* Move right */
+  }
+
+  100% {
+    top: -10%;
+    transform: translateX(10px);
+    /* Move right */
+  }
+}
+
+/* Animation for Balloon 5 */
+@keyframes flyUp5 {
+  0% {
+    top: 100%;
+    transform: translateX(0);
+  }
+
+  25% {
+    top: 75%;
+    transform: translateX(-20px);
+    /* Move left */
+  }
+
+  50% {
+    top: 50%;
+    transform: translateX(25px);
+    /* Move right */
+  }
+
+  75% {
+    top: 25%;
+    transform: translateX(-20px);
+    /* Move left */
+  }
+
+  100% {
+    top: -10%;
+    transform: translateX(20px);
+    /* Move right */
+  }
+}
+
+/* Animation for Balloon 6 */
+@keyframes flyUp6 {
+  0% {
+    top: 100%;
+    transform: translateX(0);
+  }
+
+  25% {
+    top: 80%;
+    transform: translateX(-10px);
+    /* Move left */
+  }
+
+  50% {
+    top: 60%;
+    transform: translateX(15px);
+    /* Move right */
+  }
+
+  75% {
+    top: 40%;
+    transform: translateX(-15px);
+    /* Move left */
+  }
+
+  100% {
+    top: -10%;
+    transform: translateX(20px);
+    /* Move right */
+  }
+}

@@ -1,3 +1,4 @@
+import { FaHome, FaPen, FaPaintBrush, FaComments, FaBookOpen } from "react-icons/fa"; // Importing icons
 export const wordInputs = (
   curriculumOptions,
   gradeOptions,
@@ -77,24 +78,28 @@ export const adminMenuItems = [
 
 export const UserMenuItems = [
   {
-    name: "🏠 Home",
+    name: "Home",
     link: "/user/dashboard",
+    icon: <FaHome /> // Icon for Home
   },
   {
-    name: "✍️ Stroke Order",
+    name: "Stroke Order",
     link: "/user/stroke-order",
+    icon: <FaPen /> // Icon for Stroke Order
   },
   {
-    name: "🎨 Hanzi coloring page",
+    name: "Hanzi coloring page",
     link: "/user/coloring-page",
+    icon: <FaPaintBrush /> // Icon for Hanzi Coloring Page
   },
-
   {
-    name: "📖 Create a dialogue",
+    name: "Create a dialogue",
     link: "/user/create-a-dialogue",
+    icon: <FaComments /> // Icon for Create a Dialogue
   },
   {
-    name: "💬 Create a short story",
+    name: "Create a short story",
     link: "/user/create-a-story",
+    icon: <FaBookOpen /> // Icon for Create a Short Story
   },
 ];

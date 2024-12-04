@@ -1,29 +1,52 @@
 import React from "react";
-import { adminMenuItems, UserMenuItems } from "../../constants/constants";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { UserMenuItems } from "../../constants/constants"; 
 
 const SideBar = ({ setMenuOpeb }) => {
   const router = useRouter();
+  const currentPath = router.pathname; 
+
   const Menu = ({ options }) => (
     <ul className="flex flex-col gap-4">
-      {options.map((option, index) => (
-        <li key={index} className="text-xl ">
-          <Link href={option.link}>{option.name}</Link>
-          {option.children && <Menu options={option.children} />}
-        </li>
-      ))}
+      {options.map((option, index) => {
+        const isActive = currentPath === option.link; 
+        return (
+          <li
+            key={index}
+            className={`text-xl px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 ${
+              isActive
+                ? "bg-purple-600 text-white font-bold"
+                : "hover:bg-gray-200 text-gray-700"
+            }`}
+          >
+            {/* Menu item link with icon */}
+            <Link href={option.link} passHref>
+              <span className="flex items-center gap-4">
+                {/* Render icon */}
+                <span className="text-xl">{option.icon}</span>
+                <span>{option.name}</span>
+              </span>
+            </Link>
+            {/* Recursively render submenus */}
+            {option.children && <Menu options={option.children} />}
+          </li>
+        );
+      })}
     </ul>
   );
+
   return (
-    <div className="py-28 ">
-      <div className="flex flex-col gap-8 items-center">
+    <div className="w-full h-screen py-8 px-4">
+      <div className="flex flex-col gap-8 items-center"> {/* Changed items-start to items-center */}
+        {/* Dashboard Title */}
         <h1
-          className="text-3xl text-center font-extrabold text-purple-600 cursor-pointer"
-          onClick={() => router.push("/")}
+          className="text-4xl font-extrabold text-purple-600 cursor-default mb-6 text-center" 
+         
         >
           Dashboard
         </h1>
+        {/* Render Menu */}
         <Menu options={UserMenuItems} />
       </div>
     </div>
