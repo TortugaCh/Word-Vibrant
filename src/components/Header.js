@@ -3,16 +3,16 @@ import { FiUser, FiLogIn, FiLogOut, FiMenu, FiX } from "react-icons/fi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { handleLogout } from "../lib/utils";
+import { useUserContext } from "../context/UserContext";
 
 export default function Header({
   title = "Chinese Literacy AI",
-  userData,
   onLogout,
 }) {
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const {userData}=useUserContext();
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
@@ -79,7 +79,7 @@ export default function Header({
                   </div>
                   <button
                     onClick={() => {
-                      onLogout();
+                      handleLogout();
                       setDropdownOpen(false);
                     }}
                     className="flex items-center gap-2 text-red-500 font-semibold hover:text-red-700 transition duration-200 w-full justify-center mt-4"
