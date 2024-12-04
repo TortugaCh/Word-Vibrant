@@ -24,7 +24,10 @@ export default function Page() {
   useEffect(() => {
     if (voices.length > 0) {
       // Try to find a Taiwanese Mandarin voice, with fallback to zh-CN if unavailable
-      const voice = voices.filter((v) => v.lang === "zh-TW")[2];
+      let voice = voices.filter((v) => v.lang === "zh-TW")[2];
+      if(!voice) {
+        voice = voices.filter((v) => v.lang === "zh-CN")[0]
+      }
       console.log(voices.filter((v) => v.lang === "zh-TW"));
       console.log("Voice", voice);
       setTaiwaneseVoice(voice);

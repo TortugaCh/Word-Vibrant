@@ -5,11 +5,12 @@ import { useTranslations } from "next-intl";
 import { withMessages } from "../../lib/getMessages";
 import { handleEmailAuth, handleGoogleAuth } from "../../lib/utils";
 import Loader from "../../components/Loader"; // Import the reusable loader
+import { useUserContext } from "../../context/UserContext";
 
 export default function AuthPage() {
   const router = useRouter();
   const t = useTranslations("auth");
-
+  const { setUserData } = useUserContext();
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -32,8 +33,11 @@ export default function AuthPage() {
     setError(""); // Clear any previous errors
     try {
       const user = await handleEmailAuth(email, password, isLogin, username);
-      if (user.role === "Admin") router.push("/admin");
-      else router.push("/user/dashboard");
+      if (user) {
+        if (user.role === "Admin") router.push("/admin");
+        else router.push("/user/dashboard");
+        setUserData(user);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -46,9 +50,11 @@ export default function AuthPage() {
     setError(""); // Clear any previous errors
     try {
       const user = await handleGoogleAuth();
-      
-      if (user.role === "Admin") router.push("/admin");
-      else router.push("/user/dashboard");
+      if (user) {
+        if (user.role === "Admin") router.push("/admin");
+        else router.push("/user/dashboard");
+        setUserData(user);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -110,8 +116,7 @@ export default function AuthPage() {
           onClick={handleAuth}
           className="auth-button primary w-full mb-4"
         >
-          {loading?"Loading...":t(isLogin ? "login" : "signUp")}
-
+          {loading ? "Loading..." : t(isLogin ? "login" : "signUp")}
         </button>
 
         <button

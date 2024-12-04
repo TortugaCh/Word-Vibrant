@@ -22,6 +22,10 @@ const Navbar = ({ mobile, setIsMenuOpen, userData }) => {
       key: "3",
       label: <h2>Plan: {userData?.plan || "Basic"}</h2>,
     },
+    {
+      key: "4",
+      label:<Link href="/pricing">Upgrade Your Plan</Link>,
+    }
   ];
   return (
     <div

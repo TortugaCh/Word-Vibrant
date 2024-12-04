@@ -31,7 +31,7 @@ export async function middleware(req) {
     // Decode and verify the JWT token
     const secret = new TextEncoder().encode(process.env.JWT_SECRET); // Convert the secret into a Uint8Array
     const { payload } = await jwtVerify(token, secret); // Verify and decode the JWT token
-    const userRole = payload.role; // Get the user role from the decoded token
+    const userRole = payload?.role; // Get the user role from the decoded token
     // Role-based access control
     if (
       (pathname.startsWith("/admin") && userRole !== "Admin") ||

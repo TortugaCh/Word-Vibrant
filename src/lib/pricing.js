@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_LINK = process.env.NEXT_PUBLIC_API_LINK;
+const API_LINK = "/api";
 
 // Fetch all pricing plans
 export async function fetchPricingPlans() {

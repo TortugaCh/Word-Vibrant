@@ -42,11 +42,13 @@ export const UserState = ({ children }) => {
         if (res?.data?.valid) {
           setUserData(res.data.userData);
           if (router.pathname === "/")
-            router.push(`${res.data.userData.role.toLowerCase()}/dashboard`); // Refresh the page to update the user data
+            if (userData)
+              router.push(`${res.data.userData.role.toLowerCase()}/dashboard`); // Refresh the page to update the user data
         } else {
           setUserData(null);
           localStorage.removeItem("tokenExists"); // Remove invalid token
           setTokenExists(false);
+          router.push("/auth"); // Redirect to login if token is invalid
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -73,9 +75,9 @@ export const UserState = ({ children }) => {
           );
           console.log(creditData);
 
-          // if (!creditData.success) {
-          //   router.push("/no-credits"); // Redirect if credits are insufficient
-          // }
+          if (!creditData.success) {
+            router.push("/no-credits"); // Redirect if credits are insufficient
+          }
 
           setUserData(creditData.userData);
         } catch (error) {
