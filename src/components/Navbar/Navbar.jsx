@@ -37,7 +37,7 @@ const Navbar = ({ mobile, setIsMenuOpen, userData }) => {
       key: "4",
       label: (
         <Link href="/pricing">
-          <CrownOutlined style={{ marginRight: 8, color: "#FFD700" }} />
+          <CrownOutlined style={{ marginRight: 8, color: "#9333EA" }} />
           Upgrade Your Plan
         </Link>
       ),
