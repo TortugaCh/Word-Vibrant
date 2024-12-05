@@ -17,6 +17,7 @@ export default async function handler(req, res) {
   try {
     // Verify the Firebase ID token using the admin SDK
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded Token:", decodedToken);  
     const usersRef = collection(db, "persons");
     const q = query(usersRef, where("userId", "==", decodedToken.userId));
     const querySnapshot = await getDocs(q);
