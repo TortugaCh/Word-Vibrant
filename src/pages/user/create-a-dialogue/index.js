@@ -51,7 +51,7 @@ export default function StrokeOrders() {
     <DashboardLayout>
       <CollapsibleNotificationPanel
         initialCollapsed={true} // Start collapsed
-        messages={messages} // Pass messages
+        messages={messages} // Pass sss
         title={t("notificationTitle")} // Localized title
         onToggle={(isCollapsed) =>
           console.log("Notification panel toggled:", isCollapsed)
