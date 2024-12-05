@@ -33,14 +33,24 @@ const ReusableDropdown = ({ input, handleChange }) => {
 
   return (
     <Dropdown overlay={menu} trigger={["click"]}>
-      <Button
-        className="w-full rounded-full flex items-center justify-between px-6 py-5 border border-purple-400 shadow-md hover:border-purple-500 focus:ring-2 focus:ring-purple-300"
-      >
-        <span className="text-gray-700">
-          {selected || input.placeholder} {/* Show selected or placeholder */}
-        </span>
-        <DownOutlined className="text-gray-500" />
-      </Button>
+    <Button
+  className="w-full rounded-full flex items-center justify-between px-6 py-5 border border-purple-400 shadow-md focus:ring-2 focus:ring-purple-300"
+  style={{
+    transition: "border-color 0.3s ease", // Smooth transition for border color
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.borderColor = "#F9AF42"; // Change border color to orange
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.borderColor = "rgba(128, 90, 213, 1)"; // Revert to original purple
+  }}
+>
+  <span className="text-gray-700">
+    {selected || input.placeholder} {/* Show selected value or placeholder */}
+  </span>
+  <DownOutlined className="text-gray-500" />
+</Button>
+
     </Dropdown>
   );
 };
