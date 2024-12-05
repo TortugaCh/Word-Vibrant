@@ -2,6 +2,7 @@ import { createContext, useState, useContext, useEffect, use } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { checkCredits, getAction, fetchModules } from "../lib/utils";
+import { message } from "antd";
 
 const UserContext = createContext();
 
@@ -41,20 +42,20 @@ export const UserState = ({ children }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("tokenExists");
-
+  
       if (!token) {
         setUserData(null);
         return;
       }
-
+  
       try {
         const config = {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         };
-
+  
         const res = await axios.post("/api/auth/verifyToken", {}, config);
-
+  
         if (res?.data?.valid) {
           setUserData(res.data.userData);
           setUserCredits(res.data.userData.credits);
@@ -64,12 +65,22 @@ export const UserState = ({ children }) => {
           router.push("/auth");
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        // Handle error response
+        if (error.response && error.response.status === 401) {
+          message.error("Your session has expired. Please login again.");
+          setUserData(null);
+          localStorage.removeItem("tokenExists");
+          router.push("/auth");
+        } else {
+          console.error("Error fetching user data:", error);
+          message.error("An unexpected error occurred. Please try again.");
+        }
       }
     };
-
+  
     fetchUserData();
   }, []);
+  
 
   // Step 3: Check credits before navigating to protected routes
   useEffect(() => {
@@ -125,7 +136,7 @@ export const UserState = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ userData, setUserData, userCredits, modules,setUserCredits }}
+      value={{ userData, setUserData, userCredits, modules, setUserCredits }}
     >
       {children}
     </UserContext.Provider>

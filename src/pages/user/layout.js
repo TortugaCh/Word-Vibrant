@@ -9,7 +9,7 @@ const { Header, Sider, Content } = Layout;
 export default function DashboardLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
-  const { userData,userCredits } = useUserContext();
+  const { userData, userCredits } = useUserContext();
 
   // Handle responsive behavior
   useEffect(() => {

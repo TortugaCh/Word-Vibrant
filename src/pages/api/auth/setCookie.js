@@ -38,7 +38,7 @@ export default async function handler(req, res) {
         role: userData.role,
       },
       JWT_SECRET,
-      { expiresIn: "1h" } // Token expires in 1 hour
+      { expiresIn: "7d" } // Token expires in 1 hour
     );
     const cookie = serialize("token", encodedToken, {
       httpOnly: true,
