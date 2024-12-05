@@ -1,4 +1,4 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, use } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { checkCredits, getAction, fetchModules } from "../lib/utils";
@@ -77,22 +77,36 @@ export const UserState = ({ children }) => {
       if (!isInitialized || !userData) return;
 
       const isProtected = protectedPaths.some((path) => url.startsWith(path));
+
       if (isProtected) {
         const action = getAction(url); // Map URL to corresponding action
         console.log("Action:", action);
         if (userCredits < 1) return router.push("/no-credits");
-        const requiredCredits = getRequiredCredits(action); // Get required credits for the action
+        // Extract the word from the pathname (URL-decoded)
+        const pathnameParts = url.split("/");
+        const selectedWordEncoded = pathnameParts[pathnameParts.length - 1]; // The last part after 'view/'
+        const selectedWord = decodeURIComponent(selectedWordEncoded); // Decode if necessary
+
+        console.log("Selected Word:", selectedWord);
+        const requiredCredits = getRequiredCredits(action, modules); // Get required credits for the action
 
         if (userCredits < requiredCredits) {
           router.push("/no-credits"); // Redirect if insufficient credits
         } else {
           // Update credits dynamically before navigating
           try {
-            const creditData = await checkCredits(action);
+            const remainingCredits = userCredits - requiredCredits;
+            const creditData = await checkCredits(
+              action,
+              selectedWord,
+              remainingCredits
+            );
+            console.log("Credit data:", creditData);
             if (!creditData.success) {
               router.push("/no-credits");
             } else {
-              setUserCredits(creditData.updatedCredits);
+              if (creditData.creditsDeducted)
+                setUserCredits(creditData.remainingCredits); // Update credits if deducted
             }
           } catch (error) {
             console.error("Error updating credits:", error);
@@ -120,6 +134,7 @@ export const UserState = ({ children }) => {
 
 // Utility function to get required credits for a specific action
 const getRequiredCredits = (action, modules) => {
-  const moduleData = modules.find((module) => module.value === action);
-  return moduleData.creditsCost || 0; // Default to 0 if no matching action
+  const moduleData = modules?.find((module) => module.value === action);
+  console.log("Module data:", moduleData);
+  return moduleData.creditCost;
 };
