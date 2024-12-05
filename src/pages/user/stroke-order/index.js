@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { useTranslations } from "next-intl"; // Importing the translations hook
-
+import { DollarCircleOutlined } from "@ant-design/icons";
 import { withMessages } from "../../../lib/getMessages";
 import ReusableHandler from "../../../components/ReusableHandler/ReusableHandler";
 import DashboardLayout from "../layout";
@@ -71,6 +71,9 @@ export default function StrokeOrders() {
               }
               className="bg-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-purple-700 transition duration-300 shadow-lg transform hover:scale-105"
             >
+              <DollarCircleOutlined
+                style={{ marginRight: 8, color: "#FFD700" }}
+              />
               {t("getStrokeButton", { word: selectedWord.name })}
             </button>
           </div>

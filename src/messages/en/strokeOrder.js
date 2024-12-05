@@ -5,7 +5,7 @@ export default {
   notificationTitle: "Notifications",
   selectOptions: "Select Options for Stroke Order",
   availableWords: "Available Words:",
-  getStrokeButton: "Get Stroke For {word}",
+  getStrokeButton: "Get Stroke For {word} / 01 Credit",
   practice: {
     prac: "Practice",
     prev: "Preview",
