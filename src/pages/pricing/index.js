@@ -84,7 +84,31 @@ export default function Pricing() {
           {locale === "en" ? description : descriptionZh}
         </p>
         <button
-          className={`mt-4 bg-${additional.color}-500 text-white px-6 py-3 rounded-full hover:bg-${additional.color}-700 transition`}
+          className={`mt-4 px-6 py-3 rounded-full text-white shadow-lg transition duration-300`}
+          style={{
+            backgroundColor:
+              additional.color === "green"
+                ? "#22c55e" // Green base color
+                : additional.color === "red"
+                ? "#ef4444" // Red base color
+                : "#8b5cf6", // Purple base color
+          }}
+          onMouseOver={(e) => {
+            e.target.style.backgroundColor =
+              additional.color === "green"
+                ? "#15803d" // Dark green hover
+                : additional.color === "red"
+                ? "#dc2626" // Dark red hover
+                : "#6d28d9"; // Dark purple hover
+          }}
+          onMouseOut={(e) => {
+            e.target.style.backgroundColor =
+              additional.color === "green"
+                ? "#22c55e" // Restore green base color
+                : additional.color === "red"
+                ? "#ef4444" // Restore red base color
+                : "#8b5cf6"; // Restore purple base color
+          }}
           onClick={() =>
             handleCheckout(
               plan.priceId,
