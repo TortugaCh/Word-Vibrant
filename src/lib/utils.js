@@ -188,7 +188,7 @@ export const createUserInDB = async (email, name, userId) => {
       name,
       userId,
     });
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error("Error creating user:", error);
     return null;

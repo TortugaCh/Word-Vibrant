@@ -33,6 +33,7 @@ export default function AuthPage() {
     setError(""); // Clear any previous errors
     try {
       const user = await handleEmailAuth(email, password, isLogin, username);
+      console.log(user)
       if (user) {
         if (user.role === "Admin") router.push("/admin");
         else router.push("/user/dashboard");
@@ -52,7 +53,7 @@ export default function AuthPage() {
     try {
       const user = await handleGoogleAuth();
       console.log("User:", user);
-      console.log("User Data:", user.userData.credits);
+      console.log("User Data:", user.userData);
       if (user) {
         if (user.role === "Admin") router.push("/admin");
         else router.push("/user/dashboard");
