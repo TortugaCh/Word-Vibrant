@@ -1,8 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { fetchWords, fetchWordsByFilters } from "../../lib/utils";
 
+const getRandomColor = () => {
+  const colors = [
+    "bg-red-200",
+    "bg-blue-200",
+    "bg-green-200",
+    "bg-yellow-200",
+    "bg-purple-200",
+    "bg-pink-200",
+    "bg-orange-200",
+    "bg-teal-200",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
 const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
   const [words, setWords] = useState([]);
+
   useEffect(() => {
     if (curriculum && grade && semester && wordType) {
       const fetchData = async () => {
@@ -29,19 +44,22 @@ const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
       </p>
     );
   }
+
   return (
     <div className="mt-6 flex flex-col gap-2">
-      <div className="grid grid-cols-3 gap-3 text-blue-600">
-        {words?.map((word, index) => (
-          <div
-            key={index}
-            onClick={() => handleFunc(word)}
-            className="cursor-pointer text-center bg-gradient-to-br from-purple-200 to-blue-300 p-2 rounded-full hover:shadow-lg transition-transform transform hover:scale-105 text-lg font-semibold"
-          >
-            {word.name}
-          </div>
-          
-        ))}
+      <div className="grid grid-cols-3 gap-3">
+        {words?.map((word, index) => {
+          const randomColor = getRandomColor(); // Get a random color
+          return (
+            <div
+              key={index}
+              onClick={() => handleFunc(word)}
+              className={`cursor-pointer text-center ${randomColor} p-2 rounded-full hover:shadow-lg transition-transform transform hover:scale-105 text-lg font-semibold`}
+            >
+              {word.name}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

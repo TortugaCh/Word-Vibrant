@@ -155,4 +155,4 @@ const Navbar = ({ mobile, setIsMenuOpen, userData,userCredits }) => {
   );
 };
 
-export default Navbar;
+export default Navbar;

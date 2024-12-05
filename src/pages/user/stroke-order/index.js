@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl"; // Importing the translations hook
 import { DollarCircleOutlined } from "@ant-design/icons";
 import { withMessages } from "../../../lib/getMessages";
 import ReusableHandler from "../../../components/ReusableHandler/ReusableHandler";
+import CollapsibleNotificationPanel from "../../../components/notificationPenal/CollapsibleNotificationPanel";
 import DashboardLayout from "../layout";
 
 export default function StrokeOrders() {
@@ -16,6 +17,7 @@ export default function StrokeOrders() {
   ]);
 
   const [selectedWord, setSelectedWord] = useState(null);
+  const [isCollapsed, setIsCollapsed] = useState(true); // Collapsible state
   const router = useRouter();
   const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slash
   const strokeRef = useRef(null);
@@ -35,29 +37,18 @@ export default function StrokeOrders() {
 
   return (
     <DashboardLayout>
-      {/* Modern Notification Panel */}
-      <div className="fixed top-24 right-8 w-72 max-w-full bg-white rounded-3xl shadow-lg p-4 z-30 transition-transform transform duration-500 ease-in-out">
-        <h3 className="text-lg font-semibold text-purple-600 mb-2">
-          {t("notificationTitle")}
-        </h3>
-        <div className="overflow-y-auto max-h-60 scrollbar-thin scrollbar-thumb-purple-300">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`p-4 mb-2 rounded-lg shadow-md text-purple-800 text-sm ${
-                msg.sender === "bot"
-                  ? "bg-gradient-to-r from-purple-100 to-purple-200"
-                  : "bg-gradient-to-r from-blue-100 to-blue-200"
-              }`}
-            >
-              {msg.text}
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Collapsible Notification Panel */}
+      <CollapsibleNotificationPanel
+        initialCollapsed={true} // Start collapsed
+        messages={messages} // Pass messages
+        title={t("notificationTitle")} // Localized title
+        onToggle={(isCollapsed) =>
+          console.log("Notification panel toggled:", isCollapsed)
+        } // Optional toggle handler
+      />
 
       {/* Main Contents */}
-      <main className="container mx-auto px-6 py-32 mt-16 relative z-10 flex flex-col items-center">
+      <main className="container mx-auto px-6 py-12 mt-8 relative z-10 flex flex-col items-center">
         <ReusableHandler handleFunc={handleGetStroke} t={t} />
         {/* Stroke Order Display */}
         {selectedWord && (
