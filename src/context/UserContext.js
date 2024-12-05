@@ -125,7 +125,7 @@ export const UserState = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ userData, setUserData, userCredits, modules }}
+      value={{ userData, setUserData, userCredits, modules,setUserCredits }}
     >
       {children}
     </UserContext.Provider>

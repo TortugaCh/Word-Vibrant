@@ -10,7 +10,7 @@ import { useUserContext } from "../../context/UserContext";
 export default function AuthPage() {
   const router = useRouter();
   const t = useTranslations("auth");
-  const { setUserData } = useUserContext();
+  const { setUserData, setUserCredits } = useUserContext();
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -37,6 +37,7 @@ export default function AuthPage() {
         if (user.role === "Admin") router.push("/admin");
         else router.push("/user/dashboard");
         setUserData(user);
+        setUserCredits(user.credits);
       }
     } catch (err) {
       setError(err.message);
@@ -50,10 +51,13 @@ export default function AuthPage() {
     setError(""); // Clear any previous errors
     try {
       const user = await handleGoogleAuth();
+      console.log("User:", user);
+      console.log("User Data:", user.userData.credits);
       if (user) {
         if (user.role === "Admin") router.push("/admin");
         else router.push("/user/dashboard");
-        setUserData(user);
+        setUserData(user.userData);
+        setUserCredits(user.userData.credits);
       }
     } catch (err) {
       setError(err.message);
