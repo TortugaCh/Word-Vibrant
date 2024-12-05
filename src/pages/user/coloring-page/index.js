@@ -45,7 +45,7 @@ export default function ColoringPage() {
         } // Optional toggle handler
       />
 
-      <main className="container mx-auto px-6 py-32 mt-16 relative z-10 flex flex-col items-center">
+      <main className="container mx-auto px-6 py-12 mt-8 relative z-10 flex flex-col items-center">
         <ReusableHandler t={t} handleFunc={handleSelectWord} />
 
         {selectedWord && (
