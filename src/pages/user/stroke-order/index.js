@@ -48,7 +48,7 @@ export default function StrokeOrders() {
       />
 
       {/* Main Contents */}
-      <main className="container mx-auto px-6 py-32 mt-16 relative z-10 flex flex-col items-center">
+      <main className="container mx-auto px-6 py-12 mt-8 relative z-10 flex flex-col items-center">
         <ReusableHandler handleFunc={handleGetStroke} t={t} />
         {/* Stroke Order Display */}
         {selectedWord && (

@@ -59,7 +59,7 @@ export default function StrokeOrders() {
       />
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-32 mt-16 relative z-10 flex flex-col items-center">
+      <main className="container mx-auto px-6 py-12 mt-8 relative z-10 flex flex-col items-center">
         <ReusableHandler handleFunc={handleDialoge} t={t} />
         {/* Stroke Order Display area  */}
         {selectedWord && (
