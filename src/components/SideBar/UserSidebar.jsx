@@ -47,7 +47,7 @@ const SideBar = ({ setMenuOpeb }) => {
         <h1 className="text-4xl font-extrabold text-purple-600 cursor-default mb-6 text-center">
           Dashboard
         </h1>
-        {/* Render Menuer */}
+        {/* Render Menu*/}
         <Menu options={UserMenuItems} />
       </div>
     </div>
