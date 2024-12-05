@@ -16,7 +16,7 @@ export default function ColoringPage() {
   ]);
   const [selectedWord, setSelectedWord] = useState(null);
   const router = useRouter();
-  const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slash
+  const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slashhhhhh
 
   const coloringRef = useRef(null);
 
