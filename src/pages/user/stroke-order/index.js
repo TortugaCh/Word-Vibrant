@@ -1,11 +1,10 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/router";
-import { useTranslations } from "next-intl";
-import { MessageOutlined } from "@ant-design/icons"; // Importing the icon
-import CollapsibleNotificationPanel from "../../../components/notificationPenal/CollapsibleNotificationPanel";
-
+import { useTranslations } from "next-intl"; // Importing the translations hook
+import { DollarCircleOutlined } from "@ant-design/icons";
 import { withMessages } from "../../../lib/getMessages";
 import ReusableHandler from "../../../components/ReusableHandler/ReusableHandler";
+import CollapsibleNotificationPanel from "../../../components/notificationPenal/CollapsibleNotificationPanel";
 import DashboardLayout from "../layout";
 
 export default function StrokeOrders() {
@@ -48,8 +47,8 @@ export default function StrokeOrders() {
         } // Optional toggle handler
       />
 
-      {/* Main Content */}
-      <main className="container mx-auto px-6 py-5 mt-16 relative z-10 flex flex-col items-center">
+      {/* Main Contents */}
+      <main className="container mx-auto px-6 py-32 mt-16 relative z-10 flex flex-col items-center">
         <ReusableHandler handleFunc={handleGetStroke} t={t} />
         {/* Stroke Order Display */}
         {selectedWord && (
@@ -63,6 +62,9 @@ export default function StrokeOrders() {
               }
               className="bg-purple-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-purple-700 transition duration-300 shadow-lg transform hover:scale-105"
             >
+              <DollarCircleOutlined
+                style={{ marginRight: 8, color: "#FFD700" }}
+              />
               {t("getStrokeButton", { word: selectedWord.name })}
             </button>
           </div>

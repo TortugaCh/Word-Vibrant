@@ -5,7 +5,7 @@ export default {
   notificationTitle: "通知",
   selectOptions: "選擇筆劃順序選項",
   availableWords: "可用單詞：",
-  getStrokeButton: "獲取 {word} 的筆劃順序",
+  getStrokeButton: "獲取 {word} 的筆順 / 01 點數",
   practice: {
     prac: "練習",
     prev: "預覽",

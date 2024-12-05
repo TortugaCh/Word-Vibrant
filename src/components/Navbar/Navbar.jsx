@@ -4,7 +4,8 @@ import Link from "next/link";
 import React from "react";
 import { handleLogout } from "../../lib/utils";
 
-const Navbar = ({ mobile, setIsMenuOpen, userData }) => {
+const Navbar = ({ mobile, setIsMenuOpen, userData,userCredits }) => {
+  console.log(userData,userCredits);
   const items = [
     {
       key: "1",
@@ -20,7 +21,7 @@ const Navbar = ({ mobile, setIsMenuOpen, userData }) => {
       label: (
         <span>
           <DollarCircleOutlined style={{ marginRight: 8, color: "#FFD700" }} />
-          Credits: {userData?.credits || 5}
+          Credits: {userCredits}
         </span>
       ),
     },
@@ -29,7 +30,7 @@ const Navbar = ({ mobile, setIsMenuOpen, userData }) => {
       label: (
         <span>
           <CrownOutlined style={{ marginRight: 8, color: "#a7bace" }} />
-          Plan: {userData?.plan || "Basic"}
+          Plan: {userData?.planName}
         </span>
       ),
     },

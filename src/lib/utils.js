@@ -296,14 +296,15 @@ export const handleLogout = async () => {
 
 // check route
 
-export const checkCredits = async ( action, word) => {
+export const checkCredits = async (action, word, remainingCredits) => {
   try {
-    console.log("Checking credits for:", action, word);
+    console.log("Checking credits for:", action, word, remainingCredits);
     const response = await axios.put(
       "/api/auth/checkCredits",
       {
         action,
         word,
+        remainingCredits,
       },
       {
         withCredentials: true,

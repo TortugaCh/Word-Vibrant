@@ -1,5 +1,5 @@
 import { db } from "../../../../../lib/firebaseConfig";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 export default async function handler(req, res) {
   // Only allow GET requests
   if (req.method !== "GET") {
@@ -28,11 +28,30 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "Person not found" });
     }
 
-    // Extract user data from the first matching document
-    const userDoc = querySnapshot.docs[0];
-    const userData = { id: userDoc.id, ...userDoc.data() };
+    // // Extract user data from the first matching document
 
-    return res.status(200).json(userData);
+    const userDoc = querySnapshot.docs[0];
+    const subscriptionRef = collection(db, "subscriptions");
+    const subscriptionQuery = query(
+      subscriptionRef,
+      where("userId", "==", userDoc.data().userId)
+    );
+    const subscriptionQuerySnapshot = await getDocs(subscriptionQuery);
+    let plan = "Free";
+    if (!subscriptionQuerySnapshot.empty) {
+      const subscriptionSnapshot = await getDocs(subscriptionQuery);
+      const subscriptionDoc = subscriptionSnapshot.docs[0];
+      console.log("Subscription:", subscriptionDoc.data());
+      const planRef = doc(db, "pricingplans", subscriptionDoc.data().planId); // Reference to the specific document
+      const planDoc = await getDoc(planRef); // Fetch the document
+
+      if (planDoc.exists()) {
+        console.log("Plan:", planDoc.data()); // Access the document's data
+        plan = planDoc.data().name.split(" ")[0];
+      }
+    }
+    const userData = { id: userDoc.id, ...userDoc.data(), planName: plan };
+    return res.status(200).json({ valid: true, userData });
   } catch (error) {
     console.error("Error fetching user:", error);
     return res.status(500).json({ error: "Internal server error" });

@@ -9,7 +9,7 @@ const { Header, Sider, Content } = Layout;
 export default function DashboardLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
-  const { userData } = useUserContext();
+  const { userData,userCredits } = useUserContext();
 
   // Handle responsive behavior
   useEffect(() => {
@@ -107,6 +107,7 @@ export default function DashboardLayout({ children }) {
             mobile={mobile}
             setIsMenuOpen={setMenuOpen}
             userData={userData}
+            userCredits={userCredits}
           />
         </Header>
 

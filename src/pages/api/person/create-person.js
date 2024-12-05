@@ -14,12 +14,31 @@ export default async function handler(req, res) {
       const personDoc = await getDoc(personDocRef);
 
       if (personDoc.exists()) {
-        const personData = { id: personDoc.id, ...personDoc.data() };
+        const subscriptionRef = collection(db, "subscriptions");
+        const subscriptionQuery = query(
+          subscriptionRef,
+          where("userId", "==", personDoc.data().userId)
+        );
+        const subscriptionQuerySnapshot = await getDocs(subscriptionQuery);
+        let plan = "Free";
+        if (!subscriptionQuerySnapshot.empty) {
+          const subscriptionSnapshot = await getDocs(subscriptionQuery);
+          const subscriptionDoc = subscriptionSnapshot.docs[0];
+          console.log("Subscription:", subscriptionDoc.data());
+          const planRef = doc(
+            db,
+            "pricingplans",
+            subscriptionDoc.data().planId
+          ); // Reference to the specific document
+          const planDoc = await getDoc(planRef); // Fetch the document
 
-        res.status(200).json({
-          message: "Person created successfully",
-          data: personData,
-        });
+          if (planDoc.exists()) {
+            console.log("Plan:", planDoc.data()); // Access the document's data
+            plan = planDoc.data().name.split(" ")[0];
+          }
+        }
+        const userData = { id: userDoc.id, ...userDoc.data(), planName: plan };
+        return res.status(200).json({ valid: true, userData });
       } else {
         res.status(404).json({ error: "Person not found after creation" });
       }

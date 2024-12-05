@@ -33,7 +33,10 @@ export default async function handler(req, res) {
     const userDoc = querySnapshot.docs[0];
     const userData = userDoc.data();
     const encodedToken = jwt.sign(
-      { userId: uid, role: userData.role },
+      {
+        userId: uid,
+        role: userData.role,
+      },
       JWT_SECRET,
       { expiresIn: "1h" } // Token expires in 1 hour
     );
@@ -43,25 +46,6 @@ export default async function handler(req, res) {
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: "/",
     });
-
-    // // Set an HTTP-only cookie with the token
-    // const cookie = serialize(
-    //   "userData",
-    //   JSON.stringify({
-    //     userId: userData.userId,
-    //     role: userData.role,
-    //     credits: userData.credits,
-    //     token,
-    //     email: userData.email,
-    //     // deductedActions: userData.deductedActions,
-    //   }),
-    //   {
-    //     httpOnly: true,
-    //     secure: process.env.NODE_ENV === "production",
-    //     maxAge: 60 * 60 * 24 * 7, // 1 week
-    //     path: "/",
-    //   }
-    // );
 
     res.setHeader("Set-Cookie", cookie);
     return res.status(200).json({ message: "Cookie set successfully", uid });
