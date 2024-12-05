@@ -12,6 +12,8 @@ export default function Page() {
   const { selectedWord } = router.query;
   const [loading, setLoading] = useState(false);
   const [dialogue, setDialogue] = useState([]);
+
+  // Dialogue Card Component
   const DialogueCard = ({ dialogue }) => {
     return (
       <div className="p-4 mb-2 rounded-lg shadow-md text-purple-800 text-sm bg-purple-100">
@@ -22,6 +24,7 @@ export default function Page() {
       </div>
     );
   };
+
   useEffect(() => {
     setLoading(true);
     if (selectedWord) {
@@ -29,52 +32,49 @@ export default function Page() {
     }
 
     return () => {};
-  }, []);
+  }, [selectedWord]);
+
   const genDialogue = async () => {
-    // try {
-    // Enhance the prompt to make it more specific and natural
-    // const prompt = `Generate a short, natural dialogue in **Traditional Chinese** using the word "${selectedWord}". The dialogue should be between two people in a common everyday situation. After each line in **Traditional Chinese**, provide the English translation. Include pinyin if possible for learning purposes. Format the response as a list of objects with the following structure:
-    // - 'traditionalChinese': Dialogue in Traditional Chinese
-    // - 'english': English translation of the dialogue
+    try {
+      const prompt = `Create a short dialogue using the word "${selectedWord}". Include both the Traditional Chinese and the English translation for each line. Limit the dialogue to 3-4 exchanges. Format the response as a JSON array with the following keys:
+        - "traditionalChinese": Dialogue in Traditional Chinese.
+        - "english": English translation of the dialogue.`;
 
-    // Example:
-    // [
-    //   { "traditionalChinese": "你好！你叫什麼名字？", "english": "Hello! What is your name?" },
-    //   { "traditionalChinese": "我叫小明。你呢？", "english": "My name is Xiao Ming. And you?" }
-    // ]
-    // Make sure the dialogue is simple enough for beginners to understand, using appropriate vocabulary.`;
-    const prompt = `Create a dialogue using the word "${selectedWord}". Include both the Traditional Chinese and the English translation for each line. Format the response as a list of objects with 'traditionalChinese' and 'english' keys.
-      Example:
-     [
-       { "traditionalChinese": "你好！你叫什麼名字？", "english": "Hello! What is your name?" },
-       { "traditionalChinese": "我叫小明。你呢？", "english": "My name is Xiao Ming. And you?" }
-     ]
-     Make sure the dialogue is simple enough for beginners to understand, using appropriate vocabulary
-    `;
+      const resp = await axios.post("/api/getDialogue", { prompt });
 
-    const resp = await axios.post("/api/getDialogue", { prompt });
-    if (resp.status === 200) {
-      message.success(t("dialogueSuccess"));
-      console.log(JSON.parse(resp.data.data));
-      setLoading(false);
-      setDialogue(JSON.parse(resp.data.data));
-      if (dialogue) console.log(dialogue);
+      if (resp.status === 200 && Array.isArray(resp.data.data)) {
+        console.log("Parsed Dialogue:", resp.data.data);
+        message.success(t("dialogueSuccess"));
+        setDialogue(resp.data.data); // Set the dialogue data
+      } else {
+        console.error("Invalid response structure:", resp.data);
+        message.error("Invalid response from server.");
+      }
+    } catch (error) {
+      console.error(
+        "Error generating dialogue:",
+        error.response?.data || error
+      );
+      message.error(error.response?.data?.error || t("dialogueError"));
+      setDialogue([]); // Reset dialogue on error
+    } finally {
+      setLoading(false); // Ensure loading state is cleared
     }
-    // } catch (error) {
-    //   setLoading(false);
-    //   message.error(t("dialogueError"));
-    // }
   };
+
   return (
     <DashboardLayout>
       {loading ? (
         <div>Loading...</div>
       ) : (
         <div>
-          {dialogue &&
+          {dialogue.length > 0 ? (
             dialogue.map((dia, index) => (
               <DialogueCard dialogue={dia} key={index} />
-            ))}
+            ))
+          ) : (
+            <p>{t("noDialogue")}</p>
+          )}
         </div>
       )}
     </DashboardLayout>

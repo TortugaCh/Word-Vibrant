@@ -42,7 +42,7 @@ export default function HomePage() {
                 {t("loginSignup")}
               </button>
               <button
-                onClick={() => router.push("/dashboard")}
+                onClick={() => router.push("/user/dashboard")}
                 className="px-8 py-4 bg-[#FFCA28] text-gray-900 font-semibold rounded-full"
               >
                 {t("dashboard")}

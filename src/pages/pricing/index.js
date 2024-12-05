@@ -14,6 +14,7 @@ export default function Pricing() {
   const t = useTranslations("pricing");
   const router = useRouter();
   const { locale } = router;
+
   useEffect(() => {
     const fetchPricingPlans = async () => {
       try {
@@ -33,22 +34,10 @@ export default function Pricing() {
     };
   }, []);
 
-  console.log(pricingplans);
-
-  // Define additional static data
   const additionalInfo = {
-    "Basic Plan": {
-      icon: "⭐",
-      color: "green",
-    },
-    "Standard Plan": {
-      icon: "🌟",
-      color: "red",
-    },
-    "Premium Plan": {
-      icon: "🚀",
-      color: "purple",
-    },
+    "Basic Plan": { icon: "⭐", color: "green" },
+    "Standard Plan": { icon: "🌟", color: "red" },
+    "Premium Plan": { icon: "🚀", color: "purple" },
   };
 
   const handleCheckout = async (priceId, planId, userId) => {
@@ -77,33 +66,6 @@ export default function Pricing() {
     }
   };
 
-  const handleSubscribe = async (plan, userId) => {
-    const res = await fetch("/api/payment", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plan, userId }),
-    });
-
-    const { paymentUrl, formData } = await res.json();
-    if (paymentUrl) {
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = paymentUrl;
-      console.log(Object.keys(formData));
-      Object.keys(formData).forEach((key) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = formData[key];
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(form);
-      console.log("Submitting form to:", paymentUrl);
-      console.log("Form Data:", formData);
-      form.submit();
-    }
-  };
   const PlanItem = ({ plan }) => {
     const { name, cost, credits, priceId, nameZh, description, descriptionZh } =
       plan;
@@ -123,14 +85,12 @@ export default function Pricing() {
         </p>
         <button
           className={`mt-4 bg-${additional.color}-500 text-white px-6 py-3 rounded-full hover:bg-${additional.color}-700 transition`}
-          onClick={
-            () =>
-              handleCheckout(
-                plan.priceId,
-                plan.planId,
-                "eQ0KZTNfoxRrhxagJjvrYvNzsL53"
-              )
-            // router.push(`/checkout/${plan.planId}`)
+          onClick={() =>
+            handleCheckout(
+              plan.priceId,
+              plan.planId,
+              "eQ0KZTNfoxRrhxagJjvrYvNzsL53"
+            )
           }
         >
           {t("buyNow")}
@@ -153,7 +113,14 @@ export default function Pricing() {
         {[...pricingplans].reverse().map((plan) => (
           <PlanItem key={plan.planId} plan={plan} />
         ))}
-        {/* {pricingplans.length > 0 && <PlanItem plan={pricingplans[0]} />} */}
+      </div>
+      <div className="flex justify-center mt-10">
+        <button
+          className="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition"
+          onClick={() => router.push("/user/dashboard")}
+        >
+          {t("goToDashboard")}
+        </button>
       </div>
     </Template>
   );

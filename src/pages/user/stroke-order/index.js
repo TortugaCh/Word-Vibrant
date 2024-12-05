@@ -26,7 +26,8 @@ export default function StrokeOrders() {
 
   const handleGetStroke = (word) => {
     setSelectedWord(word);
-    addMessage(t("getStrokeButton").replace("{word}", word.name), "bot");
+    addMessage(t("getStrokeButton", { word: word.name }), "bot");
+
     setTimeout(() => {
       strokeRef.current.scrollIntoView({ behavior: "smooth" });
     }, 200);
