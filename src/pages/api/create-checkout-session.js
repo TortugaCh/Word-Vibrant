@@ -15,7 +15,7 @@ export default async function handler(req, res) {
           },
         ],
         mode: "subscription",
-        customer_creation: "if_required",
+        // customer_creation: "if_required",
         success_url: `${req.headers.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.origin}/cancel`,
         metadata: { userId, planId }, // Metadata to store user and plan info

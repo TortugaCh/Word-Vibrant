@@ -122,6 +122,7 @@ async function handleCheckoutSessionCompleted(session) {
   // Update user credits
   await updateDoc(userDocRef, {
     credits: (userData.credits || 0) + creditsToAdd,
+    plan: plan.name,
   });
 }
 
