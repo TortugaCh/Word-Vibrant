@@ -84,6 +84,18 @@ async function handleCheckoutSessionCompleted(session) {
     throw new Error("Email is missing in the session object.");
   }
 
+  if (!userId || !planId) {
+    console.error(
+      "Missing metadata fields in session object:",
+      session.metadata
+    );
+    throw new Error(
+      "Required metadata fields 'userId' or 'planId' are missing."
+    );
+  }
+
+  // let subscription
+
   // Store subscription details in Firestore
   const subscriptionRef = doc(db, "subscriptions", subscriptionId);
   await setDoc(subscriptionRef, {
