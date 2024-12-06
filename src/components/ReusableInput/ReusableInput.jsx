@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Menu, Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
@@ -9,7 +9,7 @@ const ReusableDropdown = ({ input, handleChange }) => {
   const { locale } = router;
   const handleMenuClick = (e) => {
     const selectedOption = input.options.find((option) => option.id === e.key);
-    setSelected(selectedOption.name); // Update local state
+    setSelected(selectedOption); // Update local state
     handleChange(input.name, e.key); // Notify parent
   };
 
@@ -26,7 +26,7 @@ const ReusableDropdown = ({ input, handleChange }) => {
               backgroundColor: "transparent",
             }}
           >
-            {locale==="zh"?option.nameZh:option.name}
+            {locale === "zh" ? option.nameZh : option.name}
           </div>
         ),
       }))}
@@ -48,7 +48,14 @@ const ReusableDropdown = ({ input, handleChange }) => {
         }}
       >
         <span className="text-gray-700">
-          {selected || locale==="zh"?input.placeholderZh:input.placeholder}{" "}
+          {selected
+            ? locale === "zh"
+              ? selected.nameZh
+              : selected.name
+            : locale === "zh"
+            ? input.placeholderZh
+            : input.placeholder}
+
           {/* Show selected value or placeholder */}
         </span>
         <DownOutlined className="text-gray-500" />

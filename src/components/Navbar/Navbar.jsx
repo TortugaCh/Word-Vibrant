@@ -1,18 +1,33 @@
 import { Avatar, Button, Dropdown, Menu } from "antd";
-import { LogoutOutlined, MenuOutlined, CrownOutlined, UserOutlined, DollarCircleOutlined } from "@ant-design/icons";
+import {
+  LogoutOutlined,
+  MenuOutlined,
+  CrownOutlined,
+  UserOutlined,
+  DollarCircleOutlined,
+} from "@ant-design/icons";
 import Link from "next/link";
-import React from "react";
 import { handleLogout } from "../../lib/utils";
+import { useRouter } from "next/router";
 
-const Navbar = ({ mobile, setIsMenuOpen, userData,userCredits }) => {
-  console.log(userData,userCredits);
+export default function Navbar({
+  mobile,
+  setIsMenuOpen,
+  userData,
+  userCredits,
+}) {
+  const router = useRouter();
+  const { locale } = router;
   const items = [
     {
       key: "1",
       label: (
         <Link href="/" onClick={() => handleLogout()}>
-          <LogoutOutlined style={{ marginRight: 8, color: "#9333EA" }} /> {/* Icon matches text */}
-          Logout
+          <LogoutOutlined style={{ marginRight: 8, color: "#9333EA" }} />{" "}
+          {/* Icon matches text */}
+          {/* {t("logout")} */}
+          {locale === "zh" ? "登出" : "Logout"}
+          {/* Logout */}
         </Link>
       ),
     },
@@ -21,7 +36,7 @@ const Navbar = ({ mobile, setIsMenuOpen, userData,userCredits }) => {
       label: (
         <span>
           <DollarCircleOutlined style={{ marginRight: 8, color: "#FFD700" }} />
-          Credits: {userCredits}
+          {locale === "zh" ? "學分:" : "Credits:"} {userCredits}
         </span>
       ),
     },
@@ -30,7 +45,7 @@ const Navbar = ({ mobile, setIsMenuOpen, userData,userCredits }) => {
       label: (
         <span>
           <CrownOutlined style={{ marginRight: 8, color: "#a7bace" }} />
-          Plan: {userData?.planName}
+          {locale === "zh" ? "計劃:" : "Plan:"} {userData?.planName}
         </span>
       ),
     },
@@ -39,12 +54,11 @@ const Navbar = ({ mobile, setIsMenuOpen, userData,userCredits }) => {
       label: (
         <Link href="/pricing">
           <CrownOutlined style={{ marginRight: 8, color: "#9333EA" }} />
-          Upgrade Your Plan
+          {locale === "zh" ? "升級您的計劃" : "Upgrade Your Plan"}
         </Link>
       ),
     },
   ];
-  
 
   const menu = (
     <Menu
@@ -65,7 +79,8 @@ const Navbar = ({ mobile, setIsMenuOpen, userData,userCredits }) => {
             padding: "8px 16px",
             borderRadius: "6px",
             margin: "4px 0",
-            transition: "background-color 0.3s ease-in-out, color 0.3s ease-in-out",
+            transition:
+              "background-color 0.3s ease-in-out, color 0.3s ease-in-out",
             display: "flex",
             alignItems: "center",
             gap: "8px",
@@ -84,8 +99,6 @@ const Navbar = ({ mobile, setIsMenuOpen, userData,userCredits }) => {
       ))}
     </Menu>
   );
-  
-  
 
   return (
     <div
@@ -131,7 +144,9 @@ const Navbar = ({ mobile, setIsMenuOpen, userData,userCredits }) => {
           >
             <Avatar
               size="large"
-              icon={<UserOutlined style={{ fontSize: "18px", color: "#fff" }} />}
+              icon={
+                <UserOutlined style={{ fontSize: "18px", color: "#fff" }} />
+              }
               style={{
                 backgroundColor: "#9333EA",
                 marginRight: "8px",
@@ -153,6 +168,6 @@ const Navbar = ({ mobile, setIsMenuOpen, userData,userCredits }) => {
       </div>
     </div>
   );
-};
+}
 
-export default Navbar;
+// export const getServerSideProps = withMessages("strokeOrder");
