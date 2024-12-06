@@ -87,7 +87,7 @@ export default function Dashboard() {
     //   )}
     // </DashboardLayout>
     <DashboardLayout>
-      {userData && <Progress userId={userData?.uid} />}
+      {userData && <Progress userId={userData?.uid} t={t} />}
     </DashboardLayout>
   );
 }

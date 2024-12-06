@@ -15,7 +15,7 @@ const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
+const Words = ({ curriculum, grade, semester, wordType, handleFunc, t }) => {
   const [words, setWords] = useState([]);
 
   useEffect(() => {
@@ -27,8 +27,7 @@ const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
           semester,
           wordType
         );
-        console.log(curriculum, grade, semester, wordType);
-        console.log(res);
+
         if (res) {
           setWords(res);
         }
@@ -38,11 +37,7 @@ const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
   }, [curriculum, grade, semester, wordType]);
 
   if (!words.length) {
-    return (
-      <p className="text-gray-500 italic">
-        Select a curriculum, grade, semester, and word type to get stroke.
-      </p>
-    );
+    return <p className="text-gray-500 italic">{t("selectWord")}</p>;
   }
 
   return (

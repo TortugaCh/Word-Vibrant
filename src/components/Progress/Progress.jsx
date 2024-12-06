@@ -1,7 +1,15 @@
 import { Card, Col, Row, Typography, Button, Badge } from "antd";
-import { DownCircleFilled, DownCircleOutlined, DownOutlined, UpCircleFilled, UpCircleOutlined, UpOutlined } from "@ant-design/icons";
+import {
+  DownCircleFilled,
+  DownCircleOutlined,
+  DownOutlined,
+  UpCircleFilled,
+  UpCircleOutlined,
+  UpOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const { Text } = Typography;
 
@@ -34,11 +42,12 @@ const getRandomProgressCardColor = () =>
 const getModuleColor = (moduleIndex) =>
   moduleColors[moduleIndex % moduleColors.length];
 
-const Progress = ({ userId }) => {
+const Progress = ({ userId,t }) => {
   const [modules, setModules] = useState([]);
   const [userProgress, setUserProgress] = useState([]);
   const [collapsedModules, setCollapsedModules] = useState({});
-
+  const router = useRouter();
+  const { locale } = router;
   const ProgressCard = ({ word }) => (
     <Card
       style={{
@@ -75,6 +84,8 @@ const Progress = ({ userId }) => {
         ]);
 
         setModules(getModules.data.data || []);
+        if (modules) console.log(modules);
+
         setUserProgress(userProgress.data.data || []);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -126,7 +137,7 @@ const Progress = ({ userId }) => {
                       color: "#333",
                     }}
                   >
-                    {module.name}
+                    {locale === "en" ? module.name : module.nameZh}
                   </Text>
                 </div>
 
@@ -147,7 +158,7 @@ const Progress = ({ userId }) => {
                         textAlign: "center",
                       }}
                     >
-                      Learned
+                     { t("status.learned")}
                     </div>
 
                     {/* Word Progress Cards */}

@@ -3,10 +3,10 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { UserMenuItems } from "../../constants/constants";
 
-const SideBar = ({ setMenuOpeb }) => {
+const SideBar = ({ setMenuOpen }) => {
   const router = useRouter();
   const currentPath = router.pathname;
-
+  const { locale } = router;
   // Menu item component for recursive rendering
   const Menu = ({ options }) => (
     <ul className="flex flex-col gap-4">
@@ -29,7 +29,7 @@ const SideBar = ({ setMenuOpeb }) => {
               <span className="flex items-center gap-4">
                 {/* Render icon */}
                 <span className="text-xl">{option.icon}</span>
-                <span>{option.name}</span>
+                <span>{locale === "zh" ? option.nameZh : option.name}</span>
               </span>
             </Link>
             {/* Recursively render submenus */}

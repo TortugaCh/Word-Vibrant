@@ -29,7 +29,7 @@ const HanziStroke = ({ word, draw, t, voiceLoaded, speakTaiwanese }) => {
     // Clear the container's innerHTML to avoid re-initialization issues
     if (!writerRef.current || writerRef.current.character !== word) {
       containerRef.current.innerHTML = "";
-
+      
       // Initialize HanziWriter instance with traditional characters support
       const writer = HanziWriter.create(containerRef.current, word, {
         width: 250,

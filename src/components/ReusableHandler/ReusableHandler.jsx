@@ -4,7 +4,7 @@ import { useLookupData } from "../../hooks/useLookupData";
 import ReusableInput from "../ReusableInput/ReusableInput";
 import Words from "../Words/Words";
 
-const ReusableHandler = ({handleFunc,t}) => {
+const ReusableHandler = ({ handleFunc, t }) => {
   const { curriculums, grades, semesters, wordTypes } = useLookupData();
   const [values, setValues] = useState({});
 
@@ -30,28 +30,21 @@ const ReusableHandler = ({handleFunc,t}) => {
 
       {/* Word Grid */}
       <div className="mt-6 flex flex-col gap-2">
-        
-      <div className="mt-6 flex flex-col gap-2">
-  <div className="font-bold text-lg text-purple-700">
-    {t("availableWords")}
-  </div>
-  <div className="overflow-y-auto max-h-96 rounded-lg border border-purple-400 shadow-md p-4 scrollbar-thin scrollbar-thumb-purple-400 scrollbar-track-purple-100 scrollbar-thumb-rounded hover:scrollbar-thumb-purple-500 focus:scrollbar-thumb-purple-300">
-    <Words
-      curriculum={values["curriculum"]}
-      grade={values["grade"]}
-      wordType={values["wordType"]}
-      semester={values["semester"]}
-      handleFunc={handleFunc}
-    />
-  </div>
-</div>
-
-
-
-
-
-
-
+        <div className="mt-6 flex flex-col gap-2">
+          <div className="font-bold text-lg text-purple-700">
+            {t("availableWords")}
+          </div>
+          <div className="overflow-y-auto max-h-96 rounded-lg border border-purple-400 shadow-md p-4 scrollbar-thin scrollbar-thumb-purple-400 scrollbar-track-purple-100 scrollbar-thumb-rounded hover:scrollbar-thumb-purple-500 focus:scrollbar-thumb-purple-300">
+            <Words
+              curriculum={values["curriculum"]}
+              grade={values["grade"]}
+              wordType={values["wordType"]}
+              semester={values["semester"]}
+              handleFunc={handleFunc}
+              t={t}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

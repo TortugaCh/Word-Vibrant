@@ -9,5 +9,10 @@ export default {
     createStoryDescription: "Develop your language skills by creating short stories in Chinese.",
     createDialogueTitle: "💬 Create a Dialogue",
     createDialogueDescription: "Practice conversation skills by creating dialogues that enhance learning.",
+    status: {
+      learned: "Learned",
+      learning: "Learning",
+      notStarted: "Not Started",
+    },
   };
   

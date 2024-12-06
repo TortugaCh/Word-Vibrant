@@ -5,14 +5,11 @@ import { useState, useEffect } from "react";
 import { handleLogout } from "../lib/utils";
 import { useUserContext } from "../context/UserContext";
 
-export default function Header({
-  title = "Chinese Literacy AI",
-  onLogout,
-}) {
+export default function Header({ title = "Chinese Literacy AI", onLogout }) {
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const {userData}=useUserContext();
+  const { userData } = useUserContext();
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
@@ -91,22 +88,13 @@ export default function Header({
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => router.push("/auth")}
-                className="flex items-center text-purple-600 hover:text-purple-800 font-semibold transition duration-200"
-              >
-                <FiUser className="mr-1" />
-                Login
-              </button>
-              <button
-                onClick={() => router.push("/auth")}
-                className="flex items-center bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-800 transition duration-200"
-              >
-                <FiLogIn className="mr-1" />
-                Sign Up
-              </button>
-            </div>
+            <button
+              onClick={() => router.push("/auth")}
+              className="flex items-center text-purple-600 hover:text-purple-800 font-semibold transition duration-200"
+            >
+              <FiUser className="mr-1" />
+              Login
+            </button>
           )}
         </nav>
 
@@ -182,28 +170,16 @@ export default function Header({
                   </button>
                 </>
               ) : (
-                <div className="flex flex-col gap-3 mt-4">
-                  <button
-                    onClick={() => {
-                      router.push("/auth");
-                      toggleSidebar();
-                    }}
-                    className="flex items-center justify-center text-purple-600 hover:text-purple-800 font-semibold transition duration-200"
-                  >
-                    <FiUser className="mr-1" />
-                    Login
-                  </button>
-                  <button
-                    onClick={() => {
-                      router.push("/auth");
-                      toggleSidebar();
-                    }}
-                    className="flex items-center justify-center bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-800 transition duration-200"
-                  >
-                    <FiLogIn className="mr-1" />
-                    Sign Up
-                  </button>
-                </div>
+                <button
+                  onClick={() => {
+                    router.push("/auth");
+                    toggleSidebar();
+                  }}
+                  className="flex items-center justify-center text-purple-600 hover:text-purple-800 font-semibold transition duration-200"
+                >
+                  <FiUser className="mr-1" />
+                  Login
+                </button>
               )}
             </nav>
           </div>
