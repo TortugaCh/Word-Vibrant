@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
   const { userData, userCredits } = useUserContext();
-
+  
   // Handle responsive behavior
   useEffect(() => {
     const handleResize = () => {

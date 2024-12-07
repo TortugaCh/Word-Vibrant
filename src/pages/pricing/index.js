@@ -4,6 +4,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useRouter } from "next/router";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../lib/getMessages";
+import { useUserContext } from "../../context/UserContext";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -11,6 +12,7 @@ const stripePromise = loadStripe(
 
 export default function Pricing() {
   const [pricingplans, setPricingPlans] = useState([]);
+  const { userData } = useUserContext();
   const t = useTranslations("pricing");
   const router = useRouter();
   const { locale } = router;
@@ -41,6 +43,9 @@ export default function Pricing() {
   };
 
   const handleCheckout = async (priceId, planId, userId) => {
+    console.log("priceId", priceId);
+    console.log("planId", planId);
+    console.log("userId", userId);
     const stripe = await stripePromise;
     if (!stripe) {
       console.error("Stripe failed to initialize");
@@ -69,6 +74,7 @@ export default function Pricing() {
   const PlanItem = ({ plan }) => {
     const { name, cost, credits, priceId, nameZh, description, descriptionZh } =
       plan;
+    console.log(plan);
     const additional = additionalInfo[name];
 
     return (
@@ -110,11 +116,7 @@ export default function Pricing() {
                 : "#8b5cf6"; // Restore purple base color
           }}
           onClick={() =>
-            handleCheckout(
-              plan.priceId,
-              plan.planId,
-              "eQ0KZTNfoxRrhxagJjvrYvNzsL53"
-            )
+            handleCheckout(plan.priceId, plan.id, userData?.userId)
           }
         >
           {t("buyNow")}

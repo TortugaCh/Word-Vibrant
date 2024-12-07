@@ -4,12 +4,13 @@ import { useRouter } from "next/router";
 import Template from "../components/Template";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../lib/getMessages";
+import { useUserContext } from "../context/UserContext";
 
 export default function HomePage() {
   const [loading, setLoading] = useState(true); // Add a loading state
   const router = useRouter();
   const t = useTranslations("common");
-
+  const { userData } = useUserContext();
   // Simulate data fetching or page load delay
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -35,12 +36,14 @@ export default function HomePage() {
               {t("welcomeDescription")}
             </p>
             <div className="flex justify-center gap-8 mb-10">
-              <button
-                onClick={() => router.push("/auth")}
-                className="px-8 py-4 bg-[#42A5F5] text-white font-semibold rounded-full"
-              >
-                {t("loginSignup")}
-              </button>
+              {!userData && (
+                <button
+                  onClick={() => router.push("/auth")}
+                  className="px-8 py-4 bg-[#42A5F5] text-white font-semibold rounded-full"
+                >
+                  {t("loginSignup")}
+                </button>
+              )}
               <button
                 onClick={() => router.push("/user/dashboard")}
                 className="px-8 py-4 bg-[#FFCA28] text-gray-900 font-semibold rounded-full"

@@ -1,12 +1,9 @@
 import { useRouter } from "next/router";
 import HanziStroke from "../../../../../components/HanziStroke/HanziStroke";
-import Template from "../../../../../components/Template";
 import { useSpeechSynthesis } from "react-speech-kit";
 import { useEffect, useState } from "react";
 import { withMessages } from "../../../../../lib/getMessages";
 import { useTranslations } from "next-intl";
-import { PiEar } from "react-icons/pi";
-import { MdReplay } from "react-icons/md";
 import DashboardLayout from "../../../layout";
 
 export default function Page() {
@@ -49,14 +46,14 @@ export default function Page() {
           <div className="font-bold text-2xl text-purple-700">
             {t("practice.prev")}
           </div>
-          <HanziStroke word={selectedWord} draw={false} t={t} />
+          <HanziStroke word={selectedWord?.length>1?selectedWord[0]:selectedWord} draw={false} t={t} />
         </div>
         <div className="flex flex-col items-center space-y-6">
           <div className="font-bold text-2xl text-purple-700">
             {t("practice.prac")}
           </div>
           <HanziStroke
-            word={selectedWord}
+            word={selectedWord?.length>1?selectedWord[0]:selectedWord}
             draw={true}
             t={t}
             voiceLoaded={voiceLoaded}

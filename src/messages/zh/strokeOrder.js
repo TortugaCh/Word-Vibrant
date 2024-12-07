@@ -12,4 +12,6 @@ export default {
     listen: "聆聽單詞",
     replay: "重播",
   },
+  // in tradional chinese
+  selectWord: "選擇課程、年級、學期和單詞類型以獲取筆劃順序。",
 };

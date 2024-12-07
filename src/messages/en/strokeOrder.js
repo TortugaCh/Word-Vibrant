@@ -12,4 +12,6 @@ export default {
     listen: "Listen To Word",
     replay: "Replay",
   },
+  selectWord:
+    "Select a curriculum, grade, semester, and word type to get stroke.",
 };

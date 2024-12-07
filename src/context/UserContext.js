@@ -92,7 +92,12 @@ export const UserState = ({ children }) => {
       if (isProtected) {
         const action = getAction(url); // Map URL to corresponding action
         console.log("Action:", action);
-        if (userCredits < 1) return router.push("/no-credits");
+
+        if (userCredits < 1) {
+          // Redirect if no credits
+          return router.push("/no-credits");
+        }
+
         // Extract the word from the pathname (URL-decoded)
         const pathnameParts = url.split("/");
         const selectedWordEncoded = pathnameParts[pathnameParts.length - 1]; // The last part after 'view/'
@@ -102,25 +107,38 @@ export const UserState = ({ children }) => {
         const requiredCredits = getRequiredCredits(action, modules); // Get required credits for the action
 
         if (userCredits < requiredCredits) {
-          router.push("/no-credits"); // Redirect if insufficient credits
+          // Redirect if insufficient credits
+          return router.push("/no-credits");
         } else {
-          // Update credits dynamically before navigating
+          // Credits are sufficient, so we proceed to deduct them
+          let creditsBeforeDeduction = userCredits;
           try {
             const remainingCredits = userCredits - requiredCredits;
-            const creditData = await checkCredits(
-              action,
-              selectedWord,
-              remainingCredits
-            );
+            // Proceed to check and deduct credits
+            const creditData = await checkCredits(action, selectedWord, remainingCredits);
+
             console.log("Credit data:", creditData);
             if (!creditData.success) {
-              router.push("/no-credits");
-            } else {
-              if (creditData.creditsDeducted)
-                setUserCredits(creditData.remainingCredits); // Update credits if deducted
+              // If the credit check fails, redirect to the "no-credits" page
+              return router.push("/no-credits");
             }
+
+            if (creditData.creditsDeducted) {
+              // Update credits only if deduction is successful
+              setUserCredits(creditData.remainingCredits);
+            }
+
+            // Proceed with navigation only if credit deduction was successful
+            router.push(url); // Navigate to the intended page
+
           } catch (error) {
-            console.error("Error updating credits:", error);
+            // If an error occurs in the process, rollback the credit deduction
+            console.error("Error occurred while updating credits:", error);
+
+            // Restore credits to their original value
+            setUserCredits(creditsBeforeDeduction);
+
+            // Redirect to the "no-credits" page if there's an error
             router.push("/no-credits");
           }
         }
@@ -133,7 +151,6 @@ export const UserState = ({ children }) => {
       router.events.off("routeChangeStart", handleRouteChange);
     };
   }, [isInitialized, userCredits, userData]);
-
   return (
     <UserContext.Provider
       value={{ userData, setUserData, userCredits, modules, setUserCredits }}

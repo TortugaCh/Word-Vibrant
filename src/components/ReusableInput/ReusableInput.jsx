@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Menu, Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
+import { useRouter } from "next/router";
 
 const ReusableDropdown = ({ input, handleChange }) => {
   const [selected, setSelected] = useState(null); // Local state to track selected value
-
+  const router = useRouter();
+  const { locale } = router;
   const handleMenuClick = (e) => {
-    const selectedOption = input.options.find(option => option.id === e.key);
-    setSelected(selectedOption.name); // Update local state
+    const selectedOption = input.options.find((option) => option.id === e.key);
+    setSelected(selectedOption); // Update local state
     handleChange(input.name, e.key); // Notify parent
   };
 
@@ -24,7 +26,7 @@ const ReusableDropdown = ({ input, handleChange }) => {
               backgroundColor: "transparent",
             }}
           >
-            {option.name}
+            {locale === "zh" ? option.nameZh : option.name}
           </div>
         ),
       }))}
@@ -33,24 +35,31 @@ const ReusableDropdown = ({ input, handleChange }) => {
 
   return (
     <Dropdown overlay={menu} trigger={["click"]}>
-    <Button
-  className="w-full rounded-full flex items-center justify-between px-6 py-5 border border-purple-400 shadow-md focus:ring-2 focus:ring-purple-300"
-  style={{
-    transition: "border-color 0.3s ease", // Smooth transition for border color
-  }}
-  onMouseEnter={(e) => {
-    e.currentTarget.style.borderColor = "#F9AF42"; // Change border color to orange
-  }}
-  onMouseLeave={(e) => {
-    e.currentTarget.style.borderColor = "rgba(128, 90, 213, 1)"; // Revert to original purple
-  }}
->
-  <span className="text-gray-700">
-    {selected || input.placeholder} {/* Show selected value or placeholder */}
-  </span>
-  <DownOutlined className="text-gray-500" />
-</Button>
+      <Button
+        className="w-full rounded-full flex items-center justify-between px-6 py-5 border border-purple-400 shadow-md focus:ring-2 focus:ring-purple-300"
+        style={{
+          transition: "border-color 0.3s ease", // Smooth transition for border color
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = "#F9AF42"; // Change border color to orange
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = "rgba(128, 90, 213, 1)"; // Revert to original purple
+        }}
+      >
+        <span className="text-gray-700">
+          {selected
+            ? locale === "zh"
+              ? selected.nameZh
+              : selected.name
+            : locale === "zh"
+            ? input.placeholderZh
+            : input.placeholder}
 
+          {/* Show selected value or placeholder */}
+        </span>
+        <DownOutlined className="text-gray-500" />
+      </Button>
     </Dropdown>
   );
 };
