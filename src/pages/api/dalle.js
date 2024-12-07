@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   const { word } = JSON.parse(req.body);
 
-  // Refined strict prompt
+  // Refined strict prompttttttttttt
   const refinedPrompt = `
   Create a delightful, black-and-white line art coloring page designed specifically for children. 
   The illustration should creatively and playfully represent the concept of the word "${word}" through cheerful and engaging visuals. 
