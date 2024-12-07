@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import WordsHandler from "../../../components/WordsHandler/WordsHandler";
 import AdminLayout from "../layout";
 
