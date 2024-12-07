@@ -1,4 +1,4 @@
-import { FaHome, FaPen, FaPaintBrush, FaComments, FaBookOpen } from "react-icons/fa"; // Importing icons
+import { FaHome, FaPen, FaPaintBrush, FaComments, FaBookOpen, FaUsers, FaDollarSign, FaBook, FaPalette, FaLayerGroup, FaCubes } from "react-icons/fa"; // Importing icons
 export const wordInputs = (
   curriculumOptions,
   gradeOptions,
@@ -48,31 +48,45 @@ export const wordInputs = (
 export const adminMenuItems = [
   {
     name: "Home",
-    link: "/admin/",
+    nameZh: "首页",
+    link: "/admin",
+    icon: <FaHome /> // Icon for Home
   },
   {
     name: "Users",
+    nameZh: "用戶管理",
     link: "/admin/users",
+    icon: <FaUsers /> // Icon for Users
   },
   {
     name: "Pricing Plans",
+    nameZh: "定價方案",
     link: "/admin/pricing",
+    icon: <FaDollarSign /> // Icon for Pricing Plans
   },
   {
     name: "Words",
+    nameZh: "單詞管理",
     link: "/admin/words",
+    icon: <FaBook /> // Icon for Words
   },
   {
     name: "Hanzi Stroke Coloring",
+    nameZh: "漢字筆劃上色",
     link: "/admin/hanzi-stroke-coloring",
+    icon: <FaPalette /> // Icon for Hanzi Stroke Coloring
   },
   {
     name: "Module 1",
+    nameZh: "模組 1",
     link: "/admin/module-1",
+    icon: <FaLayerGroup /> // Icon for Module 1
   },
   {
     name: "Module 2",
+    nameZh: "模組 2",
     link: "/admin/module-2",
+    icon: <FaCubes /> // Icon for Module 2
   },
 ];
 
@@ -103,7 +117,7 @@ export const UserMenuItems = [
   },
   {
     name: "Create a short story",
-    nameZh:"創建故事",
+    nameZh: "創建故事",
     link: "/user/create-a-story",
     icon: <FaBookOpen /> // Icon for Create a Short Story
   },

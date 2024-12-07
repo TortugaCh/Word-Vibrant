@@ -1,11 +1,12 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import ReusableHandler from "../../../components/ReusableHandler/ReusableHandler";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../../lib/getMessages";
-import Dashboard from "../dashboard";
-import CollapsibleNotificationPanel from "../../../components/notificationPenal/CollapsibleNotificationPanel";
 import DashboardLayout from "../layout";
+import CollapsibleNotificationPanel from "../../../components/notificationPenal/CollapsibleNotificationPanel";
+import { DollarCircleOutlined } from "@ant-design/icons";
+import ReusableButton from "../../../components/Buttons/gradientButton";
 
 export default function ColoringPage() {
   const [messages, setMessages] = useState([
@@ -16,9 +17,10 @@ export default function ColoringPage() {
   ]);
   const [selectedWord, setSelectedWord] = useState(null);
   const router = useRouter();
-  const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slashhhhhh
-
+  const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slash
   const coloringRef = useRef(null);
+
+  const buttonRef = useRef(null); // Reference for the button
 
   const t = useTranslations("strokeOrder");
 
@@ -29,10 +31,14 @@ export default function ColoringPage() {
   const handleSelectWord = (word) => {
     setSelectedWord(word);
     addMessage(`Displaying coloring outline for "${word.name}".`, "bot");
-    setTimeout(() => {
-      coloringRef.current.scrollIntoView({ behavior: "smooth" });
-    }, 200);
   };
+
+  useEffect(() => {
+    if (selectedWord) {
+      // Scroll to the button when the word is selected
+      buttonRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [selectedWord]);
 
   return (
     <DashboardLayout>
@@ -49,22 +55,18 @@ export default function ColoringPage() {
         <ReusableHandler t={t} handleFunc={handleSelectWord} />
 
         {selectedWord && (
-          <div
-            ref={coloringRef}
-            className="w-full max-w-2xl mt-10 flex justify-center"
-          >
-            <button
-              onClick={() =>
-                router.push(`${cleanedPath}/download/${selectedWord.name}`)
-              }
-              className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-800 transition duration-200"
-            >
-              Download Coloring Page for "{selectedWord.name}"
-            </button>
+          <div ref={buttonRef}> {/* Button wrapper with reference */}
+            <ReusableButton
+              onClick={() => router.push(`${cleanedPath}/download/${selectedWord.name}`)}  // Passing onClick function to navigate
+              icon={DollarCircleOutlined}  // Pass the icon (with appropriate styles)
+              text={`Download Coloring Page for ${selectedWord.name}`}  // Correct string concatenation with interpolation
+              isDisabled={false}  // Button is enabled by default
+            />
           </div>
         )}
       </main>
     </DashboardLayout>
   );
 }
+
 export const getServerSideProps = withMessages("strokeOrder");
