@@ -15,7 +15,7 @@ const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
+const Words = ({ curriculum, grade, semester, wordType, handleFunc, t }) => {
   const [words, setWords] = useState([]);
 
   useEffect(() => {
@@ -37,7 +37,12 @@ const Words = ({ curriculum, grade, semester, wordType, handleFunc }) => {
   }, [curriculum, grade, semester, wordType]);
 
   if (!words.length) {
-    return <p className="text-gray-500 italic">Select a word</p>;
+    return (
+      <p className="text-gray-500 italic">
+        {" "}
+        {t ? t("selectWord") : "Select a word"}
+      </p>
+    );
   }
 
   return (
