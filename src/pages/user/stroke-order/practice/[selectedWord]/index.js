@@ -11,17 +11,13 @@ export default function Page() {
   const { speak, voices } = useSpeechSynthesis();
   const { selectedWord } = router.query;
 
-  // State to ensure voices are loaded before attempting to find one
   const [voiceLoaded, setVoiceLoaded] = useState(false);
   const [taiwaneseVoice, setTaiwaneseVoice] = useState(null);
   const t = useTranslations("strokeOrder");
 
   useEffect(() => {
     if (voices.length > 0) {
-      // Try to find a Taiwanese Mandarin voice, with fallback to zh-CN if unavailable
       const voice = voices.filter((v) => v.lang === "zh-TW")[2];
-      console.log(voices.filter((v) => v.lang === "zh-TW"));
-      console.log("Voice", voice);
       setTaiwaneseVoice(voice);
       setVoiceLoaded(true);
     }
@@ -40,20 +36,23 @@ export default function Page() {
   }
 
   return (
-    <DashboardLayout >
-      <div className="flex gap-10 items-center justify-center h-full">
-        <div className="flex flex-col items-center space-y-6">
-          <div className="font-bold text-2xl text-purple-700">
+    <DashboardLayout>
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center justify-center h-full">
+        {/* Left Box */}
+        <div className="flex flex-col items-center space-y-6 p-4 lg:p-6 box-purple w-full lg:w-auto">
+          <div className="font-bold text-xl sm:text-2xl lg:text-3xl text-purple-700">
             {t("practice.prev")}
           </div>
-          <HanziStroke word={selectedWord?.length>1?selectedWord[0]:selectedWord} draw={false} t={t} />
+          <HanziStroke word={selectedWord?.length > 1 ? selectedWord[0] : selectedWord} draw={false} t={t} />
         </div>
-        <div className="flex flex-col items-center space-y-6">
-          <div className="font-bold text-2xl text-purple-700">
+
+        {/* Right Box */}
+        <div className="flex flex-col items-center space-y-6 p-4 lg:p-6 box-purple w-full lg:w-auto">
+          <div className="font-bold text-xl sm:text-2xl lg:text-3xl text-purple-700">
             {t("practice.prac")}
           </div>
           <HanziStroke
-            word={selectedWord?.length>1?selectedWord[0]:selectedWord}
+            word={selectedWord?.length > 1 ? selectedWord[0] : selectedWord}
             draw={true}
             t={t}
             voiceLoaded={voiceLoaded}

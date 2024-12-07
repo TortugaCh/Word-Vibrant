@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+// import ReusableButton from '../../components/Buttons/gradientButton';
 import HanziWriter from "hanzi-writer";
 import { useRouter } from "next/router";
 import { MdReplay } from "react-icons/md";
@@ -29,7 +30,7 @@ const HanziStroke = ({ word, draw, t, voiceLoaded, speakTaiwanese }) => {
     // Clear the container's innerHTML to avoid re-initialization issues
     if (!writerRef.current || writerRef.current.character !== word) {
       containerRef.current.innerHTML = "";
-      
+
       // Initialize HanziWriter instance with traditional characters support
       const writer = HanziWriter.create(containerRef.current, word, {
         width: 250,
@@ -70,17 +71,26 @@ const HanziStroke = ({ word, draw, t, voiceLoaded, speakTaiwanese }) => {
     <div className="flex flex-col items-center">
       <div
         ref={containerRef}
-        className="bg-gray-100 rounded-lg shadow-md flex items-center justify-center p-6"
-        style={{ width: 300, height: 300 }}
-      ></div>
+        className="relative bg-white rounded-lg flex items-center justify-center p-6"
+        style={{
+          width: '100%',
+          maxWidth: '300px',
+          height: 'auto',
+          maxHeight: '300px',
+        }}
+      >
+        {/* Gradient border using an inner div */}
+        <div className="absolute inset-0 rounded-lg border-4 border-gradient-to-r from-blue-400 to-purple-500 pointer-events-none" />
+        {/* Content goes here */}
+      </div>
+
       {!draw ? (
         <button
           onClick={replayAnimation}
-          className={`mt-6 px-4 py-2 rounded flex items-center gap-2 ${
-            isAnimationComplete
-              ? "bg-blue-500 text-white hover:bg-blue-700"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
+          className={`mt-6 px-6 py-3 rounded-lg flex items-center gap-3 transition-all transform duration-300 ease-in-out ${isAnimationComplete
+            ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white hover:scale-110 hover:bg-gradient-to-l hover:from-purple-500 hover:to-blue-400"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
           disabled={!isAnimationComplete} // Disable button until animation is complete
         >
           <MdReplay color="white" size={32} />
@@ -89,11 +99,10 @@ const HanziStroke = ({ word, draw, t, voiceLoaded, speakTaiwanese }) => {
       ) : (
         <button
           onClick={() => speakTaiwanese(word)}
-          className={`mt-6 px-4 py-2 rounded flex items-center gap-2 ${
-            voiceLoaded
-              ? "bg-blue-500 text-white hover:bg-blue-700"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
+          className={`mt-6 px-6 py-3 rounded-lg flex items-center gap-3 transition-all transform duration-300 ease-in-out ${voiceLoaded
+            ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white hover:scale-110 hover:bg-gradient-to-l hover:from-purple-500 hover:to-blue-400"
+            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
           disabled={!voiceLoaded} // Disable until quiz completes and voice is loaded
         >
           <PiEar color="white" size={32} />
