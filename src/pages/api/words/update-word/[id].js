@@ -6,6 +6,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
+  console.log(req.query,req.body)
   const { id } = req.query;
   const { word } = req.body;
 
@@ -37,9 +38,9 @@ export default async function handler(req, res) {
     console.log(`Updated word: ${word}`);
 
     // Return the updated word data
-    return res.status(200).json({ id, ...updatedWord });
+    return res.status(200).json({ id, ...updatedWord,success:true });
   } catch (error) {
     console.error("Error updating word:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error",success:false });
   }
 }

@@ -158,38 +158,28 @@ export const UserState = ({ children }) => {
     const handleRouteChange = async (url) => {
       if (!isInitialized || !userData) return;
   
+      if (router.asPath === url) return; // Prevent handling the same route
+  
       const isProtected = protectedPaths.some((path) => url.startsWith(path));
-  
       if (isProtected) {
-        const action = getAction(url); // Map URL to corresponding action
-  
+        const action = getAction(url);
         const pathnameParts = url.split("/");
         const selectedWordEncoded = pathnameParts[pathnameParts.length - 1];
         const selectedWord = decodeURIComponent(selectedWordEncoded);
   
-        // Check if the action-word pair already exists in userProgress
         const wordExists = containsActionWord(userProgress, action, selectedWord);
-        
-       
+        const requiredCredits = getRequiredCredits(action, modules) || 0;
   
-        const requiredCredits = getRequiredCredits(action, modules);
-  
-        // Check if the user has enough credits for the action
         if (userCredits < requiredCredits && !wordExists) {
           console.log("Not enough credits.");
           return router.push("/no-credits");
         }
   
-        // Deduct credits and update progress before navigating
         const creditsBeforeDeduction = userCredits;
         const remainingCredits = userCredits - requiredCredits;
   
         try {
-          const creditData = await checkCredits(
-            action,
-            selectedWord,
-            remainingCredits
-          );
+          const creditData = await checkCredits(action, selectedWord, remainingCredits);
   
           if (!creditData.success) {
             console.log("Credit check failed.");
@@ -197,16 +187,14 @@ export const UserState = ({ children }) => {
           }
   
           if (creditData.creditsDeducted) {
-            setUserCredits(creditData.remainingCredits); // Update credits
-            setUserProgress([...userProgress, `${action}-${selectedWord}`]); // Update progress
+            setUserCredits(creditData.remainingCredits);
+            setUserProgress([...userProgress, `${action}-${selectedWord}`]);
           }
   
           router.push(url);
         } catch (error) {
           console.error("Error occurred while updating credits:", error);
-  
-          // Restore credits to their original value in case of an error
-          setUserCredits(creditsBeforeDeduction);
+          setUserCredits(creditsBeforeDeduction); // Rollback credits
           return router.push("/no-credits");
         }
       }
@@ -217,7 +205,8 @@ export const UserState = ({ children }) => {
     return () => {
       router.events.off("routeChangeStart", handleRouteChange);
     };
-  }, [isInitialized, userData]);
+  }, [isInitialized, userData, protectedPaths, modules]);
+  
   
 
   return (

@@ -37,7 +37,12 @@ const Words = ({ curriculum, grade, semester, wordType, handleFunc, t }) => {
   }, [curriculum, grade, semester, wordType]);
 
   if (!words.length) {
-    return <p className="text-gray-500 italic">{t("selectWord")}</p>;
+    return (
+      <p className="text-gray-500 italic">
+        {" "}
+        {t ? t("selectWord") : "Select a word"}
+      </p>
+    );
   }
 
   return (

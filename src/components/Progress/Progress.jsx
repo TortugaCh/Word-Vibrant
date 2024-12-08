@@ -1,11 +1,7 @@
 import { Card, Col, Row, Typography, Button, Badge } from "antd";
 import {
   DownCircleFilled,
-  DownCircleOutlined,
-  DownOutlined,
   UpCircleFilled,
-  UpCircleOutlined,
-  UpOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -13,8 +9,6 @@ import { useRouter } from "next/router";
 
 const { Text } = Typography;
 
-// List of Colors
-// List of Static Colors for Modules
 const moduleColors = [
   "rgb(232, 141, 51)", // Red-200
   "rgb(51, 232, 102)", // Blue-200
@@ -22,7 +16,6 @@ const moduleColors = [
   "rgb(226, 232, 51)", // Yellow-200
 ];
 
-// Random Colors for Progress Cards
 const progressCardColors = [
   "rgba(254, 202, 202, 0.8)", // Red-200
   "rgba(191, 219, 254, 0.8)", // Blue-200
@@ -34,32 +27,31 @@ const progressCardColors = [
   "rgba(178, 235, 242, 0.8)", // Teal-200
 ];
 
-// Function to Get a Random Color for Progress Cards
 const getRandomProgressCardColor = () =>
   progressCardColors[Math.floor(Math.random() * progressCardColors.length)];
 
-// Function to Assign a Static Color to Each Module
 const getModuleColor = (moduleIndex) =>
   moduleColors[moduleIndex % moduleColors.length];
 
-const Progress = ({ userId,t }) => {
+const Progress = ({ userId, t }) => {
   const [modules, setModules] = useState([]);
   const [userProgress, setUserProgress] = useState([]);
   const [collapsedModules, setCollapsedModules] = useState({});
   const router = useRouter();
   const { locale } = router;
+
   const ProgressCard = ({ word }) => (
     <Card
       style={{
         margin: "10px 0",
         borderRadius: "8px",
         textAlign: "center",
-        backgroundColor: getRandomProgressCardColor(), // Random color for word containers
-        color: "#333", // Ensure text is readable
+        backgroundColor: getRandomProgressCardColor(),
+        color: "#333",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "80px", // Uniform card height
+        height: "80px",
       }}
       bordered={false}
       hoverable
@@ -84,8 +76,6 @@ const Progress = ({ userId,t }) => {
         ]);
 
         setModules(getModules.data.data || []);
-        if (modules) console.log(modules);
-
         setUserProgress(userProgress.data.data || []);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -100,12 +90,18 @@ const Progress = ({ userId,t }) => {
         padding: "20px",
         width: "95%",
         margin: "0 auto",
+        maxHeight: "100vh",
+        overflowY: "auto",
+        position: "relative",
       }}
+      className="scrollbar-thin scrollbar-thumb-purple-400 scrollbar-track-purple-100 scrollbar-thumb-rounded hover:scrollbar-thumb-purple-500 focus:scrollbar-thumb-purple-300"
     >
       <Row gutter={[16, 16]}>
         {modules?.map((module, index) => {
           const hasProgress = userProgress[module.value]?.length > 0;
-          const moduleColor = getModuleColor(index); // Static color for the module
+          const moduleColor = getModuleColor(index);
+
+          const isScrollable = hasProgress && userProgress[module.value]?.length > 5;
 
           return (
             <Col
@@ -114,19 +110,18 @@ const Progress = ({ userId,t }) => {
               xs={24}
               sm={12}
               md={8}
-              lg={6} // Adjust column span for responsiveness
+              lg={6}
             >
               <div
                 style={{
                   position: "relative",
                   padding: "10px",
-                  backgroundColor: "#FFFFFF", // Main container background set to white
+                  backgroundColor: "#FFFFFF",
                   borderRadius: "8px",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // Subtle shadow
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                   textAlign: "center",
                 }}
               >
-                {/* Module Title */}
                 <div style={{ padding: "8px", borderRadius: "8px" }}>
                   <Text
                     strong
@@ -141,34 +136,41 @@ const Progress = ({ userId,t }) => {
                   </Text>
                 </div>
 
-                {/* Progress Area */}
-                {!collapsedModules[module.value] && hasProgress && (
-                  <div style={{ marginTop: "10px", textAlign: "right" }}>
-                    {/* Learned Badge */}
-                    <div
-                      style={{
-                        fontSize: "14px",
-                        backgroundColor: moduleColor, // Static color for the "Learned" badge
-                        color: "#fff",
-                        borderRadius: "16px",
-                        padding: "4px 12px",
-                        display: "inline-block",
-                        marginBottom: "10px",
-                        maxWidth: "120px",
-                        textAlign: "center",
-                      }}
-                    >
-                     { t("status.learned")}
+                {/* Scrollable content area */}
+                <div
+                  style={{
+                    maxHeight: isScrollable ? "550px" : "unset",
+                    overflowY: isScrollable ? "auto" : "unset",
+                    paddingBottom: "40px", // Space for the button
+                  }}
+                  className="scrollbar-thin scrollbar-thumb-purple-400 scrollbar-track-purple-100 scrollbar-thumb-rounded hover:scrollbar-thumb-purple-500 focus:scrollbar-thumb-purple-300"
+                >
+                  {!collapsedModules[module.value] && hasProgress && (
+                    <div style={{ marginTop: "10px", textAlign: "right" }}>
+                      <div
+                        style={{
+                          fontSize: "14px",
+                          backgroundColor: moduleColor,
+                          color: "#fff",
+                          borderRadius: "16px",
+                          padding: "4px 12px",
+                          display: "inline-block",
+                          marginBottom: "10px",
+                          maxWidth: "120px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {t("status.learned")}
+                      </div>
+
+                      {userProgress[module.value].map((word, wordIndex) => (
+                        <ProgressCard key={wordIndex} word={word} />
+                      ))}
                     </div>
+                  )}
+                </div>
 
-                    {/* Word Progress Cards */}
-                    {userProgress[module.value].map((word, wordIndex) => (
-                      <ProgressCard key={wordIndex} word={word} />
-                    ))}
-                  </div>
-                )}
-
-                {/* Collapse/Expand Button */}
+                {/* Collapse/Expand Button at the bottom */}
                 {hasProgress && (
                   <Button
                     shape="circle"
@@ -182,7 +184,7 @@ const Progress = ({ userId,t }) => {
                     size="small"
                     style={{
                       position: "absolute",
-                      bottom: "-15px",
+                      bottom: "-20px", // Button appears to be outside the container, but within the bounds
                       left: "50%",
                       transform: "translateX(-50%)",
                       zIndex: 10,

@@ -12,24 +12,16 @@ export default function Page() {
   const router = useRouter();
   const { selectedWord } = router.query;
   const [loading, setLoading] = useState(false);
-  const [story, setStory] = useState(""); // Renamed 'dialogue' to 'story'
-  const { speak, voices, cancel } = useSpeechSynthesis(); // Added cancel for pausing
-  const [isPlaying, setIsPlaying] = useState(false); // Track audio playback state
-
-  // State to ensure voices are loaded before attempting to find one
+  const [story, setStory] = useState("");
+  const { speak, voices, cancel } = useSpeechSynthesis();
+  const [isPlaying, setIsPlaying] = useState(false);
   const [voiceLoaded, setVoiceLoaded] = useState(false);
   const [taiwaneseVoice, setTaiwaneseVoice] = useState(null);
   const t = useTranslations("strokeOrder");
 
   useEffect(() => {
     if (voices.length > 0) {
-      // Try to find a Taiwanese Mandarin voice, with fallback to zh-CN if unavailable
-      let voice = voices.filter((v) => v.lang === "zh-TW")[2];
-      if(!voice) {
-        voice = voices.filter((v) => v.lang === "zh-CN")[0]
-      }
-      console.log(voices.filter((v) => v.lang === "zh-TW"));
-      console.log("Voice", voice);
+      let voice = voices.filter((v) => v.lang === "zh-TW")[2] || voices.filter((v) => v.lang === "zh-CN")[0];
       setTaiwaneseVoice(voice);
       setVoiceLoaded(true);
     }
@@ -38,50 +30,32 @@ export default function Page() {
   function speakTaiwanese(text) {
     if (taiwaneseVoice) {
       speak({ text, voice: taiwaneseVoice });
-      setIsPlaying(true); // Set to playing when the speech starts
-    } else {
-      console.warn("Taiwanese Mandarin voice not available.");
+      setIsPlaying(true);
     }
   }
 
   function pauseAudio() {
-    cancel(); // Cancel the current speech
-    setIsPlaying(false); // Set to paused when the speech is cancelled
-  }
-
-  if (!selectedWord) {
-    return <div>Loading...</div>;
+    cancel();
+    setIsPlaying(false);
   }
 
   useEffect(() => {
     setLoading(true);
     if (selectedWord) {
-      genStory(); // Renamed 'genDialogue' to 'genStory'
+      genStory();
     }
-
-    return () => {};
   }, [selectedWord]);
 
   const genStory = async () => {
     try {
-      const prompt = `
-        Write a simple and engaging children's story in Traditional Chinese using the word "${selectedWord}".  
-        Follow these guidelines:
-        1. The story should be suitable for beginners, using simple and easy-to-understand vocabulary and sentences.
-        2. Include a clear structure with a beginning, middle, and end.
-        3. The main characters should be animals, children, or other cute and relatable characters to capture children's interest.
-        4. The plot should be positive and convey a simple lesson or inspirational message.
-        5. Keep the story concise, appropriate for children's learning and reading.
-        6. Ensure the text is fully written in Traditional Chinese and easy for children to follow.
-      `;
-
+      const prompt = `Write a simple and engaging children's story in Traditional Chinese using the word "${selectedWord}".  
+        The story should be suitable for beginners, with animals, children, or cute characters, and provide a simple inspirational message.`;
       const resp = await axios.post("/api/getStory", { prompt });
 
       if (resp.status === 200) {
-        message.success(t("dialogueSuccess"));
-        console.log(resp.data);
+        // message.success(t("dialogueSuccess"));
         setLoading(false);
-        setStory(resp.data.data); // Assuming 'resp.data.data' contains the story
+        setStory(resp.data.data);
       }
     } catch (error) {
       setLoading(false);
@@ -92,25 +66,29 @@ export default function Page() {
   return (
     <DashboardLayout>
       {loading ? (
-        <div className="text-center py-10">Loading...</div>
+        <div className="flex justify-center items-center h-[70vh]">
+          <div className="w-16 h-16 border-4 border-purple-400 border-dashed rounded-full animate-spin"></div>
+        </div>
       ) : (
         <div className="flex flex-col items-center justify-center w-full mx-auto py-10">
-          {/* Display the story content here, and center it */}
-          <div className="bg-white p-10 rounded-lg shadow-lg max-w-2xl w-full flex items-center justify-center flex-col gap-8">
-            <h1 className="text-4xl font-bold text-purple-700 text-center">Story</h1>
-            <div className="flex flex-col items-center gap-2">
+          <div className="bg-gradient-to-r from-purple-200 via-purple-300 to-purple-400 p-8 rounded-lg shadow-xl max-w-2xl w-full flex items-center justify-center flex-col gap-8">
+            <h1 className="text-4xl font-semibold text-white text-center">Story</h1>
+            <div className="flex flex-col items-center gap-4">
               <p className="text-center text-lg text-gray-800">{story}</p>
               <button
                 onClick={() => (isPlaying ? pauseAudio() : speakTaiwanese(story))}
-                className={`mt-6 px-4 py-2 rounded flex items-center gap-2 ${
-                  voiceLoaded
-                    ? "bg-blue-500 text-white hover:bg-blue-700"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-                disabled={!voiceLoaded} // Disable until voices are loaded
+                className={`mt-6 px-6 py-3 rounded-lg flex items-center gap-3 transition-all transform duration-300 ease-in-out ${voiceLoaded
+                  ? "bg-gradient-to-r from-blue-400 to-purple-500 text-white hover:scale-110 hover:bg-gradient-to-l hover:from-purple-500 hover:to-blue-400"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                disabled={!voiceLoaded}
               >
-                {isPlaying?<PiPause color="white" size={32} />:<PiEar color="white" size={32} />}
-                {isPlaying ? "Pause The Story" : t("practice.listen")}
+                {isPlaying ? (
+                  <PiPause color="white" size={32} />
+                ) : (
+                  <PiEar color="white" size={32} />
+                )}
+                {isPlaying ? "Pause Story" : t("practice.listen")}
               </button>
             </div>
           </div>
