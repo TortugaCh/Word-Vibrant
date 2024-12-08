@@ -1,9 +1,14 @@
 [build]
-  command = "npm run build"
-  publish = ".next"
-  functions = "netlify/functions"
+command = "npm run build"
+publish = "out" # Ensure 'out' contains your built files
+functions = "netlify/functions"
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+from = "/api/*"
+to = "/.netlify/functions/:splat"
+status = 200
+
+[[redirects]]
+from = "/_next/image"
+to = "/.netlify/images?url=:url&w=:width&q=:quality"
+status = 200
