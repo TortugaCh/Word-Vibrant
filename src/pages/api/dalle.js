@@ -1,22 +1,30 @@
+const fetchWithTimeout=async(resource, options = {}, timeout = 10000)=> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  return fetch(resource, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
+}
+
+const fetchWithRetry = async (url, options, retries = 3, timeout = 30000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetchWithTimeout(url, options, timeout);
+      if (response.ok) return response;
+    } catch (error) {
+      if (i === retries - 1) throw error; // Throw error after last retry
+    }
+  }
+};
+
 export default async function handler(req, res) {
-  const { word } = JSON.parse(req.body);
-
-  // Refined strict promptt
-  const refinedPrompt = `
-  Create a delightful, black-and-white line art coloring page designed specifically for children. 
-  The illustration should creatively and playfully represent the concept of the word "${word}" through cheerful and engaging visuals. 
-  Focus on fun, imaginative scenes that children will love to color, featuring friendly animals, whimsical nature elements like flowers, trees, hills, flowing rivers, rainbows, and happy sunshine. 
-  Include playful details such as smiling clouds, animals interacting joyfully, or simple abstract shapes arranged in patterns.
-  
-  The artwork must be simple and easy to color, with bold, clean outlines suitable for young children. 
-  Avoid intricate details, shading, or anything overly complex, ensuring the design is stress-free and enjoyable for kids.
-  
-  **Strictly avoid** including any text, symbols, letters, or representations of the word itself within the image. 
-  The scene should inspire happiness, creativity, and storytelling, making it perfect for a child’s coloring page.
-  `;
-
   try {
-    const response = await fetch(
+    const { word } = JSON.parse(req.body);
+
+    const refinedPrompt = `
+      Create a delightful, black-and-white line art coloring page designed specifically for children.
+      The illustration should creatively represent the concept of the word "${word}" with playful visuals.
+    `;
+
+    const response = await fetchWithRetry(
       "https://api.openai.com/v1/images/generations",
       {
         method: "POST",
@@ -30,18 +38,24 @@ export default async function handler(req, res) {
           n: 1,
           size: "1024x1024",
         }),
-      }
+      },
+      3, // Retry up to 3 times
+      30000 // Timeout of 30 seconds
     );
 
     const data = await response.json();
-
     if (!data || !data.data || !data.data.length) {
       throw new Error("No image generated");
     }
 
     res.status(200).json({ imageUrl: data.data[0].url });
   } catch (error) {
-    console.error("Error generating image:", error);
-    res.status(500).json({ error: "Failed to generate image" });
+    console.error("Error generating image:", error.message || error);
+    res.status(500).json({
+      error:
+        error.name === "AbortError"
+          ? "The request timed out. Please try again."
+          : "Failed to generate image",
+    });
   }
 }
