@@ -71,9 +71,9 @@ export default async function handler(req, res) {
     return res.status(405).end("Method Not Allowed");
   }
   try {
-    const { grade, semester, wordType, curriculum, word } = req.body;
-
-    if (!grade || !semester || !wordType || !curriculum) {
+    const { grade, semester, wordType, curriculum, name } = req.body;
+  console.log(req.body)
+    if (!grade || !semester || !wordType || !curriculum || !name) {
       return res
         .status(400)
         .json({ message: "Missing required fields", status: 400 });
@@ -82,7 +82,7 @@ export default async function handler(req, res) {
     const wordCollection = collection(db, "words");
     const q = query(
       wordCollection,
-      where("name", "==", word),
+      where("name", "==", name),
       where("curriculum", "==", curriculum),
       where("grade", "==", grade),
       where("semester", "==", semester),
@@ -93,7 +93,7 @@ export default async function handler(req, res) {
     // If the document does not exist, add it
     if (querySnapshot.empty) {
       let newWord = {
-        name: word,
+        name: name,
         curriculum: curriculum,
         grade: grade,
         semester: semester,
@@ -106,14 +106,14 @@ export default async function handler(req, res) {
         updatedAt: serverTimestamp(),
       };
       await addDoc(wordCollection, newWord);
-      return res.json({ message: "Word added successfully" });
+      return res.status(200).json({ message: "Word added successfully",success:true });
     } else {
-      return res.json({ message: "Word already exists" });
+      return res.status(403).json({ message: "Word already exists",success:false });
     }
   } catch (error) {
     console.error("Error adding word:", error);
     return res
       .status(500)
-      .json({ message: "Internal Server Error", status: 500 });
+      .json({ message: "Internal Server Error", status: 500,success:false });
   }
 }
