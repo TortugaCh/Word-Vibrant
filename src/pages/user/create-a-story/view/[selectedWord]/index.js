@@ -94,7 +94,7 @@ export default function Page() {
                 }
                 className={`mt-6 px-6 py-3 rounded-lg flex items-center gap-3 transition-all transform duration-300 ease-in-out ${
                   voiceLoaded
-                    ? "bg-gradient-to-r from-green-400 to-blue-500 text-white hover:scale-105 hover:bg-gradient-to-l hover:from-blue-500 hover:to-green-400"
+                    ? "bg-gradient-to-r from-pink-400 via-purple-500 to-pink-600 text-white hover:scale-105 hover:bg-gradient-to-l hover:from-pink-600 hover:to-purple-500"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}
                 disabled={!voiceLoaded}

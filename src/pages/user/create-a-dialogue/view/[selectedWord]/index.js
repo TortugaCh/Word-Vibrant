@@ -1,13 +1,3 @@
-import React, { useEffect, useState } from "react";
-import DashboardLayout from "../../../layout";
-import axios from "axios";
-import { useTranslations } from "next-intl";
-import { withMessages } from "../../../../../lib/getMessages";
-import { useRouter } from "next/router";
-import { message } from "antd";
-import { FaRegCommentDots, FaMagic } from "react-icons/fa"; // Funky icons for kids
-import { GiBookmarklet, GiPencilBrush } from "react-icons/gi"; // Fun icons from react-icons
-
 export default function Page() {
   const router = useRouter();
   const t = useTranslations("strokeOrder");
@@ -15,7 +5,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [dialogue, setDialogue] = useState([]);
 
-  // Dialogue Card Component with kid-friendly style
+  // Dialogue Card Component with updated color scheme
   const DialogueCard = ({ dialogue, index }) => {
     const isEven = index % 2 === 0;
 
@@ -23,8 +13,8 @@ export default function Page() {
       <div
         className={`p-6 mb-6 rounded-xl shadow-lg max-w-4xl mx-auto ${
           isEven
-            ? "bg-yellow-200 hover:shadow-xl hover:bg-yellow-300"
-            : "bg-pink-200 hover:shadow-xl hover:bg-pink-300"
+            ? "bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 hover:shadow-xl hover:bg-gradient-to-r hover:from-indigo-300 hover:via-purple-300 hover:to-pink-300"
+            : "bg-gradient-to-r from-teal-200 via-green-200 to-yellow-200 hover:shadow-xl hover:bg-gradient-to-r hover:from-teal-300 hover:via-green-300 hover:to-yellow-300"
         }`}
         style={{
           display: "flex",
@@ -37,10 +27,10 @@ export default function Page() {
       >
         {/* Funky Icon for Traditional Chinese */}
         <div className={`flex items-center mb-2`}>
-          <GiPencilBrush size={40} className="text-yellow-600 mr-3" />
+          <GiPencilBrush size={40} className="text-indigo-600 mr-3" />
           <div
             className={`text-xl font-semibold ${
-              isEven ? "text-yellow-800 text-right" : "text-pink-800 text-left"
+              isEven ? "text-indigo-800 text-right" : "text-teal-800 text-left"
             }`}
             style={{ lineHeight: "1.6" }}
           >
@@ -50,7 +40,7 @@ export default function Page() {
 
         {/* Funky Icon for English Translation */}
         <div className={`flex items-center mt-2`}>
-          <GiBookmarklet size={40} className="text-pink-600 mr-3" />
+          <GiBookmarklet size={40} className="text-teal-600 mr-3" />
           <div
             className={`text-md text-gray-800 ${
               isEven ? "text-right" : "text-left"
@@ -119,5 +109,3 @@ export default function Page() {
     </DashboardLayout>
   );
 }
-
-export const getServerSideProps = withMessages("strokeOrder");
