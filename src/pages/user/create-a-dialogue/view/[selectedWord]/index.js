@@ -23,38 +23,37 @@ export default function Page() {
       <div
         className={`p-6 mb-6 rounded-xl shadow-lg max-w-4xl mx-auto ${
           isEven
-            ? "bg-yellow-200 hover:shadow-xl hover:bg-yellow-300"
-            : "bg-pink-200 hover:shadow-xl hover:bg-pink-300"
+            ? "bg-yellow-200 hover:shadow-xl hover:bg-yellow-300"  // Keep the existing colors
+            : "bg-pink-200 hover:shadow-xl hover:bg-pink-300"   // Keep the existing colors
         }`}
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          alignItems: "flex-start", // Default for left side
+          justifyContent: "center",
           padding: "20px",
           boxSizing: "border-box",
           transition: "all 0.3s ease-in-out", // Fun hover effect
+          marginLeft: isEven ? '0' : 'auto',  // Align left for even, right for odd
+          marginRight: isEven ? 'auto' : '0',  // Align right for odd, left for even
         }}
       >
-        {/* Funky Icon for Traditional Chinese */}
+        {/* Traditional Chinese */}
         <div className={`flex items-center mb-2`}>
           <GiPencilBrush size={40} className="text-yellow-600 mr-3" />
           <div
-            className={`text-xl font-semibold ${
-              isEven ? "text-yellow-800 text-right" : "text-pink-800 text-left"
-            }`}
+            className={`text-xl font-semibold ${isEven ? "text-yellow-800 text-left" : "text-pink-800 text-right"}`}
             style={{ lineHeight: "1.6" }}
           >
             {dialogue.traditionalChinese}
           </div>
         </div>
 
-        {/* Funky Icon for English Translation */}
+        {/* English Translation */}
         <div className={`flex items-center mt-2`}>
           <GiBookmarklet size={40} className="text-pink-600 mr-3" />
           <div
-            className={`text-md text-gray-800 ${
-              isEven ? "text-right" : "text-left"
-            }`}
+            className={`text-md text-gray-800 ${isEven ? "text-left" : "text-right"}`}
             style={{ lineHeight: "1.6" }}
           >
             {dialogue.english}
