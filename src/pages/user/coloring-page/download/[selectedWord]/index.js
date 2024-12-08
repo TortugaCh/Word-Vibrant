@@ -5,6 +5,7 @@ import { Canvg } from "canvg";
 import DashboardLayout from "../../../layout";
 import { DollarCircleOutlined, DownloadOutlined } from "@ant-design/icons";
 import ReusableButton from "../../../../../components/Buttons/gradientButton";
+import { getColoringPage } from "../../../../../lib/utils";
 const DownloadPage = () => {
   const router = useRouter();
   const { selectedWord } = router.query;
@@ -22,16 +23,17 @@ const DownloadPage = () => {
 
   const fetchBackgroundImage = async (word, description) => {
     try {
-      const response = await fetch("/api/dalle", {
-        method: "POST",
-        body: JSON.stringify({ word: description }),
-      });
+      // const response = await fetch("/api/dalle", {
+      //   method: "POST",
+      //   body: JSON.stringify({ word: description }),
+      // });
 
-      const data = await response.json();
-      setBackgroundImage(data.imageUrl);
+      const resp=await getColoringPage(word);
+      // const data = await response.json();
+      setBackgroundImage(resp.imageUrl);
 
       if (coloringPageContainerRef.current) {
-        coloringPageContainerRef.current.style.backgroundImage = `url(${data.imageUrl})`;
+        coloringPageContainerRef.current.style.backgroundImage = `url(${resp.imageUrl})`;
       }
     } catch (error) {
       console.error("Error fetching background image:", error);
