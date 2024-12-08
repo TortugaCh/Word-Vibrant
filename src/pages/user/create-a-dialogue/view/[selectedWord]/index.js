@@ -17,7 +17,9 @@ export default function Page() {
   // Dialogue Card Component
   const DialogueCard = ({ dialogue }) => (
     <div className="p-6 mb-4 rounded-lg shadow-lg bg-gradient-to-r from-purple-100 via-purple-200 to-purple-300">
-      <div className="text-purple-800 font-semibold mb-2">{dialogue.traditionalChinese}</div>
+      <div className="text-purple-800 font-semibold mb-2">
+        {dialogue.traditionalChinese}
+      </div>
       <div className="text-purple-700">{dialogue.english}</div>
     </div>
   );
@@ -28,7 +30,7 @@ export default function Page() {
       genDialogue();
     }
 
-    return () => { };
+    return () => {};
   }, [selectedWord]);
 
   const genDialogue = async () => {
@@ -41,14 +43,17 @@ export default function Page() {
 
       if (resp.status === 200 && Array.isArray(resp.data.data)) {
         console.log("Parsed Dialogue:", resp.data.data);
-        // message.success(t("dialogueSuccess"));
+        // message.success(t("dialogueSuccesssss"));
         setDialogue(resp.data.data); // Set the dialogue data
       } else {
         console.error("Invalid response structure:", resp.data);
         message.error("Invalid response from server.");
       }
     } catch (error) {
-      console.error("Error generating dialogue:", error.response?.data || error);
+      console.error(
+        "Error generating dialogue:",
+        error.response?.data || error
+      );
       message.error(error.response?.data?.error || t("dialogueError"));
       setDialogue([]); // Reset dialogue on error
     } finally {
