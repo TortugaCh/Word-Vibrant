@@ -36,7 +36,7 @@ export default function Page() {
 
   const genDialogue = async () => {
     try {
-      const prompt = `Create a short dialogue using the word "${selectedWord}". Include both the Traditional Chinese and the English translation for each line. Limit the dialogue to 3-4 exchanges. Format the response as a JSON array with the following keys:
+      const prompt = `Create a short dialogue using the word "${selectedWord}". Include both the Traditional Chinese and the English translation for each line. Limit the dialogue to 5-6 exchanges. Format the response as a JSON array with the following keys:
         - "traditionalChinese": Dialogue in Traditional Chinese.
         - "english": English translation of the dialogue.`;
 
