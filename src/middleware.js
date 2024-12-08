@@ -56,6 +56,16 @@ export async function middleware(req) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("token")?.value;
 
+  // Allow static files and Next.js assets to bypass authentication
+  if (
+    pathname.startsWith("/_next") || // Next.js assets (build files)
+    pathname.startsWith("/images") || // Static images in the public folder
+    pathname.startsWith("/favicon.ico") || // Favicon
+    pathname.startsWith("/robots.txt") // Static robots.txt
+  ) {
+    return NextResponse.next();
+  }
+
   // Public routes
   const publicRoutes = [
     "/auth",
@@ -99,5 +109,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ["/((?!api).*)"], // Apply to all routes except API routes
+  matcher: ["/((?!api|_next|images|favicon.ico|robots.txt).*)"], // Exclude static files and API routes
 };

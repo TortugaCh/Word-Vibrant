@@ -13,24 +13,27 @@ export default function Page() {
       <div
         className={`p-6 mb-6 rounded-xl shadow-lg max-w-4xl mx-auto ${
           isEven
-            ? "bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 hover:shadow-xl hover:bg-gradient-to-r hover:from-indigo-300 hover:via-purple-300 hover:to-pink-300"
-            : "bg-gradient-to-r from-teal-200 via-green-200 to-yellow-200 hover:shadow-xl hover:bg-gradient-to-r hover:from-teal-300 hover:via-green-300 hover:to-yellow-300"
+            ? "bg-yellow-200 hover:shadow-xl hover:bg-yellow-300"
+            : "bg-pink-200 hover:shadow-xl hover:bg-pink-300"
         }`}
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          alignItems: "flex-start", // Default for left side
+          justifyContent: "center",
           padding: "20px",
           boxSizing: "border-box",
           transition: "all 0.3s ease-in-out", // Fun hover effect
+          marginLeft: isEven ? "0" : "auto", // Align left for even, right for odd
+          marginRight: isEven ? "auto" : "0", // Align right for odd, left for even
         }}
       >
-        {/* Funky Icon for Traditional Chinese */}
+        {/* Traditional Chinese */}
         <div className={`flex items-center mb-2`}>
           <GiPencilBrush size={40} className="text-indigo-600 mr-3" />
           <div
             className={`text-xl font-semibold ${
-              isEven ? "text-indigo-800 text-right" : "text-teal-800 text-left"
+              isEven ? "text-yellow-800 text-right" : "text-pink-800 text-left"
             }`}
             style={{ lineHeight: "1.6" }}
           >
@@ -38,12 +41,12 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Funky Icon for English Translation */}
+        {/* English Translation */}
         <div className={`flex items-center mt-2`}>
           <GiBookmarklet size={40} className="text-teal-600 mr-3" />
           <div
             className={`text-md text-gray-800 ${
-              isEven ? "text-right" : "text-left"
+              isEven ? "text-left" : "text-right"
             }`}
             style={{ lineHeight: "1.6" }}
           >

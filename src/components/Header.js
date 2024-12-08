@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { handleLogout } from "../lib/utils";
 import { useUserContext } from "../context/UserContext";
 
-export default function Header({ title = "Chinese Literacy AI", onLogout }) {
+export default function Header({ logoSrc = "/images/logo4.png", onLogout }) {
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -26,12 +26,15 @@ export default function Header({ title = "Chinese Literacy AI", onLogout }) {
   return (
     <header className="bg-white shadow-md w-full fixed top-0 z-20">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <h1
-          className="text-3xl font-extrabold text-purple-600 cursor-pointer"
-          onClick={() => router.push("/")}
-        >
-          {title}
-        </h1>
+        {/* Logo Image instead of Title */}
+        <div>
+          <img
+            src={logoSrc}
+            alt="Logo"
+            className="cursor-pointer h-16 sm:h-18 md:h-20 lg:h-32 w-auto"
+            onClick={() => router.push("/")}
+          />
+        </div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-gray-600">
@@ -90,9 +93,9 @@ export default function Header({ title = "Chinese Literacy AI", onLogout }) {
           ) : (
             <button
               onClick={() => router.push("/auth")}
-              className="flex items-center text-purple-600 hover:text-purple-800 font-semibold transition duration-200"
+              className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-purple-700 transition duration-200"
             >
-              <FiUser className="mr-1" />
+              <FiUser className="text-xl" />
               Login
             </button>
           )}
@@ -116,15 +119,16 @@ export default function Header({ title = "Chinese Literacy AI", onLogout }) {
         <div className="fixed inset-0 z-30 bg-black bg-opacity-50 sidebar">
           <div className="fixed top-0 left-0 w-3/4 max-w-xs bg-white h-full shadow-lg transform transition-transform duration-300 animate-slide-right p-6">
             {/* Sidebar Content */}
-            <h2
-              className="text-2xl font-extrabold text-purple-600 mb-6 cursor-pointer"
+            <img
+              src={logoSrc}
+              alt="Logo"
+              className="cursor-pointer"
               onClick={() => {
                 toggleSidebar();
                 router.push("/");
               }}
-            >
-              {title}
-            </h2>
+              style={{ height: "50px" }} // Adjust logo size
+            />
             <nav className="flex flex-col gap-4 text-gray-700">
               <Link
                 href="/pricing"

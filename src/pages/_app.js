@@ -25,6 +25,7 @@ const App = ({ Component, pageProps }) => {
     <>
       {/* SEO Meta Tags */}
       <Head>
+        <link rel="icon" href="/favicon.ico" />
         <title>語動 - 國小識字網 | 一站式小學識字平台</title>
         <meta
           name="description"

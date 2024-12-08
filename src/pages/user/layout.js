@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobile, setMobile] = useState(false);
   const { userData, userCredits } = useUserContext();
-  
+
   // Handle responsive behavior
   useEffect(() => {
     const handleResize = () => {
@@ -31,7 +31,7 @@ export default function DashboardLayout({ children }) {
               "url('/images/monkey.png'), linear-gradient(to right, white, white)",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center center",
-            backgroundSize: "cover",
+            backgroundSize: "cover", // Ensures the image scales to cover the area
             boxShadow: "2px 0 10px rgba(0, 0, 0, 0.1)",
             position: "fixed",
             top: 0,
@@ -55,7 +55,7 @@ export default function DashboardLayout({ children }) {
             backgroundImage: "url('/images/monkey.png')",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center center",
-            backgroundSize: "cover",
+            backgroundSize: "cover", // Ensures the image scales to cover the area
             minHeight: "100vh",
           }}
           width={280}

@@ -331,3 +331,62 @@ export const getAction = (pathname) => {
     return "create-a-dialogue";
   }
 };
+
+const fetchWithTimeout = async (resource, options = {}, timeout = 10000) => {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  return fetch(resource, { ...options, signal: controller.signal }).finally(
+    () => clearTimeout(id)
+  );
+};
+
+const fetchWithRetry = async (url, options, retries = 3, timeout = 30000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetchWithTimeout(url, options, timeout);
+      if (response.ok) return response;
+    } catch (error) {
+      if (i === retries - 1) throw error; // Throw error after last retry
+    }
+  }
+};
+
+// Get Coloring Page
+
+export const getColoringPage = async (word) => {
+  console.log("Generating coloring page for word:", word);
+  const refinedPrompt = `
+    Create a delightful, black-and-white line art coloring page designed specifically for children.
+    The illustration should creatively represent the concept of the word "${word}" with playful visuals.
+  `;
+  try {
+    const response = await fetchWithRetry(
+      "https://api.openai.com/v1/images/generations",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer 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`,
+        },
+        body: JSON.stringify({
+          model: "dall-e-3",
+          prompt: refinedPrompt,
+          n: 1,
+          size: "1024x1024",
+        }),
+      },
+      3, // Retry up to 3 times
+      30000 // Timeout of 30 seconds
+    );
+
+    const data = await response.json();
+    if (!data || !data.data || !data.data.length) {
+      throw new Error("No image generated");
+    }
+
+    return { imageUrl: data.data[0].url };
+  } catch (error) {
+    console.error("Error generating image:", error.message || error);
+    return null;
+  }
+};
