@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { withMessages } from "../../../../../lib/getMessages";
 import { useRouter } from "next/router";
 import { message } from "antd";
+import { FaRegCommentDots, FaMagic } from "react-icons/fa"; // Funky icons for kids
+import { GiBookmarklet, GiPencilBrush } from "react-icons/gi"; // Fun icons from react-icons
 
 export default function Page() {
   const router = useRouter();
@@ -13,14 +15,51 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [dialogue, setDialogue] = useState([]);
 
-  // Dialogue Card Component
-  const DialogueCard = ({ dialogue }) => {
+  // Dialogue Card Component with kid-friendly style
+  const DialogueCard = ({ dialogue, index }) => {
+    const isEven = index % 2 === 0;
+
     return (
-      <div className="p-4 mb-2 rounded-lg shadow-md text-purple-800 text-sm bg-purple-100">
-        <div className="text-purple-600 font-semibold mb-2">
-          {dialogue.traditionalChinese}
+      <div
+        className={`p-6 mb-6 rounded-xl shadow-lg max-w-4xl mx-auto ${
+          isEven
+            ? "bg-yellow-200 hover:shadow-xl hover:bg-yellow-300"
+            : "bg-pink-200 hover:shadow-xl hover:bg-pink-300"
+        }`}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "20px",
+          boxSizing: "border-box",
+          transition: "all 0.3s ease-in-out", // Fun hover effect
+        }}
+      >
+        {/* Funky Icon for Traditional Chinese */}
+        <div className={`flex items-center mb-2`}>
+          <GiPencilBrush size={40} className="text-yellow-600 mr-3" />
+          <div
+            className={`text-xl font-semibold ${
+              isEven ? "text-yellow-800 text-right" : "text-pink-800 text-left"
+            }`}
+            style={{ lineHeight: "1.6" }}
+          >
+            {dialogue.traditionalChinese}
+          </div>
         </div>
-        <div className="text-purple-800">{dialogue.english}</div>
+
+        {/* Funky Icon for English Translation */}
+        <div className={`flex items-center mt-2`}>
+          <GiBookmarklet size={40} className="text-pink-600 mr-3" />
+          <div
+            className={`text-md text-gray-800 ${
+              isEven ? "text-right" : "text-left"
+            }`}
+            style={{ lineHeight: "1.6" }}
+          >
+            {dialogue.english}
+          </div>
+        </div>
       </div>
     );
   };
@@ -70,7 +109,7 @@ export default function Page() {
         <div>
           {dialogue.length > 0 ? (
             dialogue.map((dia, index) => (
-              <DialogueCard dialogue={dia} key={index} />
+              <DialogueCard dialogue={dia} key={index} index={index} />
             ))
           ) : (
             <p>{t("noDialogue")}</p>
