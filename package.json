@@ -17,6 +17,7 @@
     "@mantine/core": "^7.14.1",
     "@mantine/hooks": "^7.14.1",
     "@mantine/modals": "^7.14.1",
+    "@netlify/plugin-nextjs": "^5.8.1",
     "@stripe/react-stripe-js": "^2.8.1",
     "@stripe/stripe-js": "^4.9.0",
     "antd": "^5.22.2",
