@@ -151,7 +151,7 @@ export default function HomePage() {
           </section>
 
           {/* Pricing Section */}
-          <PricingSection isSection={true} />
+          <PricingSection isSection={true} t={t}/>
         </div>
       </Template>
 
