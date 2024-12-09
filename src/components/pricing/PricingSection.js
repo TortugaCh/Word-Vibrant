@@ -3,15 +3,15 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { useUserContext } from "../../context/UserContext";
+import { withMessages } from "../../lib/getMessages";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
 
-const PricingSection = ({ isSection = false }) => {
+export default function PricingSection({ isSection = false,t }) {
   const [pricingplans, setPricingPlans] = useState([]);
   const { userData } = useUserContext();
-  const t = useTranslations("pricing"); // Ensures correct namespace
   const router = useRouter();
   const { locale } = router;
 
@@ -70,51 +70,50 @@ const PricingSection = ({ isSection = false }) => {
 
     return (
       <div
-      className={`relative bg-gradient-to-b from-${additional.color}-50 to-${additional.color}-200 p-10 rounded-3xl shadow-2xl hover:shadow-2xl hover:scale-105 hover:rotate-1 transition-all duration-300 ease-in-out`}
-    >
-      <div
-        className={`absolute -top-4 -left-4 bg-yellow-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md`}
+        className={`relative bg-gradient-to-b from-${additional.color}-50 to-${additional.color}-200 p-10 rounded-3xl shadow-2xl hover:shadow-2xl hover:scale-105 hover:rotate-1 transition-all duration-300 ease-in-out`}
       >
-        Premium
+        <div
+          className={`absolute -top-4 -left-4 bg-yellow-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md`}
+        >
+          Premium
+        </div>
+        <h4
+          className={`text-4xl font-extrabold text-${additional.color}-700 mb-4 tracking-wide`}
+        >
+          {locale === "en" ? name : nameZh}
+        </h4>
+        <p className="text-gray-700 mb-4">NT${cost}</p>
+        <p className="text-gray-700 mb-4">{t("credits")}: {credits}</p>
+        <p className="text-sm text-gray-500 mb-6">
+          {locale === "en" ? description : descriptionZh}
+        </p>
+        <button
+          className={`px-6 py-3 rounded-full text-white shadow-xl transition-all duration-300`}
+          style={{
+            background: `linear-gradient(to right, ${
+              additional.color === "green"
+                ? "#22c55e, #15803d"
+                : additional.color === "red"
+                ? "#ef4444, #dc2626"
+                : "#8b5cf6, #6d28d9"
+            })`,
+            boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
+          }}
+          onMouseOver={(e) => (e.target.style.filter = "brightness(1.2)")}
+          onMouseOut={(e) => (e.target.style.filter = "brightness(1)")}
+          onClick={() =>
+            handleCheckout(plan.priceId, plan.id, userData?.userId)
+          }
+        >
+          {t("buyNow")}
+        </button>
+        <div
+          className={`absolute -top-8 -right-8 w-16 h-16 bg-${additional.color}-500 text-white rounded-full flex items-center justify-center text-4xl shadow-lg`}
+          style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)" }}
+        >
+          {additional.icon}
+        </div>
       </div>
-      <h4 className={`text-4xl font-extrabold text-${additional.color}-700 mb-4 tracking-wide`}>
-        {locale === "en" ? name : nameZh}
-      </h4>
-      <p className="text-gray-700 mb-4">NT${cost}</p>
-      <p className="text-gray-700 mb-4">Credits: {credits}</p>
-      <p className="text-sm text-gray-500 mb-6">
-        {locale === "en" ? description : descriptionZh}
-      </p>
-      <button
-        className={`px-6 py-3 rounded-full text-white shadow-xl transition-all duration-300`}
-        style={{
-          background: `linear-gradient(to right, ${
-            additional.color === "green"
-              ? "#22c55e, #15803d"
-              : additional.color === "red"
-              ? "#ef4444, #dc2626"
-              : "#8b5cf6, #6d28d9"
-          })`,
-          boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
-        }}
-        onMouseOver={(e) =>
-          (e.target.style.filter = "brightness(1.2)")
-        }
-        onMouseOut={(e) =>
-          (e.target.style.filter = "brightness(1)")
-        }
-        onClick={() => handleCheckout(plan.priceId, plan.id, userData?.userId)}
-      >
-        {t("buyNow")}
-      </button>
-      <div
-        className={`absolute -top-8 -right-8 w-16 h-16 bg-${additional.color}-500 text-white rounded-full flex items-center justify-center text-4xl shadow-lg`}
-        style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)" }}
-      >
-        {additional.icon}
-      </div>
-    </div>
-    
     );
   };
 
@@ -144,6 +143,5 @@ const PricingSection = ({ isSection = false }) => {
       )}
     </section>
   );
-};
+}
 
-export default PricingSection;

@@ -6,7 +6,7 @@ import {
   FaInstagram,
 } from "react-icons/fa";
 
-const Footer = () => {
+const Footer = ({t}) => {
   return (
     <footer className="bg-[#b47fe5] text-white py-8 px-4 w-full">
       <div className="max-w-screen-xl mx-auto">
@@ -19,8 +19,7 @@ const Footer = () => {
               className="h-16 mb-4"
             />
             <p className="text-lg text-center lg:text-left">
-              Your company description here. Short and memorable, showcasing
-              your brand.
+              {t("footer.description")}
             </p>
           </div>
           <div className="flex flex-col lg:flex-row justify-center lg:justify-start items-center lg:items-start mt-6 lg:mt-0 space-x-6 space-y-4 lg:space-y-0">
@@ -28,25 +27,25 @@ const Footer = () => {
               href="/about"
               className="text-white hover:text-[#ffae33] transition duration-300"
             >
-              About Us
+              {t("footer.aboutUs")}
             </a>
             <a
               href="/terms"
               className="text-white hover:text-[#ffae33] transition duration-300"
             >
-              Terms of Service
+              {t("footer.termsOfService")}
             </a>
             <a
               href="/privacy"
               className="text-white hover:text-[#ffae33] transition duration-300"
             >
-              Privacy Policy
+              {t("footer.privacyPolicy")}
             </a>
             <a
               href="mailto:contact@company.com"
               className="text-white hover:text-[#ffae33] transition duration-300"
             >
-              Contact Us
+              {t("footer.contactUs")}
             </a>
           </div>
         </div>

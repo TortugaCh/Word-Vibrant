@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { handleLogout } from "../lib/utils";
 import { useUserContext } from "../context/UserContext";
 
-export default function Header({ logoSrc = "/images/logo3.png", onLogout }) {
+export default function Header({ logoSrc = "/images/logo3.png", onLogout ,t}) {
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -42,19 +42,19 @@ export default function Header({ logoSrc = "/images/logo3.png", onLogout }) {
             href="/pricing"
             className="hover:text-purple-600 transition duration-200"
           >
-            Pricing Plan
+            {t("header.pricingPlan")}
           </Link>
           <Link
             href="/about"
             className="hover:text-purple-600 transition duration-200"
           >
-            About Us
+            {t("header.aboutUs")}
           </Link>
           <Link
             href="/privacy"
             className="hover:text-purple-600 transition duration-200"
           >
-            Privacy Policy
+            {t("header.privacyPolicy")}
           </Link>
 
           {userData ? (
@@ -64,12 +64,12 @@ export default function Header({ logoSrc = "/images/logo3.png", onLogout }) {
                 className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-purple-700 transition duration-200"
               >
                 <FiUser className="text-xl" />
-                <span>Profile</span>
+                <span>{t("header.profile")}</span>
               </button>
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg p-4 z-30 border border-gray-100">
                   <p className="text-gray-700 font-medium mb-2">
-                    Logged in as:
+                    {t("header.loggedInAs")}:
                   </p>
                   <div className="flex items-center gap-2">
                     <FiUser className="text-gray-900 text-lg" />
@@ -85,7 +85,7 @@ export default function Header({ logoSrc = "/images/logo3.png", onLogout }) {
                     className="flex items-center gap-2 text-red-500 font-semibold hover:text-red-700 transition duration-200 w-full justify-center mt-4"
                   >
                     <FiLogOut />
-                    Logout
+                    {t("header.logout")}
                   </button>
                 </div>
               )}

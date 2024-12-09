@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./Header"; // Ensure you have this header component
 
-export default function Template({ children, title, userData, onLogout }) {
+export default function Template({ children, title, userData, onLogout,t }) {
   // Static circle positions (Top-Left, Top-Right, Bottom-Right, Bottom-Left, Center)
   const circles = [
     { top: "15%", left: "5%", size: "80px", color: "rgba(126, 87, 194, 0.5)" },
@@ -29,7 +29,7 @@ export default function Template({ children, title, userData, onLogout }) {
   return (
     <div className="relative bg-white min-h-screen flex flex-col items-center overflow-hidden">
       {/* Header */}
-      <Header title={title} userData={userData} onLogout={onLogout} />
+      <Header title={title} userData={userData} onLogout={onLogout} t={t}/>
 
       {/* Decorative Circles */}
       <div className="absolute inset-0 overflow-hidden">

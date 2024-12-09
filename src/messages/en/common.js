@@ -16,4 +16,24 @@ export default {
   priceNT: "NT$",
   getStarted: "Get Started",
   buyNow: "Buy Now",
+  header:{
+    home: "Home",
+    aboutUs: "About Us",
+    contactUs: "Contact",
+    pricingPlan: "Pricing Plans",
+    login: "Login",
+    signup: "Signup",
+    logout: "Logout",
+    dashboard: "Dashboard",
+    profile:"Profile",
+    privacyPolicy: "Privacy Policy",
+    loggedInAs: "Logged in as"
+  },
+  footer:{
+    aboutUs: "About Us",
+    contactUs: "Contact Us",
+    privacyPolicy: "Privacy Policy",
+    termsOfService: "Terms of Service",
+    description:"Words Action is a platform that provides an interactive Chinese character learning experience."
+  }
 };
