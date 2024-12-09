@@ -10,6 +10,7 @@ html {
   background: #f3f4f6;
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 
 /* Decorative Elements for Background */

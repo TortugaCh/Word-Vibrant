@@ -69,8 +69,8 @@ const PricingSection = ({ isSection = false }) => {
     const additional = additionalInfo[name];
 
     return (
-      <div
-      className={`relative bg-gradient-to-b from-${additional.color}-50 to-${additional.color}-200 p-10 rounded-3xl shadow-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-in-out`}
+      <div 
+      className={`relative bg-gradient-to-b from-${additional.color}-50 to-${additional.color}-200 p-10 rounded-3xl shadow-2xl hover:shadow-2xl hover:scale-105 hover:rotate-1 transition-all duration-300 ease-in-out`}
     >
       {/* Dynamic Plan Tag */}
  {/* Dynamic Plan Tag */}
@@ -139,12 +139,11 @@ const PricingSection = ({ isSection = false }) => {
       </div>
     </div>
     
-    
     );
   };
 
   return (
-    <section
+    <section  id="pricing"
       className={`container mx-auto px-6 ${
         isSection ? "py-20" : "py-32"
       } text-center`}
