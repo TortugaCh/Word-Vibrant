@@ -1,4 +1,16 @@
-import { FaHome, FaPen, FaPaintBrush, FaComments, FaBookOpen, FaUsers, FaDollarSign, FaBook, FaPalette, FaLayerGroup, FaCubes } from "react-icons/fa"; // Importing icons
+import {
+  FaHome,
+  FaPen,
+  FaPaintBrush,
+  FaComments,
+  FaBookOpen,
+  FaUsers,
+  FaDollarSign,
+  FaBook,
+  FaPalette,
+  FaLayerGroup,
+  FaCubes,
+} from "react-icons/fa"; // Importing icons
 export const wordInputs = (
   curriculumOptions,
   gradeOptions,
@@ -50,43 +62,25 @@ export const adminMenuItems = [
     name: "Home",
     nameZh: "首页",
     link: "/admin",
-    icon: <FaHome /> // Icon for Home
+    icon: <FaHome />, // Icon for Home
   },
   {
     name: "Users",
     nameZh: "用戶管理",
     link: "/admin/users",
-    icon: <FaUsers /> // Icon for Users
+    icon: <FaUsers />, // Icon for Users
   },
   {
     name: "Pricing Plans",
     nameZh: "定價方案",
     link: "/admin/pricing",
-    icon: <FaDollarSign /> // Icon for Pricing Plans
+    icon: <FaDollarSign />, // Icon for Pricing Plans
   },
   {
     name: "Words",
     nameZh: "單詞管理",
     link: "/admin/words",
-    icon: <FaBook /> // Icon for Words
-  },
-  {
-    name: "Hanzi Stroke Coloring",
-    nameZh: "漢字筆劃上色",
-    link: "/admin/hanzi-stroke-coloring",
-    icon: <FaPalette /> // Icon for Hanzi Stroke Coloring
-  },
-  {
-    name: "Module 1",
-    nameZh: "模組 1",
-    link: "/admin/module-1",
-    icon: <FaLayerGroup /> // Icon for Module 1
-  },
-  {
-    name: "Module 2",
-    nameZh: "模組 2",
-    link: "/admin/module-2",
-    icon: <FaCubes /> // Icon for Module 2
+    icon: <FaBook />, // Icon for Words
   },
 ];
 
@@ -95,30 +89,30 @@ export const UserMenuItems = [
     name: "Home",
     nameZh: "首页",
     link: "/user/dashboard",
-    icon: <FaHome /> // Icon for Home
+    icon: <FaHome />, // Icon for Home
   },
   {
     name: "Stroke Order",
     nameZh: "筆劃順序",
     link: "/user/stroke-order",
-    icon: <FaPen /> // Icon for Stroke Order
+    icon: <FaPen />, // Icon for Stroke Order
   },
   {
     name: "Hanzi coloring page",
     nameZh: "漢字塗色頁",
     link: "/user/coloring-page",
-    icon: <FaPaintBrush /> // Icon for Hanzi Coloring Page
+    icon: <FaPaintBrush />, // Icon for Hanzi Coloring Page
   },
   {
     name: "Create a dialogue",
     nameZh: "創建對話",
     link: "/user/create-a-dialogue",
-    icon: <FaComments /> // Icon for Create a Dialogue
+    icon: <FaComments />, // Icon for Create a Dialogue
   },
   {
     name: "Create a short story",
     nameZh: "創建故事",
     link: "/user/create-a-story",
-    icon: <FaBookOpen /> // Icon for Create a Short Story
+    icon: <FaBookOpen />, // Icon for Create a Short Story
   },
 ];
