@@ -12,25 +12,28 @@ export default function StrokeOrders() {
   const t = useTranslations("strokeOrder"); // Access translations for strokeOrders page
   const [messages, setMessages] = useState([
     {
-      text: t("welcomeMessage"),
+      key: "welcomeMessage",
       sender: "bot",
+      params: {},
     },
   ]);
 
   const [selectedWord, setSelectedWord] = useState(null);
   const [isCollapsed, setIsCollapsed] = useState(true); // Collapsible state
   const router = useRouter();
+  const { locale } = router;
   const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slash
   const strokeRef = useRef(null);
   const buttonRef = useRef(null); // Reference for the button
 
-  const addMessage = (text, sender) => {
-    setMessages((prev) => [...prev, { text, sender }]);
+  // Function to add a new message
+  const addMessage = (key, sender, params = {}) => {
+    setMessages((prev) => [...prev, { key, sender, params }]);
   };
 
   const handleGetStroke = (word) => {
     setSelectedWord(word);
-    addMessage(t("getStrokeButton", { word: word.name }), "bot");
+    addMessage("getStrokeButton", "bot", { word: word.name });
   };
 
   useEffect(() => {
@@ -40,12 +43,25 @@ export default function StrokeOrders() {
     }
   }, [selectedWord]);
 
+  // Update message translations when locale changes
+  useEffect(() => {
+    setMessages(
+      (prev) => prev.map((msg) => ({ ...msg })) // Ensure messages remain intact
+    );
+  }, [locale]);
+
+  // Translate messages dynamically
+  const translatedMessages = messages.map((msg) => ({
+    text: t(msg.key, msg.params),
+    sender: msg.sender,
+  }));
+
   return (
     <DashboardLayout>
       {/* Collapsible Notification Panel */}
       <CollapsibleNotificationPanel
         initialCollapsed={true} // Start collapsed
-        messages={messages} // Pass messages
+        messages={translatedMessages} // Pass dynamically translated messages
         title={t("notificationTitle")} // Localized title
         onToggle={(isCollapsed) =>
           console.log("Notification panel toggled:", isCollapsed)
@@ -57,12 +73,16 @@ export default function StrokeOrders() {
         <ReusableHandler handleFunc={handleGetStroke} t={t} />
         {/* Stroke Order Display */}
         {selectedWord && (
-          <div ref={buttonRef}> {/* Button wrapper with reference */}
+          <div ref={buttonRef}>
+            {" "}
+            {/* Button wrapper with reference */}
             <ReusableButton
-              onClick={() => router.push(`${cleanedPath}/practice/${selectedWord.name}`)}  // Passing onClick function to navigate
-              icon={DollarCircleOutlined}  // Pass the icon (with appropriate styles)
-              text={t("getStrokeButton", { word: selectedWord.name })}  // Pass the button text with translation
-              isDisabled={false}  // Button is enabled by default
+              onClick={() =>
+                router.push(`${cleanedPath}/practice/${selectedWord.name}`)
+              } // Passing onClick function to navigate
+              icon={DollarCircleOutlined} // Pass the icon (with appropriate styles)
+              text={t("getStrokeButton", { word: selectedWord.name })} // Pass the button text with translation
+              isDisabled={false} // Button is enabled by default
             />
           </div>
         )}

@@ -9,9 +9,11 @@ import { DollarCircleOutlined } from "@ant-design/icons";
 import ReusableButton from "../../../components/Buttons/gradientButton";
 
 export default function ColoringPage() {
+  const t = useTranslations("strokeOrder"); // Access translations for strokeOrders page
+
   const [messages, setMessages] = useState([
     {
-      text: "Welcome! I’m here to help you with Hanzi Coloring. Select a curriculum, grade, semester, and word type to get started!",
+      text: t("coloringPage.msg"),
       sender: "bot",
     },
   ]);
@@ -22,7 +24,6 @@ export default function ColoringPage() {
 
   const buttonRef = useRef(null); // Reference for the button
 
-  const t = useTranslations("strokeOrder");
 
   const addMessage = (text, sender) => {
     setMessages((prev) => [...prev, { text, sender }]);
@@ -30,7 +31,7 @@ export default function ColoringPage() {
 
   const handleSelectWord = (word) => {
     setSelectedWord(word);
-    addMessage(`Displaying coloring outline for "${word.name}".`, "bot");
+    addMessage(t("coloringPage.getColoringButton", { word: word.name }), "bot");
   };
 
   useEffect(() => {
@@ -52,14 +53,14 @@ export default function ColoringPage() {
       />
 
       <main className="container mx-auto px-6 py-12 mt-8 relative z-10 flex flex-col items-center">
-        <ReusableHandler t={t} handleFunc={handleSelectWord} />
+        <ReusableHandler t={t} handleFunc={handleSelectWord} moduleName="coloring"/>
 
         {selectedWord && (
           <div ref={buttonRef}> {/* Button wrapper with reference */}
             <ReusableButton
               onClick={() => router.push(`${cleanedPath}/download/${selectedWord.name}`)}  // Passing onClick function to navigate
               icon={DollarCircleOutlined}  // Pass the icon (with appropriate styles)
-              text={`Download Coloring Page for ${selectedWord.name}`}  // Correct string concatenation with interpolation
+              text={t("coloringPage.getColoringButton", { word: selectedWord.name })}  // Pass the button text with translation
               isDisabled={false}  // Button is enabled by default
             />
           </div>

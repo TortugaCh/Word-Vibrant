@@ -14,4 +14,19 @@ export default {
   },
   // in tradional chinese
   selectWord: "選擇課程、年級、學期和單詞類型以獲取筆劃順序。",
+  coloringPage: {
+    getColoringButton: "獲取 {word} 的著色頁 / 02 點數",
+    selectOptions: "選擇著色頁選項",
+    msg: "歡迎！我在這裡幫助你學習漢字著色。選擇課程、年級、學期和單詞類型開始吧！",
+  },
+  createAStory: {
+    createStoryButton: "為 {word} 創建故事 / 03 點數",
+    selectOptions: "選擇故事創作選項",
+    msg: "歡迎！我在這裡幫助你學習漢字故事創作。選擇課程、年級、學期和單詞類型開始吧！",
+  },
+  createADialogue: {
+    createDialogueButton: "為 {word} 創建對話 / 03 點數",
+    selectOptions: "選擇對話創作選項",
+    msg: "歡迎！我在這裡幫助你學習漢字對話創作。選擇課程、年級、學期和單詞類型開始吧！",
+  },
 };

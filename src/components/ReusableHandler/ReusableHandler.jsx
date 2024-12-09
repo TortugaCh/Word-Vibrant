@@ -4,17 +4,31 @@ import { useLookupData } from "../../hooks/useLookupData";
 import ReusableInput from "../ReusableInput/ReusableInput";
 import Words from "../Words/Words";
 
-const ReusableHandler = ({ handleFunc, t }) => {
+const ReusableHandler = ({ handleFunc, t,moduleName }) => {
   const { curriculums, grades, semesters, wordTypes } = useLookupData();
   const [values, setValues] = useState({});
 
   const handleChange = (name, value) => {
     setValues((prev) => ({ ...prev, [name]: value }));
   };
+
+  const renderSelectTitle = (moduleName) => {
+    switch (moduleName) {
+      case "coloring":
+        return t("coloringPage.selectOptions");
+      case "story":
+        return t("createAStory.selectOptions");
+      case "dialogue":
+        return t("createADialogue.selectOptions");
+      default:
+        return t("selectOptions");
+    }
+  }
+
   return (
     <div className="max-w-2xl w-full bg-white rounded-3xl shadow-xl p-8 flex flex-col space-y-4 border-2 border-[#F9AF42]">
       <h2 className="text-center text-2xl font-extrabold text-purple-700 mb-4">
-        {t("selectOptions")}
+        {renderSelectTitle(moduleName)}
       </h2>
       <div className="flex flex-col gap-4">
         {wordInputs(curriculums, grades, semesters, wordTypes)?.map(

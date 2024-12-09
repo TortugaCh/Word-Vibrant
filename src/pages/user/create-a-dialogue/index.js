@@ -1,20 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { useTranslations } from "next-intl"; // Importing the translations hook
 import { withMessages } from "../../../lib/getMessages";
 import ReusableHandler from "../../../components/ReusableHandler/ReusableHandler";
 import CollapsibleNotificationPanel from "../../../components/notificationPenal/CollapsibleNotificationPanel";
 import DashboardLayout from "../layout";
-import axios from "axios";
-import { message } from "antd";
+
 import { DollarCircleOutlined } from "@ant-design/icons";
 import ReusableButton from "../../../components/Buttons/gradientButton";
 
-export default function StrokeOrders() {
+export default function CreateDialogue() {
   const t = useTranslations("strokeOrder"); // Access translations for strokeOrders page
   const [messages, setMessages] = useState([
     {
-      text: t("welcomeMessage"),
+      text: t("createADialogue.msg"),
       sender: "bot",
     },
   ]);
@@ -54,7 +53,7 @@ export default function StrokeOrders() {
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-12 mt-8 relative z-10 flex flex-col items-center">
-        <ReusableHandler handleFunc={handleDialoge} t={t} />
+        <ReusableHandler handleFunc={handleDialoge} t={t} moduleName="dialogue" />
 
         {/* Stroke Order Display area */}
         {selectedWord && (
