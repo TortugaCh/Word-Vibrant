@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import { useUserContext } from "../../context/UserContext";
 
-const { Header, Sider, Content } = Layout;
+const { Header, Sider, Content, Footer } = Layout;
 
 export default function DashboardLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -102,17 +102,18 @@ export default function DashboardLayout({ children }) {
           />
         </Header>
 
-        {/* Main Content with clean right-side UI */}
+        {/* Main Content */}
         <Content
           className="p-8 relative z-10"
           style={{
             marginTop: "80px",
             marginRight: "24px",
             marginLeft: "24px",
+            marginBottom: "24px",
             background: "white",
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
             borderRadius: "12px",
-            minHeight: "calc(100vh - 120px)",
+            minHeight: "calc(100vh - 180px)", // Adjusted to fit footer
           }}
         >
           {/* Decorative Shapes */}
@@ -122,6 +123,18 @@ export default function DashboardLayout({ children }) {
           {/* Content */}
           <div className="relative z-20">{children}</div>
         </Content>
+
+        {/* Footer */}
+        <Footer
+          style={{
+            textAlign: "center",
+            background: "#fff",
+            boxShadow: "0 -2px 10px rgba(0, 0, 0, 0.1)",
+            padding: "16px",
+          }}
+        >
+          © {new Date().getFullYear()} My Dashboard. All Rights Reserved.
+        </Footer>
       </Layout>
     </Layout>
   );
