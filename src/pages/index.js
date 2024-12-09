@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import { withMessages } from "../lib/getMessages";
 import { useUserContext } from "../context/UserContext";
 import Footer from "../components/Footer";
+import PricingSection from "../components/pricing/PricingSection";
+
 import Image from "next/image"; // Import next/image for optimized image handling
 
 export default function HomePage() {
@@ -141,36 +143,16 @@ export default function HomePage() {
             </h3>
             <p className="text-gray-600 text-lg">{t("aboutDescription")}</p>
           </section>
+{/* Plan */}
+<section className="text-center py-20">
+          <h2 className="text-5xl font-extrabold text-purple-700">
+            {t("welcomeTitle")}
+          </h2>
+          <p className="text-gray-600 mt-4">{t("welcomeDescription")}</p>
+        </section>
 
-          <section className="container mx-auto px-6 py-20 text-center relative z-10">
-            <h3 className="text-4xl font-bold text-purple-700 mb-12">
-              {t("choosePlan")}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-              {[
-                { name: t("freePlan"), credits: 5, cost: 0 },
-                { name: t("credits25"), credits: 25, cost: 250 },
-                { name: t("credits70"), credits: 70, cost: 490 },
-                { name: t("credits200"), credits: 200, cost: 999 },
-              ].map((plan, index) => (
-                <div
-                  key={index}
-                  className="p-10 bg-gradient-to-b from-blue-100 to-blue-200 rounded-3xl shadow-lg"
-                >
-                  <h4 className="text-3xl font-bold">{plan.name}</h4>
-                  <p className="text-gray-700">
-                    {plan.credits} {t("credits")}
-                  </p>
-                  {plan.cost > 0 && (
-                    <p className="text-gray-700">NT${plan.cost}</p>
-                  )}
-                  <button className="mt-4 bg-blue-500 text-white px-6 py-3 rounded-full">
-                    {t(plan.cost > 0 ? "buyNow" : "getStarted")}
-                  </button>
-                </div>
-              ))}
-            </div>
-          </section>
+        {/* Pricing Section */}
+        <PricingSection isSection={true} />
         </div>
       </Template>
 
