@@ -151,12 +151,12 @@ export default function HomePage() {
           </section>
 
           {/* Pricing Section */}
-          <PricingSection isSection={true} t={t}/>
+          <PricingSection isSection={true} t={t} />
         </div>
       </Template>
 
       {/* Footer Section outside of Template */}
-      <Footer t={t}/>
+      <Footer t={t} />
     </>
   );
 }
