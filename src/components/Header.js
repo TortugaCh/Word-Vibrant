@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { handleLogout } from "../lib/utils";
 import { useUserContext } from "../context/UserContext";
 
-export default function Header({ logoSrc = "/images/logo3.png", onLogout ,t}) {
+export default function Header({ logoSrc = "/images/logo3.png", onLogout, t }) {
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -39,8 +39,8 @@ export default function Header({ logoSrc = "/images/logo3.png", onLogout ,t}) {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-gray-600">
           <Link
-            // href="/pricing"
-             href="/#pricing"
+            href="/pricing"
+            //  href="/#pricing"
             className="hover:text-purple-600 transition duration-200"
           >
             {t("header.pricingPlan")}
