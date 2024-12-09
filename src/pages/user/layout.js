@@ -100,6 +100,7 @@ export default function DashboardLayout({ children }) {
             background: "#EDDDFF",
             boxShadow: "0 -2px 10px rgba(0, 0, 0, 0.1)",
             padding: "16px",
+            zIndex: 10,
           }}
         >
           © {new Date().getFullYear()} 語動. All Rights Reserved.
