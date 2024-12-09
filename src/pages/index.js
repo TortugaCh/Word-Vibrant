@@ -7,7 +7,6 @@ import { withMessages } from "../lib/getMessages";
 import { useUserContext } from "../context/UserContext";
 import Footer from "../components/Footer";
 import PricingSection from "../components/pricing/PricingSection";
-
 import Image from "next/image"; // Import next/image for optimized image handling
 
 export default function HomePage() {
@@ -152,7 +151,7 @@ export default function HomePage() {
           </section>
 
           {/* Pricing Section */}
-          <PricingSection isSection={true} t={t}/>
+          <PricingSection isSection={true} />
         </div>
       </Template>
 
