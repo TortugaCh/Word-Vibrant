@@ -4,7 +4,6 @@ import DashboardLayout from "../../../layout";
 import axios from "axios";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../../../../lib/getMessages";
-import { useRouter } from "next/router";
 import { message } from "antd";
 import { useSpeechSynthesis } from "react-speech-kit";
 import { PiEar, PiPause } from "react-icons/pi"; // Fun sound-related icons
