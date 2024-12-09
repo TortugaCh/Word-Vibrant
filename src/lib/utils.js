@@ -19,6 +19,8 @@ import {
 } from "firebase/auth";
 import { auth, googleProvider } from "./firebaseConfig";
 import axios from "axios";
+import jsPDF from "jspdf";
+import { Canvg } from "canvg";
 
 const API_LINK = "/api";
 
@@ -353,12 +355,67 @@ const fetchWithRetry = async (url, options, retries = 3, timeout = 30000) => {
 
 // Get Coloring Page
 
+// export const getColoringPage = async (word) => {
+//   console.log("Generating coloring page for word:", word);
+//   const refinedPrompt = `
+//     Create a delightful, black-and-white line art coloring page designed specifically for children.
+//     The illustration should creatively represent the concept of the word "${word}" with playful visuals.
+//   `;
+//   try {
+//     const response = await fetchWithRetry(
+//       "https://api.openai.com/v1/images/generations",
+//       {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer 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`,
+//         },
+//         body: JSON.stringify({
+//           model: "dall-e-3",
+//           prompt: refinedPrompt,
+//           n: 1,
+//           size: "1024x1024",
+//         }),
+//       },
+//       3, // Retry up to 3 times
+//       30000 // Timeout of 30 seconds
+//     );
+
+//     const data = await response.json();
+//     if (!data || !data.data || !data.data.length) {
+//       throw new Error("No image generated");
+//     }
+
+//     return { imageUrl: data.data[0].url };
+//   } catch (error) {
+//     console.error("Error generating image:", error.message || error);
+//     return null;
+//   }
+// };
+
+// Example usage inside your function where you get the image URL from OpenAI API
+
+const getBase64FromImageUrl = async (imageUrl) => {
+  const response = await fetch(imageUrl);
+  const blob = await response.blob(); // Fetch the image as a blob
+  const reader = new FileReader();
+
+  return new Promise((resolve, reject) => {
+    reader.onloadend = () => {
+      resolve(reader.result); // Base64 encoded string
+    };
+    reader.onerror = reject;
+
+    reader.readAsDataURL(blob); // Convert the blob to Base64
+  });
+};
 export const getColoringPage = async (word) => {
   console.log("Generating coloring page for word:", word);
   const refinedPrompt = `
     Create a delightful, black-and-white line art coloring page designed specifically for children.
     The illustration should creatively represent the concept of the word "${word}" with playful visuals.
   `;
+  
   try {
     const response = await fetchWithRetry(
       "https://api.openai.com/v1/images/generations",
@@ -366,13 +423,14 @@ export const getColoringPage = async (word) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer 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`,
+          Authorization: `Bearer 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`, // Use your actual API key
         },
         body: JSON.stringify({
           model: "dall-e-3",
           prompt: refinedPrompt,
           n: 1,
           size: "1024x1024",
+          response_format: "b64_json", // This tells the API to return the image as base64
         }),
       },
       3, // Retry up to 3 times
@@ -380,13 +438,206 @@ export const getColoringPage = async (word) => {
     );
 
     const data = await response.json();
+    
     if (!data || !data.data || !data.data.length) {
       throw new Error("No image generated");
     }
 
-    return { imageUrl: data.data[0].url };
+    const base64Image = data.data[0].b64_json; // Base64 encoded image data
+    
+    console.log("Base64 image:", base64Image);
+    return { imageUrl: base64Image };
   } catch (error) {
     console.error("Error generating image:", error.message || error);
     return null;
   }
 };
+
+/**
+ * Generates a two-page PDF containing the word image and background image.
+ * @param {Object} params - Parameters for the function.
+ * @param {HTMLElement} wordContainer - The container holding the SVG of the word image.
+ * @param {string} backgroundImageUrl - The URL of the background image.
+ * @param {string} fileName - The name of the generated PDF file.
+ * @param {HTMLCanvasElement} canvasElement - A canvas element used for rendering.
+ */
+// export const generateColoringPDF = async ({
+//   wordContainer,
+//   backgroundImageUrl,
+//   fileName,
+//   canvasElement,
+// }) => {
+//   if (!wordContainer || !backgroundImageUrl || !canvasElement) {
+//     console.error("Required elements are missing.");
+//     return;
+//   }
+//   console.log(
+//     "Generating PDF with word:",
+//     wordContainer,
+//     backgroundImageUrl,
+//     fileName,
+//     canvasElement
+//   );
+
+//   try {
+//     // Initialize jsPDF
+//     const pdf = new jsPDF();
+
+//     // Handle the word image (SVG rendering)
+//     const svgElement = wordContainer.querySelector("svg");
+//     if (svgElement) {
+//       const svgData = new XMLSerializer().serializeToString(svgElement);
+//       const ctx = canvasElement.getContext("2d");
+
+//       canvasElement.width = 500;
+//       canvasElement.height = 500;
+
+//       const v = Canvg.fromString(ctx, svgData);
+//       await v.render();
+
+//       const wordImageData = canvasElement.toDataURL("image/png");
+//       pdf.addImage(wordImageData, "PNG", 10, 10, 190, 190);
+//     }
+
+//     // Add a new page and handle the background image
+//     if (backgroundImageUrl) {
+//       const response = await fetch(backgroundImageUrl, {
+//         method: "GET",
+//         headers: {
+//           "Content-Type": "application/json", // Informing the server of expected response format
+//           "Accept": "image/png",             // Indicating the desired response type
+//         },
+//         mode: "cors", // Allow cross-origin requests
+//       });      const blob = await response.blob();
+//       const reader = new FileReader();
+
+//       const backgroundImageData = await new Promise((resolve, reject) => {
+//         reader.onloadend = () => resolve(reader.result);
+//         reader.onerror = reject;
+//         reader.readAsDataURL(blob);
+//       });
+
+//       pdf.addPage();
+//       pdf.addImage(backgroundImageData, "PNG", 10, 10, 190, 190);
+//     }
+//     // Save the PDF
+//     pdf.save(`${fileName}.pdf`);
+//   } catch (error) {
+//     console.error("Error generating PDF:", error);
+//   }
+// };
+
+// export const generateColoringPDF = async (
+//   wordContainer,
+//   backgroundImageUrl,
+//   fileName,
+//   canvasElement
+// ) => {
+//   try {
+//     const pdf = new jsPDF();
+
+//     // Page 1: Add the word SVG to the PDF
+//     const svgElement = wordContainer.querySelector("svg");
+//     if (svgElement) {
+//       const svgData = new XMLSerializer().serializeToString(svgElement);
+//       const ctx = canvasElement.getContext("2d");
+
+//       canvasElement.width = 500;
+//       canvasElement.height = 500;
+
+//       const v = Canvg.fromString(ctx, svgData);
+//       await v.render();
+
+//       const wordImageData = canvasElement.toDataURL("image/png");
+//       pdf.addImage(wordImageData, "PNG", 10, 10, 190, 190);
+//     }
+
+//     // Page 2: Add the background image to the PDF
+//     if (backgroundImageUrl) {
+//       const response = await fetch(backgroundImageUrl, { mode: "cors" });
+//       const blob = await response.blob();
+//       const reader = new FileReader();
+
+//       const backgroundImageData = await new Promise((resolve, reject) => {
+//         reader.onloadend = () => resolve(reader.result);
+//         reader.onerror = reject;
+//         reader.readAsDataURL(blob);
+//       });
+
+//       pdf.addPage();
+//       pdf.addImage(backgroundImageData, "PNG", 10, 10, 190, 190);
+//     }
+
+//     // Save the PDF
+//     pdf.save(`${fileName}_coloring_pages.pdf`);
+//   } catch (error) {
+//     console.error("Error generating PDF:", error);
+//   }
+// };
+
+export const generateColoringPDF = async ({
+  wordContainer,
+  backgroundContainer,
+  fileName,
+  canvasElement,
+}) => {
+  try {
+    // Create a new jsPDF instance
+    const pdf = new jsPDF();
+
+    // Set the page size (A4 dimensions, you can adjust as needed)
+    const pageWidth = pdf.internal.pageSize.width;
+    const pageHeight = pdf.internal.pageSize.height;
+
+    // Draw the background image from the background container (if it exists)
+    if (backgroundContainer) {
+      const backgroundImageUrl =
+        backgroundContainer.style.backgroundImage.slice(5, -2); // Extract URL
+      const img = new Image();
+      img.src = backgroundImageUrl;
+
+      // Wait for the image to load
+      await new Promise((resolve, reject) => {
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+      });
+
+      // Add background image to the first page of the PDF
+      pdf.addImage(img, "PNG", 0, 0, pageWidth, pageHeight);
+      
+      // If you want to add the word image on a new page, uncomment the line below:
+      pdf.addPage();
+    }
+
+    // Draw the word (Hanzi character) on the PDF
+    if (wordContainer) {
+      const svgElement = wordContainer.querySelector("svg");
+      if (svgElement) {
+        // Convert the SVG to a string and render it to a canvas
+        const svgData = new XMLSerializer().serializeToString(svgElement);
+        const ctx = canvasElement.getContext("2d");
+
+        // Set canvas size
+        canvasElement.width = 500;
+        canvasElement.height = 500;
+
+        // Render the SVG to the canvas using Canvg
+        const v = Canvg.fromString(ctx, svgData);
+        await v.render();
+
+        // Convert the canvas to image data
+        const wordImageData = canvasElement.toDataURL("image/png");
+
+        // Add the word image (Hanzi character) to the PDF (adjust position and size)
+        // Adjust the position to ensure it doesn't overlap with the background image
+        pdf.addImage(wordImageData, "PNG", 10, pageHeight - 200, 190, 190); // Change the position as needed
+      }
+    }
+
+    // Save the generated PDF
+    pdf.save(`${fileName}.pdf`);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+  }
+};
+

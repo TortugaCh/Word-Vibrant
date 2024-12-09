@@ -36,6 +36,7 @@ export default async function handler(req, res) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          Allow
         },
         body: JSON.stringify({
           model: "dall-e-3",
