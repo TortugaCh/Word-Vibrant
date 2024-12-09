@@ -5,7 +5,7 @@ import { Canvg } from "canvg";
 import DashboardLayout from "../../../layout";
 import { DollarCircleOutlined, DownloadOutlined } from "@ant-design/icons";
 import ReusableButton from "../../../../../components/Buttons/gradientButton";
-import { getColoringPage } from "../../../../../lib/utils";
+import { generateColoringPDF, getColoringPage } from "../../../../../lib/utils";
 const DownloadPage = () => {
   const router = useRouter();
   const { selectedWord } = router.query;
@@ -28,12 +28,12 @@ const DownloadPage = () => {
       //   body: JSON.stringify({ word: description }),
       // });
 
-      const resp=await getColoringPage(word);
+      const resp = await getColoringPage(word);
       // const data = await response.json();
       setBackgroundImage(resp.imageUrl);
 
       if (coloringPageContainerRef.current) {
-        coloringPageContainerRef.current.style.backgroundImage = `url(${resp.imageUrl})`;
+        coloringPageContainerRef.current.style.backgroundImage = `url(data:image/png;base64,${resp.imageUrl})`;
       }
     } catch (error) {
       console.error("Error fetching background image:", error);
@@ -48,7 +48,7 @@ const DownloadPage = () => {
         downloadContainerRef.current,
         selectedWord,
         {
-          width: 500,  // Set a fixed width for the character box
+          width: 500, // Set a fixed width for the character box
           height: 500, // Set a fixed height for the character box
           padding: 5,
           strokeColor: "#dddddd",
@@ -82,6 +82,20 @@ const DownloadPage = () => {
     link.click();
   };
 
+  const handleDownloadPDF = async () => {
+    if (!downloadContainerRef.current || !coloringPageContainerRef.current || !canvasRef.current) {
+      console.error("Missing required elements for PDF generation.");
+      return;
+    }
+  
+    await generateColoringPDF({
+      wordContainer: downloadContainerRef.current,
+      backgroundContainer: coloringPageContainerRef.current,
+      fileName: `${selectedWord}_coloring_pages`,
+      canvasElement: canvasRef.current,
+    });
+  };
+
   return (
     <DashboardLayout>
       <div className="flex flex-col items-center">
@@ -99,9 +113,9 @@ const DownloadPage = () => {
 
             <ReusableButton
               onClick={handleDownloadImage}
-              icon={DownloadOutlined}  // Pass the icon (with appropriate styles)
-              text={` Download Word`}  // Correct string concatenation with interpolation
-              isDisabled={false}  // Button is enabled by default
+              icon={DownloadOutlined} // Pass the icon (with appropriate styles)
+              text={` Download Word`} // Correct string concatenation with interpolation
+              isDisabled={false} // Button is enabled by default
             />
           </div>
 
@@ -112,19 +126,25 @@ const DownloadPage = () => {
               className="p-4 rounded-lg shadow-lg mb-6 bg-white w-[500px] h-[500px] bg-contain bg-center flex items-center justify-center"
             />
             {backgroundImage ? (
-
+              // <ReusableButton
+              //   onClick={() => {
+              //     const link = document.createElement("a");
+              //     link.href = backgroundImage;
+              //     link.download = `${selectedWord}_coloring_page.png`;
+              //     link.target = "_blank";
+              //     document.body.appendChild(link);
+              //     link.click();
+              //     document.body.removeChild(link);
+              //   }}  // Passing onClick function to navigate
+              //   icon={DownloadOutlined}  // Pass the icon (with appropriate styles)
+              //   text={`Download Coloring Page`}  // Correct string concatenation with interpolation
+              //   isDisabled={false}  // Button is enabled by default
+              // />
               <ReusableButton
-                onClick={() => {
-                  const link = document.createElement("a");
-                  link.href = backgroundImage;
-                  link.download = `${selectedWord}_coloring_page.png`;
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                }}  // Passing onClick function to navigate
-                icon={DownloadOutlined}  // Pass the icon (with appropriate styles)
-                text={`Download Coloring Page`}  // Correct string concatenation with interpolation
-                isDisabled={false}  // Button is enabled by default
+                onClick={handleDownloadPDF}
+                icon={DownloadOutlined}
+                text={`Download Coloring Pages as PDF`}
+                isDisabled={false}
               />
             ) : (
               <p className="text-gray-500">Loading coloring page...</p>

@@ -33,6 +33,7 @@
     "html2canvas": "^1.4.1",
     "jose": "^5.9.6",
     "js-cookie": "^3.0.5",
+    "jspdf": "^2.5.2",
     "newebpay-api": "^1.3.0",
     "next": "^15.0.2",
     "next-intl": "^3.25.1",
