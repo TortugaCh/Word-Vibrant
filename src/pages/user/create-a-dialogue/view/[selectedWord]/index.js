@@ -1,4 +1,16 @@
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import DashboardLayout from "../../../layout";
+import axios from "axios";
+import { useTranslations } from "next-intl";
+import { withMessages } from "../../../../../lib/getMessages";
+import { useRouter } from "next/router";
+import { message } from "antd";
+import { useSpeechSynthesis } from "react-speech-kit";
+import { PiEar, PiPause } from "react-icons/pi"; // Fun sound-related icons
+import { FaVolumeUp, FaPauseCircle } from "react-icons/fa"; // Volume and Pause icons
+import { GiBookCover } from "react-icons/gi"; // Icon for a book (kids' theeeme)
+
 export default function Page() {
   const router = useRouter();
   const t = useTranslations("strokeOrder");
