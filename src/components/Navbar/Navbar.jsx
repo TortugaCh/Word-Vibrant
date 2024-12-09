@@ -101,72 +101,78 @@ export default function Navbar({
   );
 
   return (
-    <div
-      className={`h-[80px] flex ${
-        mobile === false ? "justify-end" : "justify-between"
-      } sm:ml-0 sm:flex-wrap`}
-    >
-      {mobile && (
+    <div className="flex items-center px-4 py-2 w-full">
+    {/* Burger Menu Button - Left */}
+    {mobile && (
+      <Button
+        icon={<MenuOutlined />}
+        onClick={() => setIsMenuOpen((prevState) => !prevState)}
+        className="flex-shrink-0"
+        style={{
+          backgroundColor: "#9333EA",
+          color: "#fff",
+          borderRadius: "8px",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+        }}
+      />
+    )}
+  
+    {/* Profile Button - Right */}
+    <div className="ml-auto">
+      <Dropdown
+        overlay={menu}
+        trigger={["hover"]}
+        placement="bottomRight"
+        overlayStyle={{
+          minWidth: "200px",
+        }}
+      >
         <Button
-          icon={<MenuOutlined />}
-          onClick={() => setIsMenuOpen((prevState) => !prevState)}
-          className="mt-5"
-        />
-      )}
-      <div className="flex items-center justify-between gap-2 mr-10">
-        <Dropdown
-          overlay={menu}
-          trigger={["hover"]}
-          placement="bottomRight"
-          overlayStyle={{
-            minWidth: "200px",
+          type="text"
+          className="flex items-center px-4 py-2"
+          style={{
+            backgroundColor: "#9333EA",
+            color: "#fff",
+            borderRadius: "24px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+            border: "2px solid #ffffff",
+            transition: "all 0.3s ease-in-out",
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = "scale(1.1)";
+            e.target.style.boxShadow = "0 6px 14px rgba(0, 0, 0, 0.3)";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = "scale(1)";
+            e.target.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.2)";
           }}
         >
-          <Button
-            type="text"
-            className="flex items-center px-4 py-2"
+          <Avatar
+            size="large"
+            icon={
+              <UserOutlined style={{ fontSize: "18px", color: "#fff" }} />
+            }
             style={{
               backgroundColor: "#9333EA",
+              marginRight: "8px",
+              border: "2px solid #ffffff",
+            }}
+          />
+          <span
+            style={{
+              fontFamily: "'Pacifico', cursive",
               color: "#fff",
-              borderRadius: "24px",
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
-              border: "2px solid #Ffffff", // Added border
-              transition: "all 0.3s ease-in-out",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = "scale(1.1)";
-              e.target.style.boxShadow = "0 6px 14px rgba(0, 0, 0, 0.3)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = "scale(1)";
-              e.target.style.boxShadow = "0 4px 10px rgba(0, 0, 0, 0.2)";
+              fontSize: "16px",
+              textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
             }}
           >
-            <Avatar
-              size="large"
-              icon={
-                <UserOutlined style={{ fontSize: "18px", color: "#fff" }} />
-              }
-              style={{
-                backgroundColor: "#9333EA",
-                marginRight: "8px",
-                border: "2px solid #ffffff", // Added border around the avatar
-              }}
-            />
-            <span
-              style={{
-                fontFamily: "'Pacifico', cursive",
-                color: "#fff",
-                fontSize: "16px",
-                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
-              }}
-            >
-              {userData?.name || "Guest"}
-            </span>
-          </Button>
-        </Dropdown>
-      </div>
+            {userData?.name || "Guest"}
+          </span>
+        </Button>
+      </Dropdown>
     </div>
+  </div>
+  
   );
 }
 
