@@ -13,25 +13,27 @@ export default function ColoringPage() {
 
   const [messages, setMessages] = useState([
     {
-      text: t("coloringPage.msg"),
+      key: "coloringPage.msg",
       sender: "bot",
+      params: {},
     },
   ]);
   const [selectedWord, setSelectedWord] = useState(null);
   const router = useRouter();
+  const { locale } = router;
   const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slash
-  const coloringRef = useRef(null);
 
   const buttonRef = useRef(null); // Reference for the button
 
 
-  const addMessage = (text, sender) => {
-    setMessages((prev) => [...prev, { text, sender }]);
+  // Function to add a new message
+  const addMessage = (key, sender, params = {}) => {
+    setMessages((prev) => [...prev, { key, sender, params }]);
   };
 
   const handleSelectWord = (word) => {
     setSelectedWord(word);
-    addMessage(t("coloringPage.getColoringButton", { word: word.name }), "bot");
+    addMessage("coloringPage.getColoringButton", "bot",{ word: word.name });
   };
 
   useEffect(() => {
@@ -41,11 +43,25 @@ export default function ColoringPage() {
     }
   }, [selectedWord]);
 
+    // Update message translations when locale changes
+    useEffect(() => {
+      setMessages(
+        (prev) => prev.map((msg) => ({ ...msg })) // Ensure messages remain intact
+      );
+    }, [locale]);
+  
+    // Translate messages dynamically
+    const translatedMessages = messages.map((msg) => ({
+      text: t(msg.key, msg.params),
+      sender: msg.sender,
+    }));
+  
+
   return (
     <DashboardLayout>
       <CollapsibleNotificationPanel
         initialCollapsed={true} // Start collapsed
-        messages={messages} // Pass messages
+        messages={translatedMessages} // Pass messages
         title={t("notificationTitle")} // Localized title
         onToggle={(isCollapsed) =>
           console.log("Notification panel toggled:", isCollapsed)

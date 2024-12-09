@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useTranslations } from "next-intl"; // Importing the translations hook
 import { withMessages } from "../../../lib/getMessages";
@@ -12,24 +12,29 @@ export default function StrokeOrders() {
   const t = useTranslations("strokeOrder"); // Access translations for strokeOrders page
   const [messages, setMessages] = useState([
     {
-      text: t("createAStory.msg"),
+      key: "createAStory.msg",
       sender: "bot",
+      params: {},
     },
   ]);
 
   const [selectedWord, setSelectedWord] = useState(null);
   const router = useRouter();
+  const { locale } = router;
   const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slash
   const strokeRef = useRef(null);
   const buttonRef = useRef(null); // Reference for the button
 
-  const addMessage = (text, sender) => {
-    setMessages((prev) => [...prev, { text, sender }]);
+  // Function to add a new message
+  const addMessage = (key, sender, params = {}) => {
+    setMessages((prev) => [...prev, { key, sender, params }]);
   };
 
   const handleStory = (word) => {
     setSelectedWord(word);
-    addMessage(t("createAStory.createStoryButton", { word: selectedWord.name }), "bot");
+    addMessage("createAStory.createStoryButton", "bot", {
+      word: word.name,
+    });
 
     // Use setTimeout for smooth scrolling after the word is selected
     setTimeout(() => {
@@ -39,11 +44,24 @@ export default function StrokeOrders() {
     }, 200); // Slight delay to ensure the button appears before scroll
   };
 
+  // Update message translations when locale changes
+  useEffect(() => {
+    setMessages(
+      (prev) => prev.map((msg) => ({ ...msg })) // Ensure messages remain intact
+    );
+  }, [locale]);
+
+  // Translate messages dynamically
+  const translatedMessages = messages.map((msg) => ({
+    text: t(msg.key, msg.params),
+    sender: msg.sender,
+  }));
+
   return (
     <DashboardLayout>
       <CollapsibleNotificationPanel
         initialCollapsed={true} // Start collapsed
-        messages={messages} // Pass messages
+        messages={translatedMessages} // Pass messages
         title={t("notificationTitle")} // Localized title
         onToggle={(isCollapsed) =>
           console.log("Notification panel toggled:", isCollapsed)
@@ -56,13 +74,17 @@ export default function StrokeOrders() {
 
         {/* Stroke Order Display */}
         {selectedWord && (
-          <div ref={buttonRef}> {/* Button wrapper with reference */}
+          <div ref={buttonRef}>
+            {" "}
+            {/* Button wrapper with reference */}
             <ReusableButton
               onClick={() =>
                 router.push(`${cleanedPath}/view/${selectedWord.name}`)
               }
-              icon={DollarCircleOutlined}  // Pass the icon (with appropriate styles)
-              text={t("createAStory.createStoryButton", { word: selectedWord.name })}  // Pass the button text with translation              isDisabled={false}  // Button is enabled by default
+              icon={DollarCircleOutlined} // Pass the icon (with appropriate styles)
+              text={t("createAStory.createStoryButton", {
+                word: selectedWord.name,
+              })} // Pass the button text with translation              isDisabled={false}  // Button is enabled by default
             />
           </div>
         )}

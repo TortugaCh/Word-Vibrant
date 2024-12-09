@@ -19,11 +19,9 @@ export default function StrokeOrders() {
   ]);
 
   const [selectedWord, setSelectedWord] = useState(null);
-  const [isCollapsed, setIsCollapsed] = useState(true); // Collapsible state
   const router = useRouter();
   const { locale } = router;
   const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slash
-  const strokeRef = useRef(null);
   const buttonRef = useRef(null); // Reference for the button
 
   // Function to add a new message
