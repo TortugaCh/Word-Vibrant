@@ -11,7 +11,6 @@ export default function DashboardLayout({ children }) {
   const [mobile, setMobile] = useState(false);
   const { userData, userCredits } = useUserContext();
 
-  // Handle responsive behavior
   useEffect(() => {
     const handleResize = () => setMobile(window.innerWidth <= 768);
     handleResize();
@@ -34,6 +33,8 @@ export default function DashboardLayout({ children }) {
             boxShadow: "2px 0 10px rgba(0, 0, 0, 0.1)",
             overflowY: "auto",
             height: "100vh",
+            position: "sticky", // Ensures sidebar stays fixed
+            top: 0,
           }}
         >
           <SideBar />
@@ -59,7 +60,7 @@ export default function DashboardLayout({ children }) {
       )}
 
       {/* Main Content Area */}
-      <Layout>
+      <Layout style={{ display: "flex", flexDirection: "column" }}>
         {/* Header */}
         <Header
           style={{
@@ -87,7 +88,8 @@ export default function DashboardLayout({ children }) {
             background: "#fff",
             borderRadius: "12px",
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-            minHeight: "calc(100vh - 160px)", // Adjust for header and footer
+            flex: 1, // Ensures Content expands to take available height
+            overflow: "auto",
           }}
         >
           {children}
@@ -100,7 +102,6 @@ export default function DashboardLayout({ children }) {
             background: "#EDDDFF",
             boxShadow: "0 -2px 10px rgba(0, 0, 0, 0.1)",
             padding: "16px",
-            zIndex: 10,
           }}
         >
           © {new Date().getFullYear()} 語動. All Rights Reserved.
