@@ -1,69 +1,31 @@
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
+import DashboardLayout from "../components/DashboardLayout";
+import { message } from "antd";
+import axios from "axios";
+import { GiPencilBrush, GiBookmarklet } from "react-icons/gi";
+import useTranslations from "../hooks/useTranslations";
+
 export default function Page() {
-  const router = useRouter();
-  const t = useTranslations("strokeOrder");
-  const { selectedWord } = router.query;
   const [loading, setLoading] = useState(false);
   const [dialogue, setDialogue] = useState([]);
+  const [selectedWord, setSelectedWord] = useState(null);
+  const t = useTranslations("strokeOrder");
 
-  // Dialogue Card Component with updated color scheme
-  const DialogueCard = ({ dialogue, index }) => {
-    const isEven = index % 2 === 0;
-
-    return (
-      <div
-        className={`p-6 mb-6 rounded-xl shadow-lg max-w-4xl mx-auto ${
-          isEven
-            ? "bg-yellow-200 hover:shadow-xl hover:bg-yellow-300"
-            : "bg-pink-200 hover:shadow-xl hover:bg-pink-300"
-        }`}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start", // Default for left side
-          justifyContent: "center",
-          padding: "20px",
-          boxSizing: "border-box",
-          transition: "all 0.3s ease-in-out", // Fun hover effect
-          marginLeft: isEven ? "0" : "auto", // Align left for even, right for odd
-          marginRight: isEven ? "auto" : "0", // Align right for odd, left for even
-        }}
-      >
-        {/* Traditional Chinese */}
-        <div className={`flex items-center mb-2`}>
-          <GiPencilBrush size={40} className="text-indigo-600 mr-3" />
-          <div
-            className={`text-xl font-semibold ${
-              isEven ? "text-yellow-800 text-right" : "text-pink-800 text-left"
-            }`}
-            style={{ lineHeight: "1.6" }}
-          >
-            {dialogue.traditionalChinese}
-          </div>
-        </div>
-
-        {/* English Translation */}
-        <div className={`flex items-center mt-2`}>
-          <GiBookmarklet size={40} className="text-teal-600 mr-3" />
-          <div
-            className={`text-md text-gray-800 ${
-              isEven ? "text-left" : "text-right"
-            }`}
-            style={{ lineHeight: "1.6" }}
-          >
-            {dialogue.english}
-          </div>
-        </div>
-      </div>
-    );
-  };
+  // Use useEffect to safely access router.query in the client
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const router = useRouter();
+      const { selectedWord } = router.query;
+      setSelectedWord(selectedWord);
+    }
+  }, []);
 
   useEffect(() => {
-    setLoading(true);
     if (selectedWord) {
+      setLoading(true);
       genDialogue();
     }
-
-    return () => {};
   }, [selectedWord]);
 
   const genDialogue = async () => {
@@ -112,3 +74,52 @@ export default function Page() {
     </DashboardLayout>
   );
 }
+
+const DialogueCard = ({ dialogue, index }) => {
+  const isEven = index % 2 === 0;
+
+  return (
+    <div
+      className={`p-6 mb-6 rounded-xl shadow-lg max-w-4xl mx-auto ${
+        isEven
+          ? "bg-yellow-200 hover:shadow-xl hover:bg-yellow-300"
+          : "bg-pink-200 hover:shadow-xl hover:bg-pink-300"
+      }`}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: "20px",
+        boxSizing: "border-box",
+        transition: "all 0.3s ease-in-out",
+        marginLeft: isEven ? "0" : "auto",
+        marginRight: isEven ? "auto" : "0",
+      }}
+    >
+      <div className={`flex items-center mb-2`}>
+        <GiPencilBrush size={40} className="text-indigo-600 mr-3" />
+        <div
+          className={`text-xl font-semibold ${
+            isEven ? "text-yellow-800 text-right" : "text-pink-800 text-left"
+          }`}
+          style={{ lineHeight: "1.6" }}
+        >
+          {dialogue.traditionalChinese}
+        </div>
+      </div>
+
+      <div className={`flex items-center mt-2`}>
+        <GiBookmarklet size={40} className="text-teal-600 mr-3" />
+        <div
+          className={`text-md text-gray-800 ${
+            isEven ? "text-left" : "text-right"
+          }`}
+          style={{ lineHeight: "1.6" }}
+        >
+          {dialogue.english}
+        </div>
+      </div>
+    </div>
+  );
+};
