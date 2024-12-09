@@ -22,11 +22,11 @@ export default async function handler(req, res) {
     const { word } = JSON.parse(req.body);
 
     const refinedPrompt = `
-    Create a black-and-white line art coloring page designed for children. 
-    The illustration should visually and creatively represent the concept of the word "${word}" Do not include any text, letters, numbers, or symbols in the image. 
-    using playful, imaginative, and age-appropriate visuals. Focus on creating a fun, engaging, and whimsical scene that appeals to kids. 
-    
-    Ensure the design has clear, bold outlines suitable for coloring, with elements that spark creativity and joy.
+    Create a black-and-white line art coloring page specifically for children. 
+    The illustration must depict the concept of the word "${word}" purely through visuals, without any words, letters, numbers, or symbols of any kind appearing in the image. 
+    Focus on fun, playful, and imaginative elements that are age-appropriate and visually engaging for kids. 
+    The scene should include clear, bold outlines, simple shapes, and visually distinct details suitable for easy coloring. 
+    Avoid any text or textual representation within the drawing, and ensure the entire design is kid-friendly, creative, and joyful.
   `;
 
     const response = await fetchWithRetry(
