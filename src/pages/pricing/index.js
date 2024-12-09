@@ -13,7 +13,7 @@ const stripePromise = loadStripe(
 export default function Pricing() {
   const [pricingplans, setPricingPlans] = useState([]);
   const { userData } = useUserContext();
-  const t = useTranslations("pricing");
+  const t = useTranslations("common");
   const router = useRouter();
   const { locale } = router;
 
@@ -131,7 +131,7 @@ export default function Pricing() {
   };
 
   return (
-    <Template>
+    <Template t={t}>
       <h3 className="text-4xl font-bold text-purple-700 mb-12">
         {t("choosePlan")}
       </h3>
@@ -152,4 +152,4 @@ export default function Pricing() {
   );
 }
 
-export const getServerSideProps = withMessages("pricing");
+export const getServerSideProps = withMessages("common");
