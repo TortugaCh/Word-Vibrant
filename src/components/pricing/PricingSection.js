@@ -39,6 +39,10 @@ export default function PricingSection({ isSection = false,t }) {
   };
 
   const handleCheckout = async (priceId, planId, userId) => {
+    if (!userId) {
+      router.push("/auth");
+      return;
+    }
     const stripe = await stripePromise;
     if (!stripe) {
       console.error("Stripe failed to initialize");

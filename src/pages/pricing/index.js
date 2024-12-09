@@ -43,9 +43,10 @@ export default function Pricing() {
   };
 
   const handleCheckout = async (priceId, planId, userId) => {
-    console.log("priceId", priceId);
-    console.log("planId", planId);
-    console.log("userId", userId);
+    if (!userId) {
+      router.push("/auth");
+      return;
+    }
     const stripe = await stripePromise;
     if (!stripe) {
       console.error("Stripe failed to initialize");

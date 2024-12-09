@@ -6,8 +6,11 @@ import DashboardLayout from "../../../layout";
 import { DollarCircleOutlined, DownloadOutlined } from "@ant-design/icons";
 import ReusableButton from "../../../../../components/Buttons/gradientButton";
 import { generateColoringPDF, getColoringPage } from "../../../../../lib/utils";
-const DownloadPage = () => {
+import { withMessages } from "../../../../../lib/getMessages";
+import { useTranslations } from "next-intl";
+export default function DownloadPage() {
   const router = useRouter();
+  const t = useTranslations("strokeOrder");
   const { selectedWord } = router.query;
   const downloadContainerRef = useRef(null);
   const coloringPageContainerRef = useRef(null);
@@ -83,11 +86,15 @@ const DownloadPage = () => {
   };
 
   const handleDownloadPDF = async () => {
-    if (!downloadContainerRef.current || !coloringPageContainerRef.current || !canvasRef.current) {
+    if (
+      !downloadContainerRef.current ||
+      !coloringPageContainerRef.current ||
+      !canvasRef.current
+    ) {
       console.error("Missing required elements for PDF generation.");
       return;
     }
-  
+
     await generateColoringPDF({
       wordContainer: downloadContainerRef.current,
       backgroundContainer: coloringPageContainerRef.current,
@@ -100,7 +107,7 @@ const DownloadPage = () => {
     <DashboardLayout>
       <div className="flex flex-col items-center">
         <h1 className="text-3xl font-bold text-purple-700 mb-8">
-          Coloring Page for {selectedWord}
+          {t("coloringPage.coloringPageFor", { word: selectedWord })}
         </h1>
         <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl justify-center items-center">
           {/* Word Box */}
@@ -114,7 +121,7 @@ const DownloadPage = () => {
             <ReusableButton
               onClick={handleDownloadImage}
               icon={DownloadOutlined} // Pass the icon (with appropriate styles)
-              text={` Download Word`} // Correct string concatenation with interpolation
+              text={t("coloringPage.downloadWord")}
               isDisabled={false} // Button is enabled by default
             />
           </div>
@@ -143,7 +150,7 @@ const DownloadPage = () => {
               <ReusableButton
                 onClick={handleDownloadPDF}
                 icon={DownloadOutlined}
-                text={`Download Coloring Pages as PDF`}
+                text={t("coloringPage.downloadPage")}
                 isDisabled={false}
               />
             ) : (
@@ -156,11 +163,11 @@ const DownloadPage = () => {
           onClick={() => router.back()}
           className="mt-4 px-6 py-2 bg-gray-500 text-white rounded-full font-semibold hover:bg-gray-700 transition duration-200"
         >
-          Go Back
+          {t("goBack")}
         </button>
       </div>
     </DashboardLayout>
   );
-};
+}
 
-export default DownloadPage;
+export const getServerSideProps = withMessages("strokeOrder");

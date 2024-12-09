@@ -76,7 +76,7 @@ export default function Page() {
         <div className="flex flex-col items-center justify-center w-full mx-auto py-10">
           <div className="bg-blue-50 p-8 rounded-lg shadow-lg max-w-2xl w-full flex items-center justify-center flex-col gap-8 border border-blue-200">
             <h1 className="text-4xl font-semibold text-gray-800 text-center">
-              Story Time
+             {t("createAStory.storyTime")}
             </h1>
 
             {/* Fun Book Icon */}
