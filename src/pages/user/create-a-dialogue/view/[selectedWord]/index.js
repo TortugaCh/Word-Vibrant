@@ -4,6 +4,7 @@ import DashboardLayout from "../../../layout";
 import axios from "axios";
 import { useTranslations } from "next-intl";
 import { message } from "antd";
+import Loader from "../../../../../components/Loader"; 
 import { GiBookmarklet, GiPencilBrush } from "react-icons/gi"; // Icons
 
 // Page Component
@@ -76,17 +77,18 @@ export default function Page() {
 
   return (
     <DashboardLayout>
-      <div className="p-6">
-        {loading ? (
-          <div>Loading...</div>
-        ) : dialogue.length > 0 ? (
-          dialogue.map((dia, index) => (
-            <DialogueCard dialogue={dia} key={index} index={index} />
-          ))
-        ) : (
-          <p>{t("noDialogue")}</p>
-        )}
-      </div>
-    </DashboardLayout>
+  <div className="p-6">
+    {loading ? (
+      // Replace the "Loading..." text with the Loader component
+      <Loader />
+    ) : dialogue.length > 0 ? (
+      dialogue.map((dia, index) => (
+        <DialogueCard dialogue={dia} key={index} index={index} />
+      ))
+    ) : (
+      <p>{t("noDialogue")}</p>
+    )}
+  </div>
+</DashboardLayout>
   );
 }
