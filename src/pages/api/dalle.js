@@ -1,8 +1,10 @@
-const fetchWithTimeout=async(resource, options = {}, timeout = 10000)=> {
+const fetchWithTimeout = async (resource, options = {}, timeout = 10000) => {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
-  return fetch(resource, { ...options, signal: controller.signal }).finally(() => clearTimeout(id));
-}
+  return fetch(resource, { ...options, signal: controller.signal }).finally(
+    () => clearTimeout(id)
+  );
+};
 
 const fetchWithRetry = async (url, options, retries = 3, timeout = 30000) => {
   for (let i = 0; i < retries; i++) {
@@ -20,9 +22,12 @@ export default async function handler(req, res) {
     const { word } = JSON.parse(req.body);
 
     const refinedPrompt = `
-      Create a delightful, black-and-white line art coloring page designed specifically for children.
-      The illustration should creatively represent the concept of the word "${word}" with playful visuals.
-    `;
+    Create a black-and-white line art coloring page designed for children. 
+    The illustration should visually and creatively represent the concept of the word "${word}" 
+    using playful, imaginative, and age-appropriate visuals. Focus on creating a fun, engaging, and whimsical scene that appeals to kids. 
+    Do not include any text, letters, numbers, or symbols in the image. 
+    Ensure the design has clear, bold outlines suitable for coloring, with elements that spark creativity and joy.
+  `;
 
     const response = await fetchWithRetry(
       "https://api.openai.com/v1/images/generations",
