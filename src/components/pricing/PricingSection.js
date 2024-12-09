@@ -70,14 +70,34 @@ const PricingSection = ({ isSection = false }) => {
 
     return (
       <div
-      className={`relative bg-gradient-to-b from-${additional.color}-50 to-${additional.color}-200 p-10 rounded-3xl shadow-2xl hover:shadow-2xl hover:scale-105 hover:rotate-1 transition-all duration-300 ease-in-out`}
+      className={`relative bg-gradient-to-b from-${additional.color}-50 to-${additional.color}-200 p-10 rounded-3xl shadow-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 ease-in-out`}
     >
-      <div
-        className={`absolute -top-4 -left-4 bg-yellow-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md`}
-      >
-        Premium
-      </div>
-      <h4 className={`text-4xl font-extrabold text-${additional.color}-700 mb-4 tracking-wide`}>
+      {/* Dynamic Plan Tag */}
+ {/* Dynamic Plan Tag */}
+<div
+  className={`absolute -top-4 -left-4 ${
+    name.includes("Premium")
+      ? "bg-yellow-400"
+      : name.includes("Standard")
+      ? "bg-blue-400"
+      : "bg-gray-400"
+  } text-white px-3 py-1 rounded-full text-xs font-bold shadow-md`}
+  style={{
+    transform: "rotate(-15deg)", // Rotate the tag
+    transformOrigin: "center",   // Keep rotation centered
+  }}
+>
+  {name.includes("Premium")
+    ? "Premium"
+    : name.includes("Standard")
+    ? "Standard"
+    : "Basic"}
+</div>
+
+
+    
+      {/* Card Content */}
+      <h4 className={`text-4xl font-extrabold text-${additional.color}-700 mb-4`}>
         {locale === "en" ? name : nameZh}
       </h4>
       <p className="text-gray-700 mb-4">NT${cost}</p>
@@ -85,6 +105,8 @@ const PricingSection = ({ isSection = false }) => {
       <p className="text-sm text-gray-500 mb-6">
         {locale === "en" ? description : descriptionZh}
       </p>
+    
+      {/* Buy Button */}
       <button
         className={`px-6 py-3 rounded-full text-white shadow-xl transition-all duration-300`}
         style={{
@@ -107,6 +129,8 @@ const PricingSection = ({ isSection = false }) => {
       >
         {t("buyNow")}
       </button>
+    
+      {/* Icon Wrapper */}
       <div
         className={`absolute -top-8 -right-8 w-16 h-16 bg-${additional.color}-500 text-white rounded-full flex items-center justify-center text-4xl shadow-lg`}
         style={{ boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)" }}
@@ -114,6 +138,7 @@ const PricingSection = ({ isSection = false }) => {
         {additional.icon}
       </div>
     </div>
+    
     
     );
   };
