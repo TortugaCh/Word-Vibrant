@@ -128,12 +128,12 @@ export default function DashboardLayout({ children }) {
         <Footer
           style={{
             textAlign: "center",
-            background: "#fff",
+            background: "#EDDDFF",
             boxShadow: "0 -2px 10px rgba(0, 0, 0, 0.1)",
             padding: "16px",
           }}
         >
-          © {new Date().getFullYear()} My Dashboard. All Rights Reserved.
+          © {new Date().getFullYear()} 語動. All Rights Reserved.
         </Footer>
       </Layout>
     </Layout>
