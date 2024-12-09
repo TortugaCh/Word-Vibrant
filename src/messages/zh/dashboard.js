@@ -1,5 +1,5 @@
 export default {
-  dashboardTitle: "中文識字 AI 儀表板", // Translation for 'Chinese Literacy AI Dashboard'
+  dashboardTitle: "語動 儀表板", // Translation for 'Chinese Literacy AI Dashboard'
   welcome: "歡迎，{user}！",
   strokeOrdersTitle: "✍️ 筆劃順序",
   strokeOrdersDescription: "學習漢字的正確筆劃順序，提升你的書寫技巧。",

@@ -157,12 +157,14 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { FcGoogle } from "react-icons/fc";
+import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../lib/getMessages";
 import { handleEmailAuth, handleGoogleAuth } from "../../lib/utils";
 import { useUserContext } from "../../context/UserContext";
 import { Input, Button, Form, Alert, Typography } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import Image from "next/image";
 
 const { Title } = Typography;
 
@@ -174,13 +176,11 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isPasswordReset, setIsPasswordReset] = useState(false);
 
   const handleAuth = async (values) => {
     const { email, password, username } = values;
     setLoading(true);
     setError("");
-    console.log("Handling email auth:", email, password, isLogin, username);
 
     try {
       let user = await handleEmailAuth(email, password, isLogin, username);
@@ -201,10 +201,8 @@ export default function AuthPage() {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     setError("");
-
     try {
       const user = await handleGoogleAuth();
-
       if (user) {
         if (user.role === "Admin") router.push("/admin");
         else router.push("/user/dashboard");
@@ -219,31 +217,48 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="auth-page bg-gradient-to-b from-indigo-50 to-purple-50 min-h-screen flex justify-center items-center">
-      <div className="auth-container max-w-md w-full bg-white rounded-lg shadow-lg p-8 relative">
+    <div className="relative min-h-screen flex justify-center items-center bg-white overflow-hidden">
+      {/* Decorative SVGs */}
+      <div className="absolute top-0 left-0 w-40 h-40 bg-[#7e57c2] rounded-full opacity-20"></div>
+      <div className="absolute bottom-0 right-0 w-40 h-40 bg-[#b74fae] rounded-full opacity-20"></div>
+
+      {/* Auth Container */}
+      <div className="relative max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 border-t-4 border-[#7e57c2]">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/images/logo3.png"
+            alt="Logo"
+            width={100}
+            height={100}
+            className="animate-fade-in"
+          />
+        </div>
+
         {/* Back Button */}
         <Button
           onClick={() => router.push("/")}
           icon={<ArrowLeftOutlined />}
           type="default"
-          className="absolute top-4 left-4"
+          className="absolute top-4 left-4 text-[#7e57c2] hover:text-[#b74fae] hover:bg-transparent transition duration-300"
         />
 
-        <Title level={2} className="text-center text-purple-700 mb-6">
+        {/* Title */}
+        <Title level={2} className="text-center text-[#7e57c2] mb-6 font-bold">
           {t(isLogin ? "login" : "signUp")}
         </Title>
 
-        {/* Google Sign-In Button */}
+        {/* Google Sign-In */}
         <Button
           onClick={handleGoogleSignIn}
           icon={<FcGoogle />}
           type="default"
-          className="auth-button flex items-center justify-center mb-4 w-full"
+          className="flex items-center justify-center mb-4 w-full border border-gray-300 hover:border-[#7e57c2] hover:text-[#7e57c2] transition-transform transform hover:scale-105"
         >
           {t("Google")}
         </Button>
 
-        {/* Form for email and password */}
+        {/* Email & Password Form */}
         <Form
           onFinish={handleAuth}
           layout="vertical"
@@ -255,7 +270,10 @@ export default function AuthPage() {
               name="username"
               rules={[{ required: true, message: t("userNameRequired") }]}
             >
-              <Input placeholder={t("userName")} />
+              <Input
+                prefix={<UserOutlined className="text-[#7e57c2]" />}
+                placeholder={t("userName")}
+              />
             </Form.Item>
           )}
 
@@ -264,7 +282,11 @@ export default function AuthPage() {
             name="email"
             rules={[{ required: true, message: t("emailRequired") }]}
           >
-            <Input placeholder={t("email")} type="email" />
+            <Input
+              prefix={<MailOutlined className="text-[#7e57c2]" />}
+              placeholder={t("email")}
+              type="email"
+            />
           </Form.Item>
 
           <Form.Item
@@ -272,47 +294,66 @@ export default function AuthPage() {
             name="password"
             rules={[{ required: true, message: t("passwordRequired") }]}
           >
-            <Input.Password placeholder={t("password")} />
+            <Input.Password
+              prefix={<LockOutlined className="text-[#7e57c2]" />}
+              placeholder={t("password")}
+            />
           </Form.Item>
 
+          {/* Forgot Password */}
+          {isLogin && (
+            <div className="text-right mb-4">
+              <Button
+                type="link"
+                className="text-[#7e57c2] hover:text-[#b74fae] transition"
+                onClick={() => router.push("/auth/reset-password")}
+              >
+                {t("forgotPassword")}
+              </Button>
+            </div>
+          )}
+
           <Form.Item>
-            <Button type="primary" htmlType="submit" block loading={loading}>
-              {t(isLogin ? "login" : "signUp")}
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              loading={loading}
+              className="relative overflow-hidden rounded-lg bg-gradient-to-r from-[#7e57c2] to-[#b74fae] text-white font-semibold py-3 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              style={{
+                backgroundImage:
+                  "linear-gradient(to right, #7e57c2, #b74fae, #eea72e)", // Gradient background
+              }}
+            >
+              <span className="relative z-10">
+                {t(isLogin ? "login" : "signUp")}
+              </span>
+              <div className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-300"></div>
             </Button>
           </Form.Item>
         </Form>
 
-        {/* Switch between login and signup */}
-        <Button
-          type="link"
-          className="w-full"
-          onClick={() => setIsLogin(!isLogin)}
-        >
-          {t(isLogin ? "switchToSignUp" : "switchToLogin")}
-        </Button>
-
-        {/* Forgot Password Link */}
-        {isLogin && (
+        {/* Switch Between Login and Signup */}
+        <div className="text-center mt-4">
           <Button
-            type="link"
-            className="w-full mt-4"
-            onClick={() => router.push("/auth/reset-password")}
+            type="default"
+            onClick={() => setIsLogin(!isLogin)}
+            className="relative overflow-hidden rounded-lg bg-gradient-to-r from-[#eea72e] to-[#b74fae] text-white font-semibold py-3 px-6 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, #eea72e, #b74fae, #7e57c2)", // Gradient background
+            }}
           >
-            {t("forgotPassword")}
+            <span className="relative z-10">
+              {t(isLogin ? "switchToSignUp" : "switchToLogin")}
+            </span>
+            <div className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-300"></div>
           </Button>
-        )}
+        </div>
 
-        {/* Display Error or Success message */}
+        {/* Error Message */}
         {error && (
           <Alert message={error} type="error" showIcon className="mt-4" />
-        )}
-        {isPasswordReset && (
-          <Alert
-            message={t("passwordResetSuccess")}
-            type="success"
-            showIcon
-            className="mt-4"
-          />
         )}
       </div>
     </div>

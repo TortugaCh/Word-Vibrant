@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { handleLogout } from "../lib/utils";
 import { useUserContext } from "../context/UserContext";
 
-export default function Header({ logoSrc = "/images/logo4.png", onLogout }) {
+export default function Header({ logoSrc = "/images/logo3.png", onLogout }) {
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,13 +25,13 @@ export default function Header({ logoSrc = "/images/logo4.png", onLogout }) {
 
   return (
     <header className="bg-white shadow-md w-full fixed top-0 z-20">
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+      <div className="container mx-auto px-16 py-2 flex justify-between items-center">
         {/* Logo Image instead of Title */}
         <div>
           <img
             src={logoSrc}
             alt="Logo"
-            className="cursor-pointer h-16 sm:h-18 md:h-20 lg:h-32 w-auto"
+            className="cursor-pointer h-12 sm:h-14 md:h-16 lg:h-18 w-auto"
             onClick={() => router.push("/")}
           />
         </div>
@@ -127,7 +127,7 @@ export default function Header({ logoSrc = "/images/logo4.png", onLogout }) {
                 toggleSidebar();
                 router.push("/");
               }}
-              style={{ height: "50px" }} // Adjust logo size
+              style={{ height: "40px" }} // Adjust logo size
             />
             <nav className="flex flex-col gap-4 text-gray-700">
               <Link

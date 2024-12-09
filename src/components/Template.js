@@ -1,26 +1,57 @@
-import Header from "./Header";
+import React from "react";
+import Header from "./Header"; // Ensure you have this header component
 
 export default function Template({ children, title, userData, onLogout }) {
+  // Static circle positions (Top-Left, Top-Right, Bottom-Right, Bottom-Left, Center)
+  const circles = [
+    { top: "15%", left: "5%", size: "80px", color: "rgba(126, 87, 194, 0.5)" },
+    {
+      top: "2%",
+      right: "3%",
+      size: "100px",
+      color: "rgba(183, 79, 174, 0.5)",
+    },
+    {
+      bottom: "5%",
+      right: "3%",
+      size: "120px",
+      color: "rgba(238, 167, 46, 0.5)",
+    },
+    {
+      bottom: "10%",
+      left: "5%",
+      size: "90px",
+      color: "rgba(183, 79, 174, 0.3)",
+    }, // New bottom-left circle
+    // { top: "40%", left: "45%", size: "60px", color: "rgba(238, 167, 46, 0.4)" }, // New center circle
+  ];
+
   return (
-    <div className="relative bg-gradient-to-b from-indigo-100 via-purple-50 to-pink-50 min-h-screen flex flex-col items-center overflow-visible">
+    <div className="relative bg-white min-h-screen flex flex-col items-center overflow-hidden">
       {/* Header */}
       <Header title={title} userData={userData} onLogout={onLogout} />
 
-      {/* Decorative Background Elements */}
-      <div className="absolute inset-0 overflow-visible">
-        <div className="circle1 animate-bounce-slow"></div>
-        <div className="circle2 animate-bounce-slow"></div>
-        <div className="circle3 animate-bounce-slow"></div>
-        <div className="star1 animate-spin-slow">⭐</div>
-        <div className="star2 animate-spin-slow">🌟</div>
-        <div className="triangle triangle1"></div>
-        <div className="triangle triangle2"></div>
-        <div className="chinese-word chinese-word1">汉</div>
-        <div className="chinese-word chinese-word2">字</div>
+      {/* Decorative Circles */}
+      <div className="absolute inset-0 overflow-hidden">
+        {circles.map((circle, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full animate-floating" // New animation
+            style={{
+              top: circle.top,
+              bottom: circle.bottom,
+              left: circle.left,
+              right: circle.right,
+              width: circle.size,
+              height: circle.size,
+              backgroundColor: circle.color,
+            }}
+          ></div>
+        ))}
       </div>
 
-      {/* Main Content Area */}
-      <main className="container mx-auto px-6 py-24 relative z-10 flex flex-col items-center my-auto">
+      {/* Main Content Area with Margin from Top */}
+      <main className="container mx-auto px-6 py-6 mt-16 md:px-10 md:py-20 relative z-10 text-center">
         {children}
       </main>
     </div>
