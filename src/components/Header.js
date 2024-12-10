@@ -52,7 +52,7 @@ export default function Header({ logoSrc = "/images/logo3.png", onLogout, t }) {
             {t("header.aboutUs")}
           </Link>
           <Link
-            href="/privacy"
+            href="/term&condition"
             className="hover:text-purple-600 transition duration-200"
           >
             {t("header.termCondition")}
