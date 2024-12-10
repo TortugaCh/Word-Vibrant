@@ -4,7 +4,7 @@ import DashboardLayout from "../../../layout";
 import axios from "axios";
 import { useTranslations } from "next-intl";
 import { message } from "antd";
-import Loader from "../../../../../components/Loader"; 
+import Loader from "../../../../../components/Loader";
 import { GiBookmarklet, GiPencilBrush } from "react-icons/gi"; // Icons
 
 // Page Component
@@ -26,8 +26,11 @@ export default function Page() {
     try {
       setLoading(true);
       const prompt = `Create a short dialogue using the word "${selectedWord}". Include both Traditional Chinese and English translations. Limit to 7-8 exchanges. Format as a JSON array: [{"traditionalChinese": "...", "english": "..."}].`;
+      console.log("Prompt:", prompt);
 
       const resp = await axios.post("/api/getDialogue", { prompt });
+      console.log("API Response:", resp.data);
+
       if (resp.status === 200 && Array.isArray(resp.data.data)) {
         setDialogue(resp.data.data);
         message.success(t("dialogueSuccess"));
@@ -77,18 +80,18 @@ export default function Page() {
 
   return (
     <DashboardLayout>
-  <div className="p-6">
-    {loading ? (
-      // Replace the "Loading..." text with the Loader component
-      <Loader />
-    ) : dialogue.length > 0 ? (
-      dialogue.map((dia, index) => (
-        <DialogueCard dialogue={dia} key={index} index={index} />
-      ))
-    ) : (
-      <p>{t("noDialogue")}</p>
-    )}
-  </div>
-</DashboardLayout>
+      <div className="p-6">
+        {loading ? (
+          // Replace the "Loading..." text with the Loader component
+          <Loader />
+        ) : dialogue.length > 0 ? (
+          dialogue.map((dia, index) => (
+            <DialogueCard dialogue={dia} key={index} index={index} />
+          ))
+        ) : (
+          <p>{t("noDialogue")}</p>
+        )}
+      </div>
+    </DashboardLayout>
   );
 }
