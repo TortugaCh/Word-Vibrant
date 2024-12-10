@@ -22,11 +22,20 @@ export default async function handler(req, res) {
     const { word } = JSON.parse(req.body);
 
     const refinedPrompt = `
-    Create a black-and-white line art coloring page specifically for children. 
-    The illustration must depict the concept of the word "${word}" not the word purely through visuals, without any chinese words, without any letters, without any numbers, or without any symbols of any kind appearing in the image. 
-    Focus on fun, playful, and imaginative elements that are age-appropriate and visually engaging for kids. 
-    The scene should include clear, bold outlines, simple shapes, and visually distinct details suitable for easy coloring. 
-    Avoid any text or textual representation within the drawing, and ensure the entire design is kid-friendly, creative, and joyful.
+    Create a black-and-white line art coloring page exclusively for children aged 5-10. 
+    The illustration must visually represent the concept of the word "${word}" without explicitly using the word itself or any form of text, symbols, letters, or numbers. 
+    The design must adhere to the following strict guidelines:
+    
+    - **No Text or Symbols of Any Kind:** Under no circumstances should Chinese characters, English letters, numbers, or symbols appear in the design.
+    - **Visual Representation Only:** The concept should be communicated entirely through visual elements, such as objects, scenes, or characters.
+    - **Kid-Friendly and Playful:** Ensure the design is engaging, joyful, and appropriate for children.
+    - **Simple and Clear Details:** Use bold, clean outlines with simple shapes, avoiding intricate or overly complex elements.
+    - **No Hidden or Embedded Text:** Double-check to ensure no text or symbols are embedded, hidden, or implied in the drawing.
+  
+    **Important Note:** Any inclusion of text, symbols, or characters will render the illustration invalid. 
+    Focus on creating a visually appealing and fully non-verbal depiction of the concept for an enjoyable coloring experience.
+  
+    The resulting image must be simple, bold, visually distinct, and entirely free from any form of text, characters, symbols, or numbers.
   `;
 
     const response = await fetchWithRetry(
