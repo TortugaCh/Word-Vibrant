@@ -72,6 +72,8 @@ export async function middleware(req) {
     "/pricing",
     "/no-credits",
     "/about-us",
+    "/about",
+    "/terms",
     "/privacy",
   ];
   const isPublicRoute = publicRoutes.some((route) =>
