@@ -11,14 +11,7 @@ export default function Success() {
           Thank you for your purchase! Your transaction has been completed
           successfully.
         </p>
-        <div style={styles.details}>
-          <p>
-            <strong>Order ID:</strong> #123456
-          </p>
-          <p>
-            <strong>Total Paid:</strong> $499
-          </p>
-        </div>
+        <div style={styles.details}></div>
         <button
           style={styles.button}
           onClick={() => (window.location.href = "/")}
@@ -74,12 +67,20 @@ const styles = {
     textAlign: "left",
   },
   button: {
+    backgroundColor: "#ffffff",
+    color: "#343a40",
+    padding: "10px 20px",
+    border: "2px solid #007bff",
+    borderRadius: "20px",
+    fontSize: "16px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+  },
+  buttonHover: {
     backgroundColor: "#007bff",
     color: "#ffffff",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "5px",
-    fontSize: "16px",
-    cursor: "pointer",
+    transform: "scale(1.05)",
   },
 };
