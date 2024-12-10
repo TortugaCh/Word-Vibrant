@@ -1,5 +1,6 @@
 import React from "react";
-import { Table, Button } from "antd";
+import { Table, Button, Popconfirm } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const CustomTable = ({ columns, data, onEdit, onDelete }) => {
   const actionColumn = {
@@ -11,16 +12,21 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
           type="link"
           onClick={() => onEdit(record)}
           style={{ color: "#1890ff" }}
-        >
-          Edit
-        </Button>
-        <Button
-          type="link"
-          onClick={() => onDelete(record.id)}
+          icon={<EditOutlined />}
+        />
+        <Popconfirm
           style={{ color: "#ff4d4f" }}
+          icon={<DeleteOutlined />}
+          onConfirm={() => onDelete(record.id)}
+          description="Are you sure to delete this record"
+          
         >
-          Delete
-        </Button>
+          <Button
+           type="link"
+            style={{ color: "#ff4d4f" }}
+            icon={<DeleteOutlined />}
+          />
+        </Popconfirm>
       </div>
     ),
   };

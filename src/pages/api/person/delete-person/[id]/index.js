@@ -13,10 +13,11 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log(id)
     // Reference to the "persons" document
     const userDocRef = doc(db, "persons", id);
     const userDocSnap = await getDoc(userDocRef);
-
+    
     if (!userDocSnap.exists()) {
       return res.status(404).json({ error: "User not found in Firestore" });
     }

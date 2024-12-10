@@ -1,17 +1,12 @@
 import React from "react";
 import Template from "../components/Template";
 import Footer from "../components/Footer";
-import { motion } from "framer-motion"; // For animations
-
+import { useUserContext } from "../context/UserContext";
 export default function AboutUs() {
+  const t = useTranslations("common");
   return (
     <Template>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="container mx-auto px-6 py-24 text-center"
-      >
+      <div className="container mx-auto px-6 py-24 text-center">
         <h1 className="text-5xl font-bold text-[#7E57C2] mb-8">關於我們</h1>
         <motion.p
           initial={{ opacity: 0 }}
@@ -63,9 +58,11 @@ export default function AboutUs() {
           >
             chiahuammx@gmail.com
           </a>
-        </motion.p>
-      </motion.div>
+        </p>
+      </div>
       <Footer />
     </Template>
   );
 }
+
+export const getServerSideProps = withMessages("common");

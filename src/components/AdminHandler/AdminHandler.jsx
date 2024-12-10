@@ -98,10 +98,16 @@ const AdminLookupManager = () => {
       dataIndex: "name",
       key: "name",
     },
+    {
+      title: "NameZh",
+      dataIndex: "nameZh",
+      key: "nameZh",
+    },
   ];
 
   const formConfig = [
     { name: "name", label: "Name", type: "text", rules: [{ required: true }] },
+    { name: "nameZh", label: "NameZh", type: "text", rules: [{ required: true }] },
   ];
 
   return (
