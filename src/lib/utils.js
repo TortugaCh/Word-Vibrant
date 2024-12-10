@@ -669,16 +669,16 @@ export const generateDialogue = async (prompt) => {
           },
           {
             role: "user",
-            content: `Generate a short, natural dialogue in Traditional Chinese using the word "${prompt}". The response should be a JSON array of objects, where each object has the following structure:
+            content: `Generate a short, natural dialogue in Traditional Chinese using the word "${prompt}" for kids. The response should be a JSON array of objects, where each object has the following structure:
             - "traditionalChinese": Dialogue in Traditional Chinese.
             - "english": English translation of the dialogue.
-
+Limit the dialogue to 5-6 exchanges. Ensure the output is valid JSON.
             Example:
             [
               { "traditionalChinese": "你好！你叫什麼名字？", "english": "Hello! What is your name?" },
               { "traditionalChinese": "我叫小明。你呢？", "english": "My name is Xiao Ming. And you?" }
             ]
-            Limit the dialogue to 5-6 exchanges. Ensure the output is valid JSON.`,
+            `,
           },
         ],
         max_tokens: 300,
