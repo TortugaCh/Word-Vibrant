@@ -72,13 +72,7 @@
 //   }
 // }
 import { createWorker } from "tesseract.js"; // Import Tesseract.js
-const fetchWithTimeout = async (resource, options = {}, timeout = 10000) => {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-  return fetch(resource, { ...options, signal: controller.signal }).finally(
-    () => clearTimeout(id)
-  );
-};
+
 const fetchWithTimeout = async (resource, options = {}, timeout = 10000) => {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
