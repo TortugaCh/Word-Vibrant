@@ -6,7 +6,7 @@ import {
   FaInstagram,
 } from "react-icons/fa";
 
-const Footer = ({t}) => {
+const Footer = ({ t }) => {
   return (
     <footer className="bg-[#b47fe5] text-white py-8 px-4 w-full">
       <div className="max-w-screen-xl mx-auto">
@@ -39,7 +39,7 @@ const Footer = ({t}) => {
               href="/privacy"
               className="text-white hover:text-[#ffae33] transition duration-300"
             >
-              {t("footer.privacyPolicy")}
+              {t("footer.termCondition")}
             </a>
             <a
               href="mailto:contact@company.com"
