@@ -19,10 +19,9 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
           icon={<DeleteOutlined />}
           onConfirm={() => onDelete(record.id)}
           description="Are you sure to delete this record"
-          
         >
           <Button
-           type="link"
+            type="link"
             style={{ color: "#ff4d4f" }}
             icon={<DeleteOutlined />}
           />
@@ -37,6 +36,8 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
       dataSource={data}
       rowKey="id"
       bordered
+      scroll={{ x: true }}
+      size="middle"
     />
   );
 };
