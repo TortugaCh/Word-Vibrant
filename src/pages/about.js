@@ -2,12 +2,10 @@ import React from "react";
 import Template from "../components/Template";
 import Footer from "../components/Footer";
 import { useUserContext } from "../context/UserContext";
-import { useTranslations } from "next-intl";
-import { withMessages } from "../lib/getMessages";
 export default function AboutUs() {
   const t = useTranslations("common");
   return (
-    <Template t={t}>
+    <Template>
       <div className="container mx-auto px-6 py-24 text-center">
         <h1 className="text-5xl font-bold text-[#7E57C2] mb-8">關於我們</h1>
         <p className="text-gray-700 text-lg leading-relaxed mb-8">
@@ -42,9 +40,7 @@ export default function AboutUs() {
           </a>
         </p>
       </div>
-      <Footer t={t} />
+      <Footer />
     </Template>
   );
 }
-
-export const getServerSideProps = withMessages("common");
