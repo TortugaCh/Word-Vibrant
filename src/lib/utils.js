@@ -394,7 +394,8 @@ const fetchWithRetry = async (url, options, retries = 3, timeout = 30000) => {
 // };
 
 // Example usage inside your function where you get the image URL from OpenAI API
-
+const API_KEY =
+  "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";
 const getBase64FromImageUrl = async (imageUrl) => {
   const response = await fetch(imageUrl);
   const blob = await response.blob(); // Fetch the image as a blob
@@ -415,7 +416,7 @@ export const getColoringPage = async (word) => {
     Create a delightful, black-and-white line art coloring page designed specifically for children.
     The illustration should creatively represent the concept of the word "${word}" with playful visuals.
   `;
-  
+
   try {
     const response = await fetchWithRetry(
       "https://api.openai.com/v1/images/generations",
@@ -423,7 +424,7 @@ export const getColoringPage = async (word) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer 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`, // Use your actual API key
+          Authorization: `Bearer ${API_KEY}`, // Use your actual API key
         },
         body: JSON.stringify({
           model: "dall-e-3",
@@ -438,13 +439,13 @@ export const getColoringPage = async (word) => {
     );
 
     const data = await response.json();
-    
+
     if (!data || !data.data || !data.data.length) {
       throw new Error("No image generated");
     }
 
     const base64Image = data.data[0].b64_json; // Base64 encoded image data
-    
+
     console.log("Base64 image:", base64Image);
     return { imageUrl: base64Image };
   } catch (error) {
@@ -604,7 +605,7 @@ export const generateColoringPDF = async ({
 
       // Add background image to the first page of the PDF
       pdf.addImage(img, "PNG", 0, 0, pageWidth, pageHeight);
-      
+
       // If you want to add the word image on a new page, uncomment the line below:
       pdf.addPage();
     }
@@ -641,3 +642,81 @@ export const generateColoringPDF = async ({
   }
 };
 
+export const generateDialogue = async (prompt) => {
+  if (!prompt) {
+    return { error: "Prompt is required" };
+  }
+
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-4",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a helpful assistant that can speak both Traditional Chinese and English.",
+          },
+          {
+            role: "user",
+            content: `Generate a short, natural dialogue in Traditional Chinese using the word "${prompt}". The response should be a JSON array of objects, where each object has the following structure:
+            - "traditionalChinese": Dialogue in Traditional Chinese.
+            - "english": English translation of the dialogue.
+
+            Example:
+            [
+              { "traditionalChinese": "你好！你叫什麼名字？", "english": "Hello! What is your name?" },
+              { "traditionalChinese": "我叫小明。你呢？", "english": "My name is Xiao Ming. And you?" }
+            ]
+            Limit the dialogue to 6-7 exchanges. Ensure the output is valid JSON.`,
+          },
+        ],
+        max_tokens: 300,
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${API_KEY}`, // Use your actual API key
+        },
+      }
+    );
+
+    const responseData = response.data;
+
+    if (
+      responseData &&
+      responseData.choices &&
+      responseData.choices.length > 0
+    ) {
+      const dialogueText = responseData.choices[0].message.content.trim();
+      console.log("Dialogue from OpenAI:", dialogueText);
+      try {
+        const parsedData = JSON.parse(dialogueText); // Parse OpenAI's response
+        console.log("Parsed Dialogue:", parsedData);
+
+        // Validate that it's an array of objects with required keys
+        if (
+          Array.isArray(parsedData) &&
+          parsedData.every((d) => d.traditionalChinese && d.english)
+        ) {
+          return { data: parsedData };
+        } else {
+          throw new Error("Parsed data is not in the expected format.");
+        }
+      } catch (parseError) {
+        console.error("Error parsing JSON:", parseError);
+        return {
+          error:
+            "Failed to parse response data from OpenAI. Invalid JSON format.",
+        };
+      }
+    } else {
+      return { error: "Invalid response from OpenAI." };
+    }
+  } catch (error) {
+    console.error("Error in API call to OpenAI:", error);
+    return { error: "Failed to fetch dialogue from OpenAI." };
+  }
+};
