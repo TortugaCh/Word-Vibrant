@@ -32,22 +32,22 @@ export default function Page() {
 
       const dialogueText = resp.data?.data || "[]";
 
-      try {
-        const parsedData = JSON.parse(dialogueText); // Parsing response data
-        console.log("Parsed Dialogue:", parsedData);
+      // Check if `dialogueText` is already an object
+      const parsedData =
+        typeof dialogueText === "string"
+          ? JSON.parse(dialogueText)
+          : dialogueText;
 
-        if (Array.isArray(parsedData)) {
-          setDialogue(parsedData);
-          message.success(
-            t("dialogueSuccess") || "Dialogue fetched successfully!"
-          );
-        } else {
-          console.error("Parsed data is not an array:", parsedData);
-          message.error("Invalid dialogue format received from server.");
-        }
-      } catch (parseError) {
-        console.error("Error parsing dialogue text:", parseError);
-        message.error("Invalid JSON format received from server.");
+      console.log("Parsed Dialogue:", parsedData);
+
+      if (Array.isArray(parsedData)) {
+        setDialogue(parsedData);
+        message.success(
+          t("dialogueSuccess") || "Dialogue fetched successfully!"
+        );
+      } else {
+        console.error("Parsed data is not an array:", parsedData);
+        message.error("Invalid dialogue format received from server.");
       }
     } catch (error) {
       console.error(
