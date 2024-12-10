@@ -15,7 +15,9 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [dialogue, setDialogue] = useState([]);
 
+  // Debugging selectedWord
   useEffect(() => {
+    console.log("Selected word from query:", selectedWord);
     if (selectedWord) {
       fetchDialogue();
     }
@@ -25,24 +27,31 @@ export default function Page() {
   const fetchDialogue = async () => {
     try {
       setLoading(true);
+      console.log("Fetching dialogue for word:", selectedWord);
+
       const prompt = `Create a short dialogue using the word "${selectedWord}". Include both Traditional Chinese and English translations. Limit to 7-8 exchanges. Format as a JSON array: [{"traditionalChinese": "...", "english": "..."}].`;
-      console.log("Prompt:", prompt);
 
       const resp = await axios.post("/api/getDialogue", { prompt });
       console.log("API Response:", resp.data);
 
       if (resp.status === 200 && Array.isArray(resp.data.data)) {
         setDialogue(resp.data.data);
-        message.success(t("dialogueSuccess"));
+        message.success(
+          t("dialogueSuccess") || "Dialogue fetched successfully!"
+        );
       } else {
-        console.error("Invalid response:", resp.data);
+        console.error("Unexpected API response format:", resp.data);
         message.error("Invalid response format from server.");
       }
     } catch (error) {
-      console.error("Error:", error.response?.data || error.message);
-      message.error(t("dialogueError"));
+      console.error(
+        "Error during API call:",
+        error.response?.data || error.message
+      );
+      message.error(t("dialogueError") || "Failed to fetch dialogue.");
     } finally {
       setLoading(false);
+      console.log("Loading state set to false");
     }
   };
 
@@ -82,14 +91,13 @@ export default function Page() {
     <DashboardLayout>
       <div className="p-6">
         {loading ? (
-          // Replace the "Loading..." text with the Loader component
-          <Loader />
+          <Loader /> // Replace the "Loading..." text with the Loader component
         ) : dialogue.length > 0 ? (
           dialogue.map((dia, index) => (
             <DialogueCard dialogue={dia} key={index} index={index} />
           ))
         ) : (
-          <p>{t("noDialogue")}</p>
+          <p>{t("noDialogue") || "No dialogue available for this word."}</p>
         )}
       </div>
     </DashboardLayout>
