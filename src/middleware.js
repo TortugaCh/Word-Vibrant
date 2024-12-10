@@ -74,7 +74,7 @@ export async function middleware(req) {
     "/about-us",
     "/about",
     "/terms",
-    "/privacy",
+    "/term&condition",
   ];
   const isPublicRoute = publicRoutes.some((route) =>
     pathname.startsWith(route)
