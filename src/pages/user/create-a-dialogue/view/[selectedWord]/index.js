@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { message } from "antd";
 import Loader from "../../../../../components/Loader";
 import { GiBookmarklet, GiPencilBrush } from "react-icons/gi";
+import { generateDialogue } from "../../../../../lib/utils";
 
 export default function Page() {
   const router = useRouter();
@@ -20,6 +21,45 @@ export default function Page() {
     }
   }, [selectedWord]);
 
+  // const fetchDialogue = async () => {
+  //   try {
+  //     setLoading(true);
+  //     console.log("Fetching dialogue for word:", selectedWord);
+
+  //     const prompt = `Create a short dialogue using the word "${selectedWord}". Include both Traditional Chinese and English translations. Limit to 7-8 exchanges. Format as a JSON array: [{"traditionalChinese": "...", "english": "..."}].`;
+
+  //     const resp = await axios.post("/api/getDialogue", { prompt });
+  //     console.log("API Response:", resp.data);
+
+  //     const dialogueText = resp.data?.data || "[]";
+
+  //     // Check if `dialogueText` is already an object
+  //     const parsedData =
+  //       typeof dialogueText === "string"
+  //         ? JSON.parse(dialogueText)
+  //         : dialogueText;
+
+  //     console.log("Parsed Dialogue:", parsedData);
+
+  //     if (Array.isArray(parsedData)) {
+  //       setDialogue(parsedData);
+  //       message.success(
+  //         t("dialogueSuccess") || "Dialogue fetched successfully!"
+  //       );
+  //     } else {
+  //       console.error("Parsed data is not an array:", parsedData);
+  //       message.error("Invalid dialogue format received from server.");
+  //     }
+  //   } catch (error) {
+  //     console.error(
+  //       "Error during API call:",
+  //       error.response?.data || error.message
+  //     );
+  //     message.error(t("dialogueError") || "Failed to fetch dialogue.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const fetchDialogue = async () => {
     try {
       setLoading(true);
@@ -27,10 +67,12 @@ export default function Page() {
 
       const prompt = `Create a short dialogue using the word "${selectedWord}". Include both Traditional Chinese and English translations. Limit to 7-8 exchanges. Format as a JSON array: [{"traditionalChinese": "...", "english": "..."}].`;
 
-      const resp = await axios.post("/api/getDialogue", { prompt });
-      console.log("API Response:", resp.data);
+      const resp = await generateDialogue(prompt);
+      // const resp = await axios.post("/api/getDialogue", { prompt });
+      console.log("API Response:", resp);
 
-      const dialogueText = resp.data?.data || "[]";
+      // const dialogueText = resp.data?.data || "[]";
+      const dialogueText = resp.data || "[]";
 
       // Check if `dialogueText` is already an object
       const parsedData =
