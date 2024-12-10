@@ -29,7 +29,7 @@ export default async function handler(req, res) {
               { "traditionalChinese": "你好！你叫什麼名字？", "english": "Hello! What is your name?" },
               { "traditionalChinese": "我叫小明。你呢？", "english": "My name is Xiao Ming. And you?" }
             ]
-            Limit the dialogue to 6-7 exchanges. Ensure the output is valid JSON.`,
+            Limit the dialogue to 5-6 exchanges. Ensure the output is valid JSON.`,
           },
         ],
         max_tokens: 300,
