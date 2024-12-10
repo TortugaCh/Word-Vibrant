@@ -5,25 +5,21 @@ import axios from "axios";
 import { useTranslations } from "next-intl";
 import { message } from "antd";
 import Loader from "../../../../../components/Loader";
-import { GiBookmarklet, GiPencilBrush } from "react-icons/gi"; // Icons
+import { GiBookmarklet, GiPencilBrush } from "react-icons/gi";
 
-// Page Component
 export default function Page() {
   const router = useRouter();
-  const t = useTranslations("strokeOrder"); // For translations
+  const t = useTranslations("strokeOrder");
   const { selectedWord } = router.query;
   const [loading, setLoading] = useState(false);
   const [dialogue, setDialogue] = useState([]);
 
-  // Debugging selectedWord
   useEffect(() => {
-    console.log("Selected word from query:", selectedWord);
     if (selectedWord) {
       fetchDialogue();
     }
   }, [selectedWord]);
 
-  // Fetch Dialogue from API
   const fetchDialogue = async () => {
     try {
       setLoading(true);
@@ -34,14 +30,24 @@ export default function Page() {
       const resp = await axios.post("/api/getDialogue", { prompt });
       console.log("API Response:", resp.data);
 
-      if (resp.status === 200 && Array.isArray(resp.data.data)) {
-        setDialogue(resp.data.data);
-        message.success(
-          t("dialogueSuccess") || "Dialogue fetched successfully!"
-        );
-      } else {
-        console.error("Unexpected API response format:", resp.data);
-        message.error("Invalid response format from server.");
+      const dialogueText = resp.data?.data || "[]";
+
+      try {
+        const parsedData = JSON.parse(dialogueText); // Parsing response data
+        console.log("Parsed Dialogue:", parsedData);
+
+        if (Array.isArray(parsedData)) {
+          setDialogue(parsedData);
+          message.success(
+            t("dialogueSuccess") || "Dialogue fetched successfully!"
+          );
+        } else {
+          console.error("Parsed data is not an array:", parsedData);
+          message.error("Invalid dialogue format received from server.");
+        }
+      } catch (parseError) {
+        console.error("Error parsing dialogue text:", parseError);
+        message.error("Invalid JSON format received from server.");
       }
     } catch (error) {
       console.error(
@@ -51,11 +57,9 @@ export default function Page() {
       message.error(t("dialogueError") || "Failed to fetch dialogue.");
     } finally {
       setLoading(false);
-      console.log("Loading state set to false");
     }
   };
 
-  // Dialogue Card Component
   const DialogueCard = ({ dialogue, index }) => {
     const isEven = index % 2 === 0;
     return (
@@ -71,17 +75,17 @@ export default function Page() {
           transition: "all 0.3s ease-in-out",
         }}
       >
-        {/* Traditional Chinese */}
         <div className="flex items-center mb-2">
           <GiPencilBrush size={30} className="text-indigo-600 mr-3" />
           <div className="text-xl font-semibold text-gray-800">
-            {dialogue.traditionalChinese}
+            {dialogue?.traditionalChinese || "No content"}
           </div>
         </div>
-        {/* English Translation */}
         <div className="flex items-center">
           <GiBookmarklet size={30} className="text-teal-600 mr-3" />
-          <div className="text-md text-gray-700">{dialogue.english}</div>
+          <div className="text-md text-gray-700">
+            {dialogue?.english || "No content"}
+          </div>
         </div>
       </div>
     );
@@ -91,13 +95,15 @@ export default function Page() {
     <DashboardLayout>
       <div className="p-6">
         {loading ? (
-          <Loader /> // Replace the "Loading..." text with the Loader component
+          <Loader />
         ) : dialogue.length > 0 ? (
           dialogue.map((dia, index) => (
             <DialogueCard dialogue={dia} key={index} index={index} />
           ))
         ) : (
-          <p>{t("noDialogue") || "No dialogue available for this word."}</p>
+          <p className="text-center text-gray-500">
+            {t("noDialogue") || "No dialogue available."}
+          </p>
         )}
       </div>
     </DashboardLayout>
