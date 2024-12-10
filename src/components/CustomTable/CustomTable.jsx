@@ -37,7 +37,6 @@ const CustomTable = ({ columns, data, onEdit, onDelete }) => {
       rowKey="id"
       bordered
       scroll={{ x: true }}
-      size="middle"
     />
   );
 };
