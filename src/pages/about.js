@@ -3,6 +3,7 @@ import Template from "../components/Template";
 import Footer from "../components/Footer";
 import { useUserContext } from "../context/UserContext";
 import { withMessages } from "../lib/getMessages";
+import { useTranslations } from "next-intl";
 export default function AboutUs() {
   const t = useTranslations("common");
   return (
