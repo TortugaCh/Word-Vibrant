@@ -37,11 +37,12 @@ const Page = () => {
     }
   };
   const handleDelete = async (id) => {
-    console.log("Delete", id);
+    
     await deletePricingPlan(id);
   };
   const formConfig = [
     { name: "name", label: "Name", type: "text", rules: [{ required: true }] },
+    { name: "nameZh", label: "NameZh", type: "text", rules: [{ required: true }] },
     {
       name: "priceId",
       label: "PriceId",
@@ -72,6 +73,12 @@ const Page = () => {
       type: "text",
       rules: [{ required: true }],
     },
+    {
+      name: "descriptionZh",
+      label: "DescriptionZh",
+      type: "text",
+      rules: [{ required: true }],
+    },
   ];
 
   return (
@@ -84,8 +91,7 @@ const Page = () => {
         handleDelete={handleDelete}
         columnsToFilter={[
           "features",
-          "nameZh",
-          "descriptionZh",
+          "id",
           "updatedAt",
           "createdAt",
         ]}
