@@ -7,7 +7,7 @@ const FloatingButton = ({ onClick }) => {
       style={{
         position: "fixed",
         bottom: "20px",
-        right: "20px",
+        right: "40%",
         zIndex: 1000,
         cursor: "pointer",
       }}

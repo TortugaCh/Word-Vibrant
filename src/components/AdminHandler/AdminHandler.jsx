@@ -128,7 +128,7 @@ const AdminLookupManager = () => {
         onDelete={handleDeleteItem}
       />
 
-      <FloatingButton onClick={() => openModal()} />
+<FloatingButton onClick={() => openModal()} />
 
       <CustomModal
         visible={isModalVisible}
