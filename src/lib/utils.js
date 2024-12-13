@@ -215,6 +215,7 @@ export async function fetchWordsByFilters(
       (word) => word.wordType !== "m4xvaJmSSeORT9gH3UXo"
     );
   }
+  return sortedWords;
 }
 
 // Function to check if a user already exists in the database
