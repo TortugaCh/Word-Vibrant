@@ -45,15 +45,15 @@ export const wordInputs = (
       options: semesterOptions,
       required: true,
     },
-    {
-      name: "wordType",
-      label: "Word Type",
-      placeholder: "Select Word Type",
-      placeholderZh: "选择词汇类型",
-      type: "select",
-      options: wordTypeOptions,
-      required: true,
-    },
+    // {
+    //   name: "wordType",
+    //   label: "Word Type",
+    //   placeholder: "Select Word Type",
+    //   placeholderZh: "选择词汇类型",
+    //   type: "select",
+    //   options: wordTypeOptions,
+    //   required: true,
+    // },
   ];
 };
 

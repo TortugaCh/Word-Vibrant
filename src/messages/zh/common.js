@@ -19,12 +19,12 @@
 // };
 
 export default {
-  welcomeTitle: "歡迎來到文字行動",
+  welcomeTitle: "歡迎來到語動",
   welcomeDescription:
     "探索互動式課程，掌握漢字的藝術。我們的課程設計讓學習變得有趣且有效，適合所有人！",
   loginSignup: "登入或註冊",
   dashboard: "前往儀表板",
-  aboutTitle: "關於文字行動",
+  aboutTitle: "關於語動",
   aboutDescription:
     "我們的平台提供引人入勝且互動的學習體驗，讓各個年齡層的學習者輕鬆愉快地掌握漢字。",
   choosePlan: "選擇您的方案",
@@ -54,6 +54,6 @@ export default {
     contactUs: "聯絡我們",
     termCondition: "條款與條件",
     termsOfService: "服務條款",
-    description: "文字行動是一個提供互動式漢字學習體驗的平台。",
+    description: "語動是一個提供互動式漢字學習體驗的平台。",
   },
 };

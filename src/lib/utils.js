@@ -9,6 +9,7 @@ import {
   deleteDoc,
   doc,
   serverTimestamp,
+  orderBy,
 } from "firebase/firestore";
 
 import {
@@ -78,11 +79,27 @@ export async function deleteLookupItem(id) {
 
 export async function fetchWords() {
   const wordsCollection = collection(db, "words");
-  const querySnapshot = await getDocs(wordsCollection);
-  return querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+
+  // Create a query to order documents by 'createdAt'
+  const orderedQuery = query(wordsCollection, orderBy("createdAt", "desc"));
+
+  const querySnapshot = await getDocs(orderedQuery);
+
+  // Map the documents into an array
+  return querySnapshot.docs
+    .map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+    .filter((word) => {
+      const { wordType, name } = word;
+      // Check if wordType is 1 or 2 and the word length
+      return (
+        (wordType === "Q42TlBt4cvPrEXc9u7Nk" ||
+          wordType === "907D0C34ChEIp550SrfD") &&
+        name.length == 1
+      ); // Adjust length condition as needed
+    });
 }
 
 // Get Modules
@@ -147,21 +164,57 @@ export async function fetchWordsByFilters(
   curriculum,
   grade,
   semester,
-  wordType
+  moduleName
 ) {
+  console.log(moduleName);
   const wordsCollection = collection(db, "words");
-  const q = query(
+  let q;
+  // if (moduleName === "stroke-order" || moduleName === "coloring-page") {
+  //   q = query(
+  //     wordsCollection,
+  //     where("curriculum", "==", curriculum),
+  //     where("grade", "==", grade),
+  //     where("semester", "==", semester),
+  //     where("wordType", "!=", "m4xvaJmSSeORT9gH3UXo")
+  //   );
+  // } else {
+  q = query(
     wordsCollection,
     where("curriculum", "==", curriculum),
     where("grade", "==", grade),
-    where("semester", "==", semester),
-    where("wordType", "==", wordType)
+    where("semester", "==", semester)
   );
+  // }
+
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+  const words = querySnapshot.docs
+    .map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+    .filter((word) => {
+      const { wordType, name } = word;
+
+      // If the wordType is "Q42TlBt4cvPrEXc9u7Nk" or "907D0C34ChEIp550SrfD", apply the length filter
+      if (
+        wordType === "Q42TlBt4cvPrEXc9u7Nk" ||
+        wordType === "907D0C34ChEIp550SrfD"
+      ) {
+        return name.length === 1;
+      }
+
+      // Otherwise, include all other word types
+      return true;
+    });
+  // Sort results by 'createdAt' in ascending order
+  const sortedWords = words.sort(
+    (a, b) => a.createdAt.toMillis() - b.createdAt.toMillis()
+  );
+  if (moduleName === "stroke-order" || moduleName === "coloring") {
+    return sortedWords.filter(
+      (word) => word.wordType !== "m4xvaJmSSeORT9gH3UXo"
+    );
+  }
 }
 
 // Function to check if a user already exists in the database

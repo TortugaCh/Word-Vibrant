@@ -31,7 +31,7 @@ const ReusableHandler = ({ handleFunc, t,moduleName }) => {
         {renderSelectTitle(moduleName)}
       </h2>
       <div className="flex flex-col gap-4">
-        {wordInputs(curriculums, grades, semesters, wordTypes)?.map(
+        {wordInputs(curriculums, grades, semesters)?.map(
           (input, index) => (
             <ReusableInput
               input={input}
@@ -52,10 +52,10 @@ const ReusableHandler = ({ handleFunc, t,moduleName }) => {
             <Words
               curriculum={values["curriculum"]}
               grade={values["grade"]}
-              wordType={values["wordType"]}
               semester={values["semester"]}
               handleFunc={handleFunc}
               t={t}
+              moduleName={moduleName}
             />
           </div>
         </div>

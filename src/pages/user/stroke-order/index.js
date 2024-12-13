@@ -68,7 +68,7 @@ export default function StrokeOrders() {
 
       {/* Main Contents */}
       <main className="container mx-auto px-6 py-12 mt-8 relative z-10 flex flex-col items-center">
-        <ReusableHandler handleFunc={handleGetStroke} t={t} />
+        <ReusableHandler handleFunc={handleGetStroke} t={t} moduleName="stroke-order"/>
         {/* Stroke Order Display */}
         {selectedWord && (
           <div ref={buttonRef}>
