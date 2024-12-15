@@ -3,8 +3,9 @@ import { wordInputs } from "../../constants/constants";
 import { useLookupData } from "../../hooks/useLookupData";
 import ReusableInput from "../ReusableInput/ReusableInput";
 import Words from "../Words/Words";
+import ReusableButton from "../Buttons/gradientButton";
 
-const ReusableHandler = ({ handleFunc, t,moduleName }) => {
+const ReusableHandler = ({ handleFunc, t, moduleName }) => {
   const { curriculums, grades, semesters, wordTypes } = useLookupData();
   const [values, setValues] = useState({});
 
@@ -23,7 +24,7 @@ const ReusableHandler = ({ handleFunc, t,moduleName }) => {
       default:
         return t("selectOptions");
     }
-  }
+  };
 
   return (
     <div className="max-w-2xl w-full bg-white rounded-3xl shadow-xl p-8 flex flex-col space-y-4 border-2 border-[#F9AF42]">
@@ -31,20 +32,24 @@ const ReusableHandler = ({ handleFunc, t,moduleName }) => {
         {renderSelectTitle(moduleName)}
       </h2>
       <div className="flex flex-col gap-4">
-        {wordInputs(curriculums, grades, semesters)?.map(
-          (input, index) => (
-            <ReusableInput
-              input={input}
-              handleChange={handleChange}
-              index={index}
-            />
-          )
+        {wordInputs(curriculums, grades, semesters, wordTypes)?.map(
+          (input, index) =>
+            (moduleName === "story" || moduleName === "dialogue") &&
+            input.name === "wordType" ? null : (
+              <ReusableInput
+                key={index}
+                input={input}
+                handleChange={handleChange}
+                index={index}
+              />
+            )
         )}
       </div>
 
       {/* Word Grid */}
       <div className="mt-6 flex flex-col gap-2">
-        <div className="mt-6 flex flex-col gap-2">
+        <ReusableButton text="Generate Story" isDisabled={!values["semester"] || !values["curriculum"] || !values["grade"]} onClick={handleFunc}/>
+        {/* <div className="mt-6 flex flex-col gap-2">
           <div className="font-bold text-lg text-purple-700">
             {t("availableWords")}
           </div>
@@ -58,7 +63,7 @@ const ReusableHandler = ({ handleFunc, t,moduleName }) => {
               moduleName={moduleName}
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

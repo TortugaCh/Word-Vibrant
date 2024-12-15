@@ -164,27 +164,28 @@ export async function fetchWordsByFilters(
   curriculum,
   grade,
   semester,
+  wordType,
   moduleName
 ) {
   console.log(moduleName);
   const wordsCollection = collection(db, "words");
   let q;
-  // if (moduleName === "stroke-order" || moduleName === "coloring-page") {
-  //   q = query(
-  //     wordsCollection,
-  //     where("curriculum", "==", curriculum),
-  //     where("grade", "==", grade),
-  //     where("semester", "==", semester),
-  //     where("wordType", "!=", "m4xvaJmSSeORT9gH3UXo")
-  //   );
-  // } else {
-  q = query(
-    wordsCollection,
-    where("curriculum", "==", curriculum),
-    where("grade", "==", grade),
-    where("semester", "==", semester)
-  );
-  // }
+  if (moduleName === "stroke-order" || moduleName === "coloring-page") {
+    q = query(
+      wordsCollection,
+      where("curriculum", "==", curriculum),
+      where("grade", "==", grade),
+      where("semester", "==", semester),
+      where("wordType", "==", wordType)
+    );
+  } else {
+    q = query(
+      wordsCollection,
+      where("curriculum", "==", curriculum),
+      where("grade", "==", grade),
+      where("semester", "==", semester)
+    );
+  }
 
   const querySnapshot = await getDocs(q);
   const words = querySnapshot.docs

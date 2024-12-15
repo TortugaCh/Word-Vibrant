@@ -25,6 +25,7 @@ const Words = ({ curriculum, grade, semester, wordType, handleFunc, t,moduleName
           curriculum,
           grade,
           semester,
+          wordType,
           moduleName
         );
 
