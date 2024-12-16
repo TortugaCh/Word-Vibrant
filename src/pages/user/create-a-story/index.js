@@ -17,12 +17,10 @@ export default function StrokeOrders() {
       params: {},
     },
   ]);
-
-  const [selectedWord, setSelectedWord] = useState(null);
+  const [fetchedWords, setFetchedWords] = useState(null);
   const router = useRouter();
   const { locale } = router;
   const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slash
-  const strokeRef = useRef(null);
   const buttonRef = useRef(null); // Reference for the button
 
   // Function to add a new message
@@ -31,7 +29,6 @@ export default function StrokeOrders() {
   };
 
   const handleStory = (word) => {
-    setSelectedWord(word);
     addMessage("createAStory.createStoryButton", "bot", {
       word: word.name,
     });
@@ -57,6 +54,10 @@ export default function StrokeOrders() {
     sender: msg.sender,
   }));
 
+  const handleNavigate = () => {
+    router.push(`${cleanedPath}/view`);
+  };
+
   return (
     <DashboardLayout>
       <CollapsibleNotificationPanel
@@ -70,20 +71,22 @@ export default function StrokeOrders() {
 
       {/* Main Content */}
       <main className="container mx-auto px-6 py-12 mt-8 relative z-10 flex flex-col items-center">
-        <ReusableHandler handleFunc={handleStory} t={t} moduleName="story" />
+        <ReusableHandler
+          handleFunc={handleStory}
+          t={t}
+          moduleName="story"
+          setWordsFetcehed={setFetchedWords}
+        />
 
         {/* Stroke Order Display */}
-        {selectedWord && (
+        {fetchedWords && (
           <div ref={buttonRef}>
-            {" "}
             {/* Button wrapper with reference */}
             <ReusableButton
-              onClick={() =>
-                router.push(`${cleanedPath}/view/${selectedWord.name}`)
-              }
+              onClick={handleNavigate}
               icon={DollarCircleOutlined} // Pass the icon (with appropriate styles)
               text={t("createAStory.createStoryButton", {
-                word: selectedWord.name,
+                word: "newWord", // Pass the word with translation
               })} // Pass the button text with translation              isDisabled={false}  // Button is enabled by default
             />
           </div>

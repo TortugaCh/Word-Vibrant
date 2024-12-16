@@ -15,28 +15,28 @@ const getRandomColor = () => {
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
-const Words = ({ curriculum, grade, semester, wordType, handleFunc, t,moduleName }) => {
-  const [words, setWords] = useState([]);
+const Words = ({ curriculum, grade, semester, wordType, handleFunc, t,moduleName,words }) => {
+  // const [words, setWords] = useState([]);
 
-  useEffect(() => {
-    if (curriculum && grade && semester) {
-      const fetchData = async () => {
-        const res = await fetchWordsByFilters(
-          curriculum,
-          grade,
-          semester,
-          wordType,
-          moduleName
-        );
+  // useEffect(() => {
+  //   if (curriculum && grade && semester) {
+  //     const fetchData = async () => {
+  //       const res = await fetchWordsByFilters(
+  //         curriculum,
+  //         grade,
+  //         semester,
+  //         wordType,
+  //         moduleName
+  //       );
 
-        if (res) {
-          console.log(res);
-          setWords(res);
-        }
-      };
-      fetchData();
-    }
-  }, [curriculum, grade, semester, wordType]);
+  //       if (res) {
+  //         console.log(res);
+  //         setWords(res);
+  //       }
+  //     };
+  //     fetchData();
+  //   }
+  // }, [curriculum, grade, semester, wordType]);
 
   if (!words.length) {
     return (

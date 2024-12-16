@@ -20,6 +20,7 @@ export default function CreateDialogue() {
   ]);
 
   const [selectedWord, setSelectedWord] = useState(null);
+  const [fetchedWords, setFetchedWords] = useState(null);
   const router = useRouter();
   const { locale } = router;
   const cleanedPath = router.asPath.replace(/\/$/, ""); // Remove trailing slash
@@ -72,21 +73,21 @@ export default function CreateDialogue() {
           handleFunc={handleDialoge}
           t={t}
           moduleName="dialogue"
+          wordsFetched={fetchedWords}
+          setWordsFetcehed={setFetchedWords}
         />
 
         {/* Stroke Order Display area */}
-        {selectedWord && (
+        {fetchedWords && (
           <div ref={buttonRef}>
-            {" "}
+            {console.log(fetchedWords)}
             {/* Button wrapper with reference */}
             <ReusableButton
               onClick={() =>
-                router.push(`${cleanedPath}/view/${selectedWord.name}`)
+                router.push(`${cleanedPath}/view`)
               } // Passing onClick function to navigate
               icon={DollarCircleOutlined} // Pass the icon (with appropriate styles)
-              text={t("createADialogue.createDialogueButton", {
-                word: selectedWord.name,
-              })} // Pass the button text with translation  
+              text={t("createADialogue.createDialogueButton")}// Pass the button text with translation  
               isDisabled={false} // Button is enabled by default
             />
           </div>

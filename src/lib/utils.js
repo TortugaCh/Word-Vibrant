@@ -167,7 +167,6 @@ export async function fetchWordsByFilters(
   wordType,
   moduleName
 ) {
-  console.log(moduleName);
   const wordsCollection = collection(db, "words");
   let q;
   if (moduleName === "stroke-order" || moduleName === "coloring-page") {
@@ -367,8 +366,12 @@ export const checkCredits = async (action, word, remainingCredits) => {
         withCredentials: true,
       }
     );
-    console.log("Response:", response);
-    return response.data;
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      console.error("Error checking credits:", response.data);
+      return null;
+    }
   } catch (error) {
     console.error("Error checking route:", error);
     return null;

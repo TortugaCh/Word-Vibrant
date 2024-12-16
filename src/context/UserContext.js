@@ -157,40 +157,47 @@ export const UserState = ({ children }) => {
   useEffect(() => {
     const handleRouteChange = async (url) => {
       if (!isInitialized || !userData) return;
-  
+
       if (router.asPath === url) return; // Prevent handling the same route
-  
+
       const isProtected = protectedPaths.some((path) => url.startsWith(path));
       if (isProtected) {
         const action = getAction(url);
         const pathnameParts = url.split("/");
         const selectedWordEncoded = pathnameParts[pathnameParts.length - 1];
         const selectedWord = decodeURIComponent(selectedWordEncoded);
-  
-        const wordExists = containsActionWord(userProgress, action, selectedWord);
+
+        const wordExists =
+          action === "create-a-dialogue" || action === "create-a-story"
+            ? false
+            : containsActionWord(userProgress, action, selectedWord);
         const requiredCredits = getRequiredCredits(action, modules) || 0;
-  
-        if (userCredits < requiredCredits && !wordExists) {
+
+        if (Math.abs(userCredits) < requiredCredits && !wordExists) {
           console.log("Not enough credits.");
           return router.push("/no-credits");
         }
-  
+
         const creditsBeforeDeduction = userCredits;
         const remainingCredits = userCredits - requiredCredits;
-  
+
         try {
-          const creditData = await checkCredits(action, selectedWord, remainingCredits);
-  
+          const creditData = await checkCredits(
+            action,
+            selectedWord,
+            remainingCredits
+          );
+
           if (!creditData.success) {
             console.log("Credit check failed.");
             return router.push("/no-credits");
           }
-  
+
           if (creditData.creditsDeducted) {
             setUserCredits(creditData.remainingCredits);
             setUserProgress([...userProgress, `${action}-${selectedWord}`]);
           }
-  
+
           router.push(url);
         } catch (error) {
           console.error("Error occurred while updating credits:", error);
@@ -199,15 +206,13 @@ export const UserState = ({ children }) => {
         }
       }
     };
-  
+
     router.events.on("routeChangeStart", handleRouteChange);
-  
+
     return () => {
       router.events.off("routeChangeStart", handleRouteChange);
     };
   }, [isInitialized, userData, protectedPaths, modules]);
-  
-  
 
   return (
     <UserContext.Provider

@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
   const { token } = req.cookies;
-  const { action, word,remainingCredits } = req.body;
+  const { action, word, remainingCredits } = req.body;
   if (!token) {
     return res.status(401).json({ success: false, message: "No token found" });
   }
@@ -39,14 +39,15 @@ export default async function handler(req, res) {
     const userData = userDoc.data();
     // Check if credits are already deducted for this action and word
     const actionKey = `${action}-${word}`; // Unique key for this action and word
-    if (userData.deductedActions?.includes(actionKey)) {
-      return res
-        .status(200)
-        .json({ creditsDeducted: false, success: true, userData });
+    if (action === "stroke-order" || action === "coloring-page") {
+      if (userData.deductedActions?.includes(actionKey)) {
+        return res
+          .status(200)
+          .json({ creditsDeducted: false, success: true, userData });
+      }
     }
-
     // Check if user has enough credits
-    if (userData.credits <= 0) {
+    if (userData.credits < 0) {
       return res
         .status(403)
         .json({ success: false, message: "Insufficient credits" });
@@ -65,14 +66,12 @@ export default async function handler(req, res) {
     const updatedUserDoc = await getDoc(userDocRef); // Use getDoc instead of getDocs
     const updatedUserData = updatedUserDoc.data(); // Get the document data
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        creditsDeducted: true,
-        remainingCredits,
-        userData: updatedUserData,
-      });
+    return res.status(200).json({
+      success: true,
+      creditsDeducted: true,
+      remainingCredits,
+      userData: updatedUserData,
+    });
   } catch (error) {
     console.error("Error in deductCredits:", error);
     return res.status(500).json({ success: false, message: "Server error" });
