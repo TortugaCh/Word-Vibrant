@@ -57,10 +57,18 @@ export default async function handler(req, res) {
 
     // Update user credits in Firestore
     const userDocRef = doc(db, "persons", userDoc.id);
-    await updateDoc(userDocRef, {
-      credits: remainingCredits,
-      deductedActions: updatedActions,
-    });
+    if(action === "stroke-order" || action === "coloring-page") {
+      await updateDoc(userDocRef, {
+        credits: remainingCredits,
+        deductedActions: updatedActions,
+      });
+    }
+    else {
+      await updateDoc(userDocRef, {
+        credits: remainingCredits,
+      });
+    }
+   
 
     // Fetch the updated user data correctly
     const updatedUserDoc = await getDoc(userDocRef); // Use getDoc instead of getDocs
