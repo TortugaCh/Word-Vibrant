@@ -79,7 +79,7 @@ export default function StrokeOrders() {
         />
 
         {/* Stroke Order Display */}
-        {fetchedWords && (
+        {fetchedWords &&  (
           <div ref={buttonRef}>
             {/* Button wrapper with reference */}
             <ReusableButton

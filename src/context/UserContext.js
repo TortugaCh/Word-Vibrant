@@ -291,30 +291,31 @@ export const UserState = ({ children }) => {
   // Step 2: Fetch user data once
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem("tokenExists");
-      if (!token) {
-        setUserData(null);
-        return;
-      }
-
-      try {
-        const res = await axios.post("/api/auth/verifyToken", {}, { withCredentials: true });
-        if (res?.data?.valid) {
-          setUserData(res.data.userData);
-          setUserCredits(res.data.userData.credits);
-          setUserProgress(res.data.userData.deductedActions);
-        } else {
-          localStorage.removeItem("tokenExists");
-          router.push("/auth");
+        const token = localStorage.getItem("tokenExists");
+        if (!token) {
+            setUserData(null);
+            return;
         }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        message.error("Session expired. Please login again.");
-        router.push("/auth");
-      }
+
+        try {
+            const res = await axios.post("/api/auth/verifyToken", {}, { withCredentials: true });
+            setUserData(res.data.userData);
+            setUserCredits(res.data.userData.credits);
+            setUserProgress(res.data.userData.deductedActions);
+        } catch (error) {
+            if (error.response?.status === 401) {
+                console.warn("Unauthorized: Token invalid or expired.");
+                localStorage.removeItem("tokenExists");
+                message.error("Session expired. Please login again.");
+                router.push("/auth");
+            } else {
+                console.error("Error fetching user data:", error);
+                message.error("An unexpected error occurred.");
+            }
+        }
     };
     fetchUserData();
-  }, []);
+}, []);
 
   // Step 3: Handle route protection
   useEffect(() => {
@@ -334,7 +335,9 @@ export const UserState = ({ children }) => {
 
         const action = getAction(url);
         const pathnameParts = url.split("/");
-        const selectedWord = decodeURIComponent(pathnameParts[pathnameParts.length - 1]);
+        const selectedWord = decodeURIComponent(
+          pathnameParts[pathnameParts.length - 1]
+        );
 
         const wordExists =
           action === "create-a-dialogue" || action === "create-a-story"
@@ -349,7 +352,11 @@ export const UserState = ({ children }) => {
           return;
         }
 
-        const creditData = await checkCredits(action, selectedWord, userCredits - requiredCredits);
+        const creditData = await checkCredits(
+          action,
+          selectedWord,
+          userCredits - requiredCredits
+        );
         if (!creditData.success) {
           router.push("/no-credits");
           return;
@@ -357,8 +364,8 @@ export const UserState = ({ children }) => {
 
         if (creditData.creditsDeducted) {
           setUserCredits(creditData.remainingCredits);
-          if(userProgress && userProgress.length > 0)
-          setUserProgress([...userProgress, `${action}-${selectedWord}`]);
+          if (userProgress && userProgress.length > 0)
+            setUserProgress([...userProgress, `${action}-${selectedWord}`]);
         }
       } catch (error) {
         console.error("Error handling route change:", error);

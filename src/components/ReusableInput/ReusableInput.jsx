@@ -12,12 +12,12 @@ const ReusableDropdown = ({ input, handleChange }) => {
     setSelected(selectedOption); // Update local state
     handleChange(input.name, e.key); // Notify parent
   };
-
+  
   const menu = (
     <Menu
       className="rounded-lg border border-purple-400 shadow-md"
       onClick={handleMenuClick}
-      items={input.options.map((option) => ({
+      items={input?.options?.map((option) => ({
         key: option.id,
         label: (
           <div
@@ -34,33 +34,51 @@ const ReusableDropdown = ({ input, handleChange }) => {
   );
 
   return (
-    <Dropdown overlay={menu} trigger={["click"]}>
-      <Button
-        className="w-full rounded-full flex items-center justify-between px-6 py-5 border border-purple-400 shadow-md focus:ring-2 focus:ring-purple-300"
-        style={{
-          transition: "border-color 0.3s ease", // Smooth transition for border color
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = "#F9AF42"; // Change border color to orange
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = "rgba(128, 90, 213, 1)"; // Revert to original purple
-        }}
-      >
-        <span className="text-gray-700">
-          {selected
-            ? locale === "zh"
-              ? selected.nameZh
-              : selected.name
-            : locale === "zh"
-            ? input.placeholderZh
-            : input.placeholder}
+    <div>
+      {input.type === "select" ? (
+        <Dropdown overlay={menu} trigger={["click"]}>
+          <Button
+            className="w-full rounded-full flex items-center justify-between px-6 py-5 border border-purple-400 shadow-md focus:ring-2 focus:ring-purple-300"
+            style={{
+              transition: "border-color 0.3s ease", // Smooth transition for border color
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#F9AF42"; // Change border color to orange
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "rgba(128, 90, 213, 1)"; // Revert to original purple
+            }}
+          >
+            <span className="text-gray-700">
+              {console.log(selected)}
+              {selected
+                ? locale === "zh"
+                  ? selected.nameZh
+                  : selected.name
+                : locale === "zh"
+                ? input.placeholderZh
+                : input.placeholder}
 
-          {/* Show selected value or placeholder */}
-        </span>
-        <DownOutlined className="text-gray-500" />
-      </Button>
-    </Dropdown>
+              {/* Show selected value or placeholder */}
+            </span>
+            <DownOutlined className="text-gray-500" />
+          </Button>
+        </Dropdown>
+      ) : (
+        <input
+          type={input.type}
+          name={input.name}
+          placeholder={
+            locale === "zh" ? input.placeholderZh : input.placeholder
+          }
+          className="w-full rounded-full px-6 py-5 border border-purple-400 shadow-md focus:ring-2 focus:ring-purple-300"
+          style={{
+            transition: "border-color 0.3s ease",
+          }}
+          onChange={(e) => handleChange(input.name, e.target.value)}
+        />
+      )}
+    </div>
   );
 };
 

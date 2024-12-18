@@ -3,14 +3,12 @@ import DashboardLayout from "../../layout";
 import axios from "axios";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../../../lib/getMessages";
-import { useRouter } from "next/router";
 import { message } from "antd";
 import { useSpeechSynthesis } from "react-speech-kit";
 import { FaVolumeUp, FaPauseCircle } from "react-icons/fa"; // Volume and Pause icons
 import { GiBookCover } from "react-icons/gi"; // Icon for a book (kids' theeeme)
 
 export default function Page() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [story, setStory] = useState("");
   const { speak, voices, cancel } = useSpeechSynthesis();
@@ -19,11 +17,14 @@ export default function Page() {
   const [taiwaneseVoice, setTaiwaneseVoice] = useState(null);
   const t = useTranslations("strokeOrder");
   const [words, setWords] = useState([]);
+  const [topic, setTopic] = useState("");
   useEffect(() => {
     if (typeof window !== "undefined") {
       // Access sessionStorage safely
       const storedWords = sessionStorage.getItem("words");
+      const storedTopic = sessionStorage.getItem("topic");
       setWords(JSON.parse(storedWords));
+      setTopic(storedTopic);
     }
   }, []);
   useEffect(() => {
@@ -49,16 +50,27 @@ export default function Page() {
   }
 
   useEffect(() => {
-    if (words.length>0) {
+    if (words.length > 0) {
       console.log(words?.map((word) => word.name));
-      genStory(words?.map((word) => word.name));
+      genStory(words?.map((word) => word.name),topic);
     }
   }, [words?.length]);
 
-  const genStory = async (words) => {
+  const genStory = async (words, topic) => {
     try {
-      const prompt = `Write a simple and engaging children's story in Traditional Chinese using these words mentioned in this array : "${words}".  
-        The story should be suitable for beginners, with animals, children, or cute characters, and provide a simple inspirational message. (Note: Don't use any words outside the list I provided you)`;
+      const prompt = `
+      Write a complete and engaging children's story in Traditional Chinese on the topic: "${topic}".  
+      Use ONLY the following words provided in this array: "${words}".  
+      The story should:
+      1. Have a clear beginning, middle, and a positive ending.
+      2. Include cute and relatable characters like animals, children, or friendly figures.
+      3. Convey a simple and inspirational message suitable for beginners.  
+      4. Be short, engaging, and beginner-friendly in language.
+      
+      Ensure the story is complete, without cutting off, and avoid using any words outside the provided list and stick to the topic provided.
+      `;
+      
+    console.log(prompt);
       const resp = await axios.post("/api/getStory", { prompt });
 
       if (resp.status === 200) {

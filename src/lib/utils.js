@@ -169,6 +169,7 @@ export async function fetchWordsByFilters(
 ) {
   const wordsCollection = collection(db, "words");
   let q;
+  console.log("Fetching words for:", curriculum, grade, semester, wordType);
   if (moduleName === "stroke-order" || moduleName === "coloring-page") {
     q = query(
       wordsCollection,
@@ -210,6 +211,7 @@ export async function fetchWordsByFilters(
   const sortedWords = words.sort(
     (a, b) => a.createdAt.toMillis() - b.createdAt.toMillis()
   );
+  console.log("Sorted words:", sortedWords);
   if (moduleName === "stroke-order" || moduleName === "coloring") {
     return sortedWords.filter(
       (word) => word.wordType !== "m4xvaJmSSeORT9gH3UXo"
@@ -727,16 +729,17 @@ export const generateDialogue = async (prompt) => {
           },
           {
             role: "user",
-            content: `Generate a short, natural dialogue in Traditional Chinese using the word "${prompt}" for kids. The response should be a JSON array of objects, where each object has the following structure:
-            - "traditionalChinese": Dialogue in Traditional Chinese.
-            - "english": English translation of the dialogue.
-Limit the dialogue to 5-6 exchanges. Ensure the output is valid JSON.
-            Example:
-            [
-              { "traditionalChinese": "你好！你叫什麼名字？", "english": "Hello! What is your name?" },
-              { "traditionalChinese": "我叫小明。你呢？", "english": "My name is Xiao Ming. And you?" }
-            ]
-            `,
+            content:prompt
+//             content: `Generate a short, natural dialogue in Traditional Chinese using the word "${prompt}" for kids. The response should be a JSON array of objects, where each object has the following structure:
+//             - "traditionalChinese": Dialogue in Traditional Chinese.
+//             - "english": English translation of the dialogue.
+// Limit the dialogue to 5-6 exchanges. Ensure the output is valid JSON.
+//             Example:
+//             [
+//               { "traditionalChinese": "你好！你叫什麼名字？", "english": "Hello! What is your name?" },
+//               { "traditionalChinese": "我叫小明。你呢？", "english": "My name is Xiao Ming. And you?" }
+//             ]
+//             `,
           },
         ],
         max_tokens: 300,
@@ -751,6 +754,7 @@ Limit the dialogue to 5-6 exchanges. Ensure the output is valid JSON.
     );
 
     const responseData = response.data;
+    console.log("Response from OpenAI:", responseData);
 
     if (
       responseData &&
@@ -760,7 +764,11 @@ Limit the dialogue to 5-6 exchanges. Ensure the output is valid JSON.
       const dialogueText = responseData.choices[0].message.content.trim();
       console.log("Dialogue from OpenAI:", dialogueText);
       try {
-        const parsedData = JSON.parse(dialogueText); // Parse OpenAI's response
+        const cleanedJSON = cleanJSON(dialogueText); // Parse OpenAI's response
+        if (!cleanedJSON) {
+          throw new Error("No valid JSON array found in the response.");
+        }
+        const parsedData = JSON.parse(cleanedJSON); 
         console.log("Parsed Dialogue:", parsedData);
 
         // Validate that it's an array of objects with required keys
@@ -787,3 +795,8 @@ Limit the dialogue to 5-6 exchanges. Ensure the output is valid JSON.
     return { error: "Failed to fetch dialogue from OpenAI." };
   }
 };
+
+function cleanJSON(input) {
+  const jsonMatch = input.match(/\[.*\]/s); // Matches JSON array inside square brackets
+  return jsonMatch ? jsonMatch[0] : null;
+}

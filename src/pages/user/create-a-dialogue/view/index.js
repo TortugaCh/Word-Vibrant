@@ -13,6 +13,7 @@ export default function Page() {
   const router = useRouter();
   const t = useTranslations("strokeOrder");
   const [words, setWords] = useState([]);
+  const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
   const [dialogue, setDialogue] = useState([]);
 
@@ -20,13 +21,15 @@ export default function Page() {
     if (typeof window !== "undefined") {
       // Access sessionStorage safely
       const storedWords = sessionStorage.getItem("words");
+      const storedTopic = sessionStorage.getItem("topic");
       setWords(JSON.parse(storedWords));
+      setTopic(storedTopic);
     }
   }, []);
   useEffect(() => {
     if (words.length > 0) {
       console.log(words?.map((word) => word.name));
-      fetchDialogue(words?.map((word) => word.name));
+      fetchDialogue(words?.map((word) => word.name),topic);
     }
   }, [words.length]);
 
@@ -69,11 +72,27 @@ export default function Page() {
   //     setLoading(false);
   //   }
   // };
-  const fetchDialogue = async (words) => {
+  const fetchDialogue = async (words,topic) => {
     try {
       setLoading(true);
 
-      const prompt = `Create a short dialogue using the words "${words}" (Note: stick to the words provided only use these words to make dialogues). Include both Traditional Chinese and English translations. Limit to 7-8 exchanges. Format as a JSON array: [{"traditionalChinese": "...", "english": "..."}].`;
+      // const prompt = `Create a short dialogue using the words "${words}" (Note: stick to the words provided only use these words to make dialogues). Include both Traditional Chinese and English translations. Limit to 7-8 exchanges. Format as a JSON array: [{"traditionalChinese": "...", "english": "..."}].`;
+      const prompt = `
+      Create a short and engaging dialogue based on the topic: "${topic}".  
+      Use ONLY the following words provided: "${words}".  
+      Include Traditional Chinese and English translations for each sentence.  
+      The dialogue should:  
+      1. Be limited to 7-8 exchanges (short back-and-forth conversation).  
+      2. Stick strictly to the words provided without introducing any new words.  
+      3. Ensure the topic is reflected clearly throughout the dialogue.  
+
+      Format the output as a JSON array:  
+      [
+        {"traditionalChinese": "Chinese sentence 1", "english": "English sentence 1"},
+        {"traditionalChinese": "Chinese sentence 2", "english": "English sentence 2"},
+        ...
+      ]  
+    `;
       console.log("Prompt:", prompt);  
       const resp = await generateDialogue(prompt);
       // const resp = await axios.post("/api/getDialogue", { prompt });

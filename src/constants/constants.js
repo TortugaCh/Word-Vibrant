@@ -54,6 +54,14 @@ export const wordInputs = (
       options: wordTypeOptions,
       required: true,
     },
+    {
+      name: "topic",
+      label: "Topic",
+      placeholder: "Write Topic",
+      placeholderZh: "写主题",
+      type: "text",
+      required: true,
+    },
   ];
 };
 

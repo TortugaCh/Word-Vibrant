@@ -18,6 +18,7 @@ const ReusableHandler = ({
   const [values, setValues] = useState({});
 
   const handleChange = (name, value) => {
+    console.log(name, value);
     setValues((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -37,11 +38,13 @@ const ReusableHandler = ({
               wordType,
               moduleName
             );
+            console.log("res", res);
             if (res) {
               setWords(res);
               if (setWordsFetcehed) {
                 setWordsFetcehed(res);
                 sessionStorage.setItem("words", JSON.stringify(res));
+                sessionStorage.setItem("topic", values.topic);
               }
             }
           } catch (error) {
@@ -66,7 +69,6 @@ const ReusableHandler = ({
         return t("selectOptions");
     }
   };
-
   return (
     <div className="max-w-2xl w-full bg-white rounded-3xl shadow-xl p-8 flex flex-col space-y-4 border-2 border-[#F9AF42]">
       <h2 className="text-center text-2xl font-extrabold text-purple-700 mb-4">
@@ -80,7 +82,9 @@ const ReusableHandler = ({
           wordTypes.filter((type) => type.name !== "Phrases")
         )?.map((input, index) =>
           (moduleName === "story" || moduleName === "dialogue") &&
-          input.name === "wordType" ? null : (
+          input.name === "wordType" ? null : (moduleName === "stroke-order" ||
+              moduleName === "coloring") &&
+            input.name === "topic" ? null : (
             <ReusableInput
               key={index}
               input={input}
@@ -100,9 +104,6 @@ const ReusableHandler = ({
             </div>
             <div className="overflow-y-auto max-h-96 rounded-lg border border-purple-400 shadow-md p-4 scrollbar-thin scrollbar-thumb-purple-400 scrollbar-track-purple-100 scrollbar-thumb-rounded hover:scrollbar-thumb-purple-500 focus:scrollbar-thumb-purple-300">
               <Words
-                // curriculum={values["curriculum"]}
-                // grade={values["grade"]}
-                // semester={values["semester"]}
                 handleFunc={handleFunc}
                 words={words}
                 t={t}
