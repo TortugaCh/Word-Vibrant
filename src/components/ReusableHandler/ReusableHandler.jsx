@@ -24,12 +24,12 @@ const ReusableHandler = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      const { curriculum, grade, semester, wordType } = values;
+      const { curriculum, grade, semester, wordType,topic } = values;
 
       // Ensure required fields are selected
       if (curriculum && grade && semester) {
         // Fetch condition based on moduleName
-        if (moduleName === "story" || moduleName === "dialogue" || wordType) {
+        if ((moduleName === "story" || moduleName === "dialogue" && topic )|| wordType) {
           try {
             const res = await fetchWordsByFilters(
               curriculum,
