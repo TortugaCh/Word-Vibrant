@@ -1,23 +1,20 @@
-import { useRouter } from "next/router";
 import Words from "../Words/Words";
 import ReusableInput from "../ReusableInput/ReusableInput";
 import axios from "axios";
-import { wordInputs, wordsInputs } from "../../constants/constants";
+import { wordInputs } from "../../constants/constants";
 import { useEffect, useRef, useState } from "react";
-import { fetchAllLookupData } from "../../lib/utils";
 import { message } from "antd";
+import { fetchWordsByFilters } from "../../lib/utils/words";
+import { useLookupData } from "../../hooks/useLookupData";
 const WordsHandler = () => {
   const [selectedWord, setSelectedWord] = useState(null);
   const [words, setWords] = useState([]);
   const [values, setValues] = useState({});
   const [modalValues, setModalValues] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [curriculums, setCurriculums] = useState([]);
-  const [grades, setGrades] = useState([]);
-  const [semesters, setSemesters] = useState([]);
-  const [wordTypes, setWordTypes] = useState([]);
-  const strokeRef = useRef(null);
+  const { curriculums, grades, semesters, wordTypes } = useLookupData();
 
+  const strokeRef = useRef(null);
 
   const handleChange = (name, value) => {
     setValues((prev) => ({ ...prev, [name]: value }));
@@ -31,10 +28,6 @@ const WordsHandler = () => {
   const handleGetStroke = (word) => {
     setSelectedWord(word);
     setValues({
-      curriculum: word.curriculum,
-      grade: word.grade,
-      semester: word.semester,
-      wordType: word.wordType,
       name: word.name,
     });
     setTimeout(() => {
@@ -44,58 +37,40 @@ const WordsHandler = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const res = await fetchAllLookupData();
-        if (res) {
-          res.sort((a, b) => a.createdAt - b.createdAt);
-          setCurriculums(res.filter((item) => item.type === "curriculum"));
-          setGrades(res.filter((item) => item.type === "grade"));
-          setSemesters(res.filter((item) => item.type === "semester"));
-          setWordTypes(res.filter((item) => item.type === "wordType"));
-        }
-      } catch (error) {
-        console.error("Error fetching lookup data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  
-  useEffect(() => {
-    const fetchData = async () => {
       const { curriculum, grade, semester, wordType } = values;
 
       // Ensure required fields are selected
-      if (curriculum && grade && semester&& wordType) {
-          try {
-            const res = await fetchWordsByFilters(
-              curriculum,
-              grade,
-              semester,
-              wordType,
-              moduleName
-            );
-            if (res) {
-              setWords(res);
-              if (setWordsFetcehed) {
-                setWordsFetcehed(res);
-                sessionStorage.setItem("words", JSON.stringify(res));
-              }
-            }
-          } catch (error) {
-            console.error("Error fetching words:", error);
+      if (curriculum && grade && semester && wordType) {
+        try {
+          const res = await fetchWordsByFilters(
+            curriculum,
+            grade,
+            semester,
+            wordType,
+            "admin"
+          );
+          if (res) {
+            setWords(res);
           }
+        } catch (error) {
+          console.error("Error fetching words:", error);
         }
-      
+      }
     };
 
     fetchData();
-  }, [values]);
-
+  }, [values.curriculum, values.grade, values.semester, values.wordType]);
 
   const handleAddWord = async () => {
     try {
-      const resp = await axios.post(`/api/words/create-word`, modalValues);
+      const { curriculum, grade, semester, wordType } = modalValues;
+      const resp = await axios.post(`/api/words/create-word`, {
+        ...modalValues,
+        curriculum: curriculum.id,
+        grade: grade.id,
+        semester: semester.id,
+        wordType: wordType.id,
+      });
       if (resp.status === 200) {
         console.log("Word added successfully");
         message.success("Word added successfully");
@@ -164,14 +139,15 @@ const WordsHandler = () => {
         </h2>
         <div className="flex flex-col gap-4">
           {wordInputs(curriculums, grades, semesters, wordTypes)?.map(
-            (input, index) => (
-              <ReusableInput
-                key={index}
-                input={{ ...input, value: values[input.name] || "" }}
-                handleChange={handleChange}
-                index={index}
-              />
-            )
+            (input, index) =>
+              input.name === "topic" ? null : (
+                <ReusableInput
+                  key={index}
+                  input={{ ...input, value: values[input.name] || "" }}
+                  handleChange={handleChange}
+                  index={index}
+                />
+              )
           )}
         </div>
         <div className="mt-6 flex flex-col gap-2">
@@ -180,10 +156,7 @@ const WordsHandler = () => {
               Available Words:
             </div>
             <div className="overflow-y-auto max-h-96 rounded-lg border border-purple-400 shadow-md p-4 scrollbar-thin scrollbar-thumb-purple-400 scrollbar-track-purple-100 scrollbar-thumb-rounded hover:scrollbar-thumb-purple-500 focus:scrollbar-thumb-purple-300">
-              <Words
-               words={words}
-                handleFunc={handleGetStroke}
-              />
+              <Words words={words} handleFunc={handleGetStroke} />
             </div>
           </div>
         </div>
@@ -196,14 +169,15 @@ const WordsHandler = () => {
             <h2 className="text-center text-xl font-bold mb-4">Add New Word</h2>
             <div className="flex flex-col gap-4">
               {wordInputs(curriculums, grades, semesters, wordTypes)?.map(
-                (input, index) => (
-                  <ReusableInput
-                    key={index}
-                    input={{ ...input, value: modalValues[input.name] || "" }}
-                    handleChange={handleModalChange}
-                    index={index}
-                  />
-                )
+                (input, index) =>
+                  input.name === "topic" ? null : (
+                    <ReusableInput
+                      key={index}
+                      input={{ ...input, value: modalValues[input.name] || "" }}
+                      handleChange={handleModalChange}
+                      index={index}
+                    />
+                  )
               )}
               {modalValues.curriculum &&
                 modalValues.wordType &&

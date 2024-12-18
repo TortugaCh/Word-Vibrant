@@ -7,7 +7,7 @@ import {
   DollarCircleOutlined,
 } from "@ant-design/icons";
 import Link from "next/link";
-import { handleLogout } from "../../lib/utils";
+import { handleLogout } from "../../lib/utils/auth";
 import { useRouter } from "next/router";
 
 export default function Navbar({

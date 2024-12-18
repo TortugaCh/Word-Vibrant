@@ -4,7 +4,7 @@ import DashboardOptionCard from "../../../components/DashboardOptionCard";
 import { auth } from "../../../lib/firebaseConfig";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../../lib/getMessages";
-import { fetchModules } from "../../../lib/utils";
+import { fetchModules } from "../../../lib/utils/modules";
 import DashboardLayout from "../layout";
 import { useRouter } from "next/router";
 import Progress from "../../../components/Progress/Progress";

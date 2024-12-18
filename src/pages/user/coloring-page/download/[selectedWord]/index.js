@@ -5,7 +5,7 @@ import { Canvg } from "canvg";
 import DashboardLayout from "../../../layout";
 import { DollarCircleOutlined, DownloadOutlined } from "@ant-design/icons";
 import ReusableButton from "../../../../../components/Buttons/gradientButton";
-import { generateColoringPDF, getColoringPage } from "../../../../../lib/utils";
+import { generateColoringPDF, getColoringPage } from "../../../../../lib/utils/coloring";
 import { withMessages } from "../../../../../lib/getMessages";
 import { useTranslations } from "next-intl";
 export default function DownloadPage() {

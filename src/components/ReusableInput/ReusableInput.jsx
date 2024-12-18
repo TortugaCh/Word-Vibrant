@@ -9,8 +9,10 @@ const ReusableDropdown = ({ input, handleChange }) => {
   const { locale } = router;
   const handleMenuClick = (e) => {
     const selectedOption = input.options.find((option) => option.id === e.key);
-    setSelected(selectedOption); // Update local state
-    handleChange(input.name, e.key); // Notify parent
+    if (selectedOption) {
+      setSelected(selectedOption); // Store the full option object
+      handleChange(input.name, selectedOption); // Pass the full selected option to parent
+    }
   };
   
   const menu = (

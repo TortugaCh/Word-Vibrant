@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { fetchAllLookupData } from "../lib/utils";
+import {fetchAllLookupData} from "../lib/utils/lookup"
 
 export const useLookupData = () => {
-  const [selectedWord, setSelectedWord] = useState(null);
   const [curriculums, setCurriculums] = useState([]);
   const [grades, setGrades] = useState([]);
   const [semesters, setSemesters] = useState([]);

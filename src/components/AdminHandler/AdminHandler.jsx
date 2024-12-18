@@ -4,7 +4,7 @@ import {
   addLookupItem,
   updateLookupItem,
   deleteLookupItem,
-} from "../../lib/utils";
+} from "../../lib/utils/lookup";
 import { message, Form } from "antd";
 import CustomTable from "../CustomTable/CustomTable";
 import CustomModal from "../CustomModal/CustomModal";

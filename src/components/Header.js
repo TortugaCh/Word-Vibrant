@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { FiUser, FiLogIn, FiLogOut, FiMenu, FiX } from "react-icons/fi";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { handleLogout } from "../lib/utils";
+import { handleLogout } from "../lib/utils/auth";
 import { useUserContext } from "../context/UserContext";
 
 export default function Header({ logoSrc = "/images/logo3.png", onLogout, t }) {

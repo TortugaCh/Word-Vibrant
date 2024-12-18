@@ -3,8 +3,7 @@ import { wordInputs } from "../../constants/constants";
 import { useLookupData } from "../../hooks/useLookupData";
 import ReusableInput from "../ReusableInput/ReusableInput";
 import Words from "../Words/Words";
-import ReusableButton from "../Buttons/gradientButton";
-import { fetchWordsByFilters } from "../../lib/utils";
+import { fetchWordsByFilters } from "../../lib/utils/words";
 
 const ReusableHandler = ({
   handleFunc,
@@ -36,7 +35,9 @@ const ReusableHandler = ({
               grade,
               semester,
               wordType,
-              moduleName
+              moduleName,
+              grades,
+              semesters
             );
             console.log("res", res);
             if (res) {
@@ -55,7 +56,7 @@ const ReusableHandler = ({
     };
 
     fetchData();
-  }, [values, moduleName]);
+  }, [values.curriculum, values.grade, values.semester, values.wordType, moduleName]);
 
   const renderSelectTitle = (moduleName) => {
     switch (moduleName) {

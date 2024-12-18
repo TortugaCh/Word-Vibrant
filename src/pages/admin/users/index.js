@@ -6,22 +6,15 @@ import {
   deleteUserData,
   getUsers,
   updateUserData,
-} from "../../../lib/utils";
+} from "../../../lib/utils/user";
 import AdminLayout from "../layout";
 import { message } from "antd";
 import {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../../lib/firebaseConfig";
 
 const Page = () => {
-  //     title,
-  //   fetchData,
-  //   columnsConfig = null,
-  //   formConfig,
-  //   handleSave,
-  //   handleDelete,
 
   const handleSave = async (editingItem, values) => {
     if (editingItem) {

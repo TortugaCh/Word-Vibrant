@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { message } from "antd";
 import Loader from "../../../../../components/Loader";
 import { GiBookmarklet, GiPencilBrush } from "react-icons/gi";
-import { generateDialogue } from "../../../../../lib/utils";
+import { generateDialogue } from "../../../../../lib/utils/dialogue";
 
 export default function Page() {
   const router = useRouter();

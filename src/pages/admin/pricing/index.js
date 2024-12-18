@@ -1,19 +1,6 @@
 import React from "react";
 import AdminPanel from "../../../components/AdminPanel/AdminPanel";
-import {
-  checkUserExists,
-  createUserInDB,
-  deleteUserData,
-  getUsers,
-  updateUserData,
-} from "../../../lib/utils";
 import AdminLayout from "../layout";
-import { message } from "antd";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { auth } from "../../../lib/firebaseConfig";
 import {
   createPricingPlan,
   deletePricingPlan,
@@ -22,12 +9,6 @@ import {
 } from "../../../lib/pricing";
 
 const Page = () => {
-  //     title,
-  //   fetchData,
-  //   columnsConfig = null,
-  //   formConfig,
-  //   handleSave,
-  //   handleDelete,
 
   const handleSave = async (editingItem, values) => {
     if (editingItem) {
@@ -37,7 +18,6 @@ const Page = () => {
     }
   };
   const handleDelete = async (id) => {
-    
     await deletePricingPlan(id);
   };
   const formConfig = [
