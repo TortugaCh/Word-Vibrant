@@ -84,7 +84,7 @@ const ReusableHandler = ({
         )?.map((input, index) =>
           (moduleName === "story" || moduleName === "dialogue") &&
           input.name === "wordType" ? null : (moduleName === "stroke-order" ||
-              moduleName === "coloring") &&
+              moduleName === "coloring" || moduleName==="dialogue") &&
             input.name === "topic" ? null : (
             <ReusableInput
               key={index}

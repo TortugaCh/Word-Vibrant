@@ -147,7 +147,7 @@ export const UserState = ({ children }) => {
     return moduleData?.creditCost || 0;
   };
 
-  const containsActionWord = (actions, targetAction, targetWord) => {
+  const containsActionWord = (actions, targetAction, targetWord,moduleName) => {
     return actions?.includes(`${targetAction}-${targetWord}`);
   };
 

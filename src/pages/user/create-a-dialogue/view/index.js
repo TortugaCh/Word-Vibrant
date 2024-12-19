@@ -13,7 +13,6 @@ export default function Page() {
   const router = useRouter();
   const t = useTranslations("strokeOrder");
   const [words, setWords] = useState([]);
-  const [topic, setTopic] = useState("");
   const [loading, setLoading] = useState(false);
   const [dialogue, setDialogue] = useState([]);
 
@@ -21,15 +20,13 @@ export default function Page() {
     if (typeof window !== "undefined") {
       // Access sessionStorage safely
       const storedWords = sessionStorage.getItem("words");
-      const storedTopic = sessionStorage.getItem("topic");
       setWords(JSON.parse(storedWords));
-      setTopic(storedTopic);
     }
   }, []);
   useEffect(() => {
     if (words.length > 0) {
       console.log(words?.map((word) => word.name));
-      fetchDialogue(words?.map((word) => word.name),topic);
+      fetchDialogue(words?.map((word) => word.name));
     }
   }, [words.length]);
 
@@ -72,13 +69,13 @@ export default function Page() {
   //     setLoading(false);
   //   }
   // };
-  const fetchDialogue = async (words,topic) => {
+  const fetchDialogue = async (word) => {
     try {
       setLoading(true);
 
       // const prompt = `Create a short dialogue using the words "${words}" (Note: stick to the words provided only use these words to make dialogues). Include both Traditional Chinese and English translations. Limit to 7-8 exchanges. Format as a JSON array: [{"traditionalChinese": "...", "english": "..."}].`;
       const prompt = `
-      Create a short and engaging dialogue based on the topic: "${topic}".  
+      Create a short and engaging dialogue.  
       Use ONLY the following words provided: "${words}".  
       Include Traditional Chinese and English translations for each sentence.  
       The dialogue should:  
