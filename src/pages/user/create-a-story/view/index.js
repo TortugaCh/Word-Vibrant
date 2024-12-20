@@ -7,6 +7,7 @@ import { message } from "antd";
 import { FaVolumeUp, FaPauseCircle } from "react-icons/fa";
 import { GiBookCover } from "react-icons/gi";
 import { useSpeak } from "../../../../hooks/useSpeak";
+import { generateStory } from "../../../../lib/utils/story";
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
@@ -49,12 +50,12 @@ export default function Page() {
         3. Convey a simple and inspirational message suitable for beginners.  
         4. Be short, engaging, and beginner-friendly in language.
       `;
-      const resp = await axios.post("/api/getStory", { prompt });
+      const resp = await generateStory(prompt);
 
-      if (resp.status === 200) {
-        setStory(resp.data.data);
-        highlightWords(resp.data.data, words);
-        await togglePlayback(resp.data.data);
+      if (resp.data !== null) {
+        setStory(resp.data);
+        highlightWords(resp.data, words);
+        await togglePlayback(resp.data);
       }
     } catch (error) {
       message.error(t("dialogueError"));
@@ -62,6 +63,31 @@ export default function Page() {
       setLoading(false);
     }
   };
+  // const genStory = async (words, topic) => {
+  //   try {
+  //     setLoading(true);
+  //     const prompt = `
+  //       Write a complete and engaging children's story in Traditional Chinese on the topic: "${topic}".
+  //       Use ONLY the following words provided in this array: "${words}".
+  //       The story should:
+  //       1. Have a clear beginning, middle, and a positive ending.
+  //       2. Include cute and relatable characters like animals, children, or friendly figures.
+  //       3. Convey a simple and inspirational message suitable for beginners.
+  //       4. Be short, engaging, and beginner-friendly in language.
+  //     `;
+  //     const resp = await axios.post("/api/getStory", { prompt });
+
+  //     if (resp.status === 200) {
+  //       setStory(resp.data.data);
+  //       highlightWords(resp.data.data, words);
+  //       await togglePlayback(resp.data.data);
+  //     }
+  //   } catch (error) {
+  //     message.error(t("dialogueError"));
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   // Highlight unmatched words
   const highlightWords = (storyText, validWords) => {
