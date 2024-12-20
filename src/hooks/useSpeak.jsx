@@ -25,6 +25,9 @@ export const useSpeak = () => {
 
         // Initialize the audio instance
         audioRef.current = new Audio(audioUrl);
+        audioRef.current.pause(); // Prevents auto-play behavior
+
+
       }
     } catch (error) {
       console.error("Error fetching audio:", error);

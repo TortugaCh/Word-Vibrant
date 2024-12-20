@@ -79,13 +79,11 @@ export default function Page() {
   const { selectedWord } = router.query;
   const t = useTranslations("strokeOrder");
 
-  const { audioSrc, loadingAudio, fetchSpeech } = useSpeak({
-    text: selectedWord,
-  });
+  const { audioSrc, loadingAudio, fetchSpeech } = useSpeak();
   // Fetch audio when the word changes
   useEffect(() => {
     if (selectedWord) {
-      fetchSpeech();
+       fetchSpeech(selectedWord,"cmn-TW-Wavenet-C");
     }
   }, [selectedWord]);
 
