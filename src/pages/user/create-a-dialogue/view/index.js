@@ -82,7 +82,11 @@ The dialogue should:
 2. Include Traditional Chinese and English translations for each sentence.  
 3. Be limited to exactly 7-8 exchanges (short back-and-forth conversation).  
 4. Strictly use the provided words without introducing any new ones.  
-5. Include the character roles explicitly as comments before each dialogue line (e.g., "Female: ..." or "Male: ...").  
+5. Ensure the roles follow logical relationships:
+   - The female character can play roles like "Sister," "Mom," or "Friend."
+   - The male character can play roles like "Brother," "Dad," or "Friend."
+   - Ensure the dialogue matches the relationship logically (e.g., no "Mom" calling "Dad" as a child).
+6. Include the character roles explicitly as comments before each dialogue line (e.g., "Female: ..." or "Male: ...").  
 
 Format the output as a JSON array of objects with this structure:  
 [
@@ -123,10 +127,10 @@ Format the output as a JSON array of objects with this structure:
 
   const DialogueCard = ({ dialogue, index }) => {
     const { loadingAudio, isPlaying, togglePlayback } = useSpeak();
-    const role = dialogue?.role
+    const role = dialogue?.role;
     console.log("Role:", role);
-    const englishDialogue = dialogue?.english
-    const tradionalDialogue = dialogue?.traditionalChinese
+    const englishDialogue = dialogue?.english;
+    const tradionalDialogue = dialogue?.traditionalChinese;
     const isEven = index % 2 === 0;
     return (
       <div
