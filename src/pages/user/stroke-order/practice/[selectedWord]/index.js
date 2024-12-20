@@ -83,7 +83,7 @@ export default function Page() {
   // Fetch audio when the word changes
   useEffect(() => {
     if (selectedWord) {
-       fetchSpeech(selectedWord,"cmn-TW-Wavenet-D");
+       fetchSpeech(selectedWord,"cmn-TW-Wavenet-A");
     }
   }, [selectedWord]);
 
