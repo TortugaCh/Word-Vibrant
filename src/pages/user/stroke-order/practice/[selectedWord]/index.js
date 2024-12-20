@@ -66,47 +66,26 @@
 
 // export const getServerSideProps = withMessages("strokeOrder");
 
-
 import { useRouter } from "next/router";
 import HanziStroke from "../../../../../components/HanziStroke/HanziStroke";
 import { useEffect, useState } from "react";
 import { withMessages } from "../../../../../lib/getMessages";
 import { useTranslations } from "next-intl";
 import DashboardLayout from "../../../layout";
+import { useSpeak } from "../../../../../hooks/useSpeak";
 
 export default function Page() {
   const router = useRouter();
   const { selectedWord } = router.query;
   const t = useTranslations("strokeOrder");
 
-  const [audioSrc, setAudioSrc] = useState(null);
-  const [loadingAudio, setLoadingAudio] = useState(false);
-
-  // Fetch audio using Google Cloud TTS API
-  async function fetchSpeech(text) {
-    if (!text) return;
-    setLoadingAudio(true);
-    try {
-      const response = await fetch("/api/speak", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
-      });
-      const data = await response.json();
-      if (data.audioContent) {
-        setAudioSrc(`data:audio/mp3;base64,${data.audioContent}`);
-      }
-    } catch (error) {
-      console.error("Error fetching audio:", error);
-    } finally {
-      setLoadingAudio(false);
-    }
-  }
-
+  const { audioSrc, loadingAudio, fetchSpeech } = useSpeak({
+    text: selectedWord,
+  });
   // Fetch audio when the word changes
   useEffect(() => {
     if (selectedWord) {
-      fetchSpeech(selectedWord);
+      fetchSpeech();
     }
   }, [selectedWord]);
 
@@ -141,16 +120,6 @@ export default function Page() {
             loadingAudio={loadingAudio}
             audioSrc={audioSrc}
           />
-          {/* {loadingAudio ? (
-            <div>Loading pronunciation...</div>
-          ) : audioSrc ? (
-            <audio controls>
-              <source src={audioSrc} type="audio/mp3" />
-              Your browser does not support the audio element.
-            </audio>
-          ) : (
-            <div>No pronunciation available</div>
-          )} */}
         </div>
       </div>
     </DashboardLayout>

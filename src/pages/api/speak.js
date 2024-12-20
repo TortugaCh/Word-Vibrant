@@ -3,34 +3,43 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { text } = req.body;
-  console.log("text", text);
-  if (!text) {
-    return res.status(400).json({ error: "Text is required" });
+  const { text, voice } = req.body;
+  if (!text || typeof text !== "string") {
+    return res.status(400).json({ error: "Valid text is required." });
   }
 
-  const API_KEY = process.env.GOOGLE_CLOUD_API_KEY; // Replace with your API key
+  const API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
   const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${API_KEY}`;
-  console.log("url", url);
+
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         input: { text },
-        voice: { languageCode: "zh-TW", name: "zh-TW-Wavenet-A" },
-        audioConfig: { audioEncoding: "MP3" },
+        voice: {
+          languageCode: "cmn-TW",
+          name: `${voice ? voice : "cmn-TW-Wavenet-A"}`,
+        },
+        audioConfig: {
+          audioEncoding: "MP3",
+          speakingRate: 0.75, // Slow down speech (0.5 to 1.0 is slow range)
+        },
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`Google TTS API error: ${response.statusText}`);
+      const errorData = await response.text();
+      console.error("Google TTS API Error:", errorData);
+      throw new Error(`API error: ${response.statusText} - ${errorData}`);
     }
 
     const data = await response.json();
-    res.status(200).json({ audioContent: data.audioContent });
+    return res.status(200).json({ audioContent: data.audioContent });
   } catch (error) {
-    console.error("Error calling Google TTS API:", error);
-    res.status(500).json({ error: "Failed to generate speech." });
+    console.error("Error calling Google TTS API:", error.message);
+    res
+      .status(500)
+      .json({ error: error.message || "Failed to generate speech." });
   }
 }

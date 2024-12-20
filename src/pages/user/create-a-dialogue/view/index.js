@@ -8,6 +8,8 @@ import Loader from "../../../../components/Loader";
 import { GiBookmarklet, GiPencilBrush } from "react-icons/gi";
 import { generateDialogue } from "../../../../lib/utils/dialogue";
 import { withMessages } from "../../../../lib/getMessages";
+import { useSpeak } from "../../../../hooks/useSpeak";
+import { FaPauseCircle, FaVolumeUp } from "react-icons/fa";
 
 export default function Page() {
   const router = useRouter();
@@ -69,57 +71,50 @@ export default function Page() {
   //     setLoading(false);
   //   }
   // };
-  const fetchDialogue = async (word) => {
+  const fetchDialogue = async (words) => {
     try {
       setLoading(true);
 
-      // const prompt = `Create a short dialogue using the words "${words}" (Note: stick to the words provided only use these words to make dialogues). Include both Traditional Chinese and English translations. Limit to 7-8 exchanges. Format as a JSON array: [{"traditionalChinese": "...", "english": "..."}].`;
       const prompt = `
-      Create a short and engaging dialogue.  
-      Use ONLY the following words provided: "${words}".  
-      Include Traditional Chinese and English translations for each sentence.  
-      The dialogue should:  
-      1. Be limited to 7-8 exchanges (short back-and-forth conversation).  
-      2. Stick strictly to the words provided without introducing any new words.  
-      3. Ensure the topic is reflected clearly throughout the dialogue.  
+Create a short and engaging dialogue using ONLY the following words: "${words}".  
+The dialogue should:  
+1. Alternate strictly between a female and a male character. The first line must always be spoken by the female character.  
+2. Include Traditional Chinese and English translations for each sentence.  
+3. Be limited to exactly 7-8 exchanges (short back-and-forth conversation).  
+4. Strictly use the provided words without introducing any new ones.  
+5. Include the character roles explicitly as comments before each dialogue line (e.g., "Female: ..." or "Male: ...").  
 
-      Format the output as a JSON array:  
-      [
-        {"traditionalChinese": "Chinese sentence 1", "english": "English sentence 1"},
-        {"traditionalChinese": "Chinese sentence 2", "english": "English sentence 2"},
-        ...
-      ]  
-    `;
-      console.log("Prompt:", prompt);  
-      const resp = await generateDialogue(prompt);
-      // const resp = await axios.post("/api/getDialogue", { prompt });
-      console.log("API Response:", resp);
+Format the output as a JSON array of objects with this structure:  
+[
+  { "role": "Female", "traditionalChinese": "Chinese sentence 1", "english": "English sentence 1" },
+  { "role": "Male", "traditionalChinese": "Chinese sentence 2", "english": "English sentence 2" },
+  ...
+]
+`;
 
-      // const dialogueText = resp.data?.data || "[]";
-      const dialogueText = resp.data || "[]";
+      console.log("Prompt:", prompt);
 
-      // Check if `dialogueText` is already an object
-      const parsedData =
-        typeof dialogueText === "string"
-          ? JSON.parse(dialogueText)
-          : dialogueText;
+      // Call OpenAI dialogue generator
+      const response = await generateDialogue(prompt);
+      console.log("API Response:", response);
 
-      console.log("Parsed Dialogue:", parsedData);
+      if (response?.data) {
+        const parsedData = response.data;
 
-      if (Array.isArray(parsedData)) {
-        setDialogue(parsedData);
-        message.success(
-          t("dialogueSuccess") || "Dialogue fetched successfully!"
-        );
+        if (Array.isArray(parsedData)) {
+          setDialogue(parsedData);
+          message.success(
+            t("dialogueSuccess") || "Dialogue fetched successfully!"
+          );
+        } else {
+          console.error("Invalid dialogue format:", parsedData);
+          message.error("Received invalid dialogue format.");
+        }
       } else {
-        console.error("Parsed data is not an array:", parsedData);
-        message.error("Invalid dialogue format received from server.");
+        throw new Error(response.error || "Unknown error occurred.");
       }
     } catch (error) {
-      console.error(
-        "Error during API call:",
-        error.response?.data || error.message
-      );
+      console.error("Error fetching dialogue:", error.message);
       message.error(t("dialogueError") || "Failed to fetch dialogue.");
     } finally {
       setLoading(false);
@@ -127,6 +122,11 @@ export default function Page() {
   };
 
   const DialogueCard = ({ dialogue, index }) => {
+    const { loadingAudio, isPlaying, togglePlayback } = useSpeak();
+    const role = dialogue?.role
+    console.log("Role:", role);
+    const englishDialogue = dialogue?.english
+    const tradionalDialogue = dialogue?.traditionalChinese
     const isEven = index % 2 === 0;
     return (
       <div
@@ -144,13 +144,27 @@ export default function Page() {
         <div className="flex items-center mb-2">
           <GiPencilBrush size={30} className="text-indigo-600 mr-3" />
           <div className="text-xl font-semibold text-gray-800">
-            {dialogue?.traditionalChinese || "No content"}
+            {tradionalDialogue || "No content"}
           </div>
         </div>
+        <button
+          onClick={() =>
+            togglePlayback(
+              tradionalDialogue,
+              `${role === "Male" ? "cmn-TW-Wavenet-B" : "cmn-TW-Wavenet-A"}`
+            )
+          }
+          className={`p-2 rounded-full ${
+            isPlaying ? "bg-red-400" : "bg-blue-400"
+          } text-white`}
+          disabled={loadingAudio}
+        >
+          {isPlaying ? <FaPauseCircle size={24} /> : <FaVolumeUp size={24} />}
+        </button>
         <div className="flex items-center">
           <GiBookmarklet size={30} className="text-teal-600 mr-3" />
           <div className="text-md text-gray-700">
-            {dialogue?.english || "No content"}
+            {englishDialogue || "No content"}
           </div>
         </div>
       </div>

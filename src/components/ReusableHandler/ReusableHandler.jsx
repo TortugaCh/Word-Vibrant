@@ -28,7 +28,7 @@ const ReusableHandler = ({
       // Ensure required fields are selected
       if (curriculum && grade && semester) {
         // Fetch condition based on moduleName
-        if ((moduleName === "story" || moduleName === "dialogue" && topic )|| wordType) {
+        if (((moduleName === "story" && topic) || moduleName === "dialogue"  )|| wordType) {
           try {
             const res = await fetchWordsByFilters(
               curriculum,
@@ -45,6 +45,7 @@ const ReusableHandler = ({
               if (setWordsFetcehed) {
                 setWordsFetcehed(res);
                 sessionStorage.setItem("words", JSON.stringify(res));
+                if(moduleName === "story")
                 sessionStorage.setItem("topic", values.topic);
               }
             }
