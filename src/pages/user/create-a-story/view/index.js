@@ -90,24 +90,51 @@ export default function Page() {
   // };
 
   // Highlight unmatched words
-  const highlightWords = (storyText, validWords) => {
-    const wordsSet = new Set(validWords.map((word) => word.trim())); // Trim validWords for consistency
-    console.log("Valid Words:", wordsSet);
+//   const highlightWords = (storyText, validWords) => {
+//     validWords.push("a");
+//     const wordsSet = new Set(validWords.map((word) => word.trim())); // Trim validWords for consistency
+//     console.log("Valid Words:", wordsSet);
+// const newStoryTxt= storyText.split(/(\s+)/);
+// newStoryTxt.push("a");
+//     const storyWords =newStoryTxt.map((word, index) => {
+//       const cleanedWord = word.trim().replace(/[^\p{Script=Han}\w]/gu, ""); // Use Unicode property escapes
+//       console.log("Word:", word);
+//       console.log("Cleaned Word:", cleanedWord);
+//       if (cleanedWord && !wordsSet.has(word)) {
+//         console.log("Highlighting:", word);
+//         return (
+//           <span key={index} className="underline text-red-500">
+//             {word}
+//           </span>
+//         );
+//       }
+//       return <span key={index}>{word}</span>;
+//     });
 
-    const storyWords = storyText.split(/(\s+)/).map((word, index) => {
-      const cleanedWord = word.trim().replace(/[^\w]/g, ""); // Remove punctuation for comparison
-      if (cleanedWord && !wordsSet.has(cleanedWord)) {
-        return (
-          <span key={index} className="underline text-red-500">
-            {word}
-          </span>
-        );
-      }
-      return <span key={index}>{word}</span>;
-    });
+//     setHighlightedStory(storyWords);
+//   };
 
-    setHighlightedStory(storyWords);
-  };
+const highlightWords = (storyText, validWords) => {
+  // Normalize validWords for consistency
+  const wordsSet = new Set(validWords.map((word) => word.trim())); // No case conversion needed for Chinese
+  console.log("Valid Words:", wordsSet);
+
+  // Split text into individual characters, words, and preserve spaces/punctuation
+  const storyWords = storyText.split("").map((word, index) => {
+    // const cleanedWord = word.trim(); // No need to clean further since split isolates parts
+    if (word && !wordsSet.has(word)) {
+      return (
+        <span key={index} className="underline text-red-500">
+          {word} {/* Keep the original word for display */}
+        </span>
+      );
+    }
+    return <span key={index}>{word}</span>;
+  });
+
+  setHighlightedStory(storyWords);
+};
+
 
   return (
     <DashboardLayout>
