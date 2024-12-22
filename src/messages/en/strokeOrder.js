@@ -7,6 +7,8 @@ export default {
   availableWords: "Available Words:",
   getStrokeButton: "Get Stroke For {word} / 01 Credit",
   goBack: "Go Back",
+  optionsConfirmed: "Options Confirmed",
+  confirmOptions: "Confirm Options",
   practice: {
     prac: "Practice",
     prev: "Preview",
@@ -24,13 +26,13 @@ export default {
     coloringPageFor: "Coloring Page For {word}",
   },
   createAStory: {
-    createStoryButton: "Create A Story For {word} / 03 Credit",
+    createStoryButton: "Create A Story / 03 Credit",
     selectOptions: "Select Options for Story Creation",
     msg: "Welcome! I’m here to help you with Hanzi Story Creation. Select a curriculum, grade, semester, and word type to get started!",
     storyTime:"Story Time"
   },
   createADialogue: {
-    createDialogueButton: "Create A Dialogue For {word} / 03 Credit",
+    createDialogueButton: "Create A Dialogue / 03 Credit",
     selectOptions: "Select Options for Dialogue Creation",
     msg: "Welcome! I’m here to help you with Hanzi Dialogue Creation. Select a curriculum, grade, semester, and word type to get started!",
   },
