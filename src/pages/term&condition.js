@@ -24,7 +24,7 @@ export default function TermsAndConditions() {
     <>
       <Template t={t}>
         <div className="container mx-auto px-6 py-16">
-          {/* Page Header */}
+          {/* Page Headerrrrrr */}
           <div className="text-center mb-12">
             <h1 className="text-5xl font-bold text-[#7E57C2]">條款與條件</h1>
             <p className="text-gray-600 mt-4 text-lg">
