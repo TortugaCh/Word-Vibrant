@@ -76,25 +76,29 @@ export default function Page() {
       setLoading(true);
 
       const prompt = `
-Create a short and engaging dialogue using ONLY the following words: "${words}".  
-The dialogue should:  
-1. Alternate strictly between a female and a male character. The first line must always be spoken by the female character.  
-2. Include Traditional Chinese and English translations for each sentence.  
-3. Be limited to exactly 7-8 exchanges (short back-and-forth conversation).  
-4. Strictly use the provided words without introducing any new ones.  
-5. Ensure the roles follow logical relationships:
-   - The female character can play roles like "Sister," "Mom," or "Friend."
-   - The male character can play roles like "Brother," "Dad," or "Friend."
-   - Ensure the dialogue matches the relationship logically (e.g., no "Mom" calling "Dad" as a child).
-6. Include the character roles explicitly as comments before each dialogue line (e.g., "Female: ..." or "Male: ...").  
-
-Format the output as a JSON array of objects with this structure:  
-[
-  { "role": "Female", "traditionalChinese": "Chinese sentence 1", "english": "English sentence 1" },
-  { "role": "Male", "traditionalChinese": "Chinese sentence 2", "english": "English sentence 2" },
-  ...
-]
-`;
+      Create a short and engaging dialogue using ONLY the following words: "${words}".  
+      The dialogue must strictly follow these rules:  
+      1. Alternate between a **female** and a **male** character. The first line must always be spoken by the female character.  
+      2. Ensure logical relationships:
+         - If the female character is a "Mom," the male character must be her "Son."
+         - If the female character is a "Sister," the male character must be her "Brother."
+         - If the female character is a "Friend," the male character must be her "Friend."
+      3. Include Traditional Chinese and English translations for each sentence.  
+      4. Limit the dialogue to exactly 7-8 exchanges (short back-and-forth conversation).  
+      5. Only use the provided words; do not introduce new ones.  
+      6. Write roles explicitly as comments before each dialogue line (e.g., "// Female (Mom): ...", "// Male (Son): ...").  
+      
+      Format the output as a JSON array of objects with this structure:  
+      [
+        { "role": "Female", "traditionalChinese": "Chinese sentence 1", "english": "English sentence 1" },
+        { "role": "Male", "traditionalChinese": "Chinese sentence 2", "english": "English sentence 2" },
+        ...
+      ]
+      
+      ### Important:
+      - Ensure the dialogue aligns with the logical relationship (e.g., a "Mom" will not address "Dad" as her "Son").
+      - Do not deviate from the word list or logical relationships under any circumstances.
+      `;
 
       console.log("Prompt:", prompt);
 
@@ -128,7 +132,6 @@ Format the output as a JSON array of objects with this structure:
   const DialogueCard = ({ dialogue, index }) => {
     const { loadingAudio, isPlaying, togglePlayback } = useSpeak();
     const role = dialogue?.role;
-    console.log("Role:", role);
     const englishDialogue = dialogue?.english;
     const tradionalDialogue = dialogue?.traditionalChinese;
     const isEven = index % 2 === 0;
@@ -151,11 +154,12 @@ Format the output as a JSON array of objects with this structure:
             {tradionalDialogue || "No content"}
           </div>
         </div>
+        {console.log("Role:", role)}
         <button
           onClick={() =>
             togglePlayback(
               tradionalDialogue,
-              `${role === "Male" ? "cmn-TW-Wavenet-B" : "cmn-TW-Wavenet-A"}`
+              role?.split(" ")?.[0] !== "Female" ? "cmn-TW-Wavenet-B" : "cmn-TW-Wavenet-A"
             )
           }
           className={`p-2 rounded-full ${

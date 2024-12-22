@@ -65,6 +65,7 @@ export const useSpeak = () => {
   //   }
 
   async function togglePlayback(text,voice="cmn-TW-Wavenet-A") {
+    console.log(voice)
     if (isPlaying) {
       pauseAudio();
     } else {
