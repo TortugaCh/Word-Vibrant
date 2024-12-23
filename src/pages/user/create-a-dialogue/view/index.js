@@ -15,6 +15,7 @@ export default function Page() {
   const router = useRouter();
   const t = useTranslations("strokeOrder");
   const [words, setWords] = useState([]);
+  const [wordNames, setWordNames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogue, setDialogue] = useState([]);
 
@@ -23,6 +24,7 @@ export default function Page() {
       // Access sessionStorage safely
       const storedWords = sessionStorage.getItem("words");
       setWords(JSON.parse(storedWords));
+      setWordNames(JSON.parse(storedWords)?.map((word) => word?.name));
     }
   }, []);
   useEffect(() => {
@@ -129,12 +131,115 @@ export default function Page() {
     }
   };
 
+  // const DialogueCard = ({ dialogue, index }) => {
+  //   const { loadingAudio, isPlaying, togglePlayback } = useSpeak();
+  //   const [highlightedDialogue, setHighlighedDialogue] = useState("");
+  //   const highlightedWords = (tradionalDialogue, validWords) => {
+  //     // Normalize validWords for consistency
+  //     console.log("Valid Words:", validWords);
+  //     const wordsSet = new Set(validWords.map((word) => word.trim())); // No case conversion needed for Chinese
+  //     console.log("Valid Words:", wordsSet);
+
+  //     // Split text into individual characters, words, and preserve spaces/punctuation
+  //     const dialogueWords = tradionalDialogue.split("").map((word, index) => {
+  //       // const cleanedWord = word.trim(); // No need to clean further since split isolates parts
+  //       if (word && !wordsSet.has(word)) {
+  //         return (
+  //           <span key={index} className="underline text-red-500">
+  //             {word} {/* Keep the original word for display */}
+  //           </span>
+  //         );
+  //       }
+  //       return <span key={index}>{word}</span>;
+  //     });
+
+  //     setHighlighedDialogue(dialogueWords);
+  //   };
+  //   highlightedWords(dialogue?.traditionalChinese, wordNames);
+  //   const role = dialogue?.role;
+  //   const englishDialogue = dialogue?.english;
+  //   const tradionalDialogue = dialogue?.traditionalChinese;
+  //   const isEven = index % 2 === 0;
+  //   return (
+  //     <div
+  //       className={`p-6 mb-6 rounded-xl shadow-lg max-w-4xl mx-auto ${
+  //         isEven
+  //           ? "bg-yellow-200 hover:bg-yellow-300"
+  //           : "bg-pink-200 hover:bg-pink-300"
+  //       }`}
+  //       style={{
+  //         marginLeft: isEven ? "0" : "auto",
+  //         marginRight: isEven ? "auto" : "0",
+  //         transition: "all 0.3s ease-in-out",
+  //       }}
+  //     >
+  //       <div className="flex items-center mb-2">
+  //         <GiPencilBrush size={30} className="text-indigo-600 mr-3" />
+  //         <div className="text-xl font-semibold text-gray-800">
+  //           {highlightedDialogue || "No content"}
+  //         </div>
+  //       </div>
+  //       {console.log("Role:", role)}
+  //       <button
+  //         onClick={() =>
+  //           togglePlayback(
+  //             tradionalDialogue,
+  //             role?.split(" ")?.[0] !== "Female"
+  //               ? "cmn-TW-Wavenet-B"
+  //               : "cmn-TW-Wavenet-A"
+  //           )
+  //         }
+  //         className={`p-2 rounded-full ${
+  //           isPlaying ? "bg-red-400" : "bg-blue-400"
+  //         } text-white`}
+  //         disabled={loadingAudio}
+  //       >
+  //         {isPlaying ? <FaPauseCircle size={24} /> : <FaVolumeUp size={24} />}
+  //       </button>
+  //       <div className="flex items-center">
+  //         <GiBookmarklet size={30} className="text-teal-600 mr-3" />
+  //         <div className="text-md text-gray-700">
+  //           {englishDialogue || "No content"}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // };
+
   const DialogueCard = ({ dialogue, index }) => {
     const { loadingAudio, isPlaying, togglePlayback } = useSpeak();
+    const [highlightedDialogue, setHighlighedDialogue] = useState("");
+  
+    useEffect(() => {
+      if (!dialogue?.traditionalChinese || !wordNames) return;
+  
+      const highlightedWords = (tradionalDialogue, validWords) => {
+        // Normalize validWords for consistency
+        const wordsSet = new Set(validWords.map((word) => word.trim()));
+  
+        // Split text into individual characters, words, and preserve spaces/punctuation
+        const dialogueWords = tradionalDialogue.split("").map((word, index) => {
+          if (word && !wordsSet.has(word)) {
+            return (
+              <span key={index} className="underline text-red-500">
+                {word}
+              </span>
+            );
+          }
+          return <span key={index}>{word}</span>;
+        });
+  
+        setHighlighedDialogue(dialogueWords);
+      };
+  
+      highlightedWords(dialogue.traditionalChinese, wordNames);
+    }, [dialogue?.traditionalChinese, wordNames]); // Add dependencies to avoid unnecessary calls
+  
     const role = dialogue?.role;
     const englishDialogue = dialogue?.english;
     const tradionalDialogue = dialogue?.traditionalChinese;
     const isEven = index % 2 === 0;
+  
     return (
       <div
         className={`p-6 mb-6 rounded-xl shadow-lg max-w-4xl mx-auto ${
@@ -151,7 +256,7 @@ export default function Page() {
         <div className="flex items-center mb-2">
           <GiPencilBrush size={30} className="text-indigo-600 mr-3" />
           <div className="text-xl font-semibold text-gray-800">
-            {tradionalDialogue || "No content"}
+            {highlightedDialogue || "No content"}
           </div>
         </div>
         {console.log("Role:", role)}
@@ -159,7 +264,9 @@ export default function Page() {
           onClick={() =>
             togglePlayback(
               tradionalDialogue,
-              role?.split(" ")?.[0] !== "Female" ? "cmn-TW-Wavenet-B" : "cmn-TW-Wavenet-A"
+              role?.split(" ")?.[0] !== "Female"
+                ? "cmn-TW-Wavenet-B"
+                : "cmn-TW-Wavenet-A"
             )
           }
           className={`p-2 rounded-full ${
@@ -178,7 +285,7 @@ export default function Page() {
       </div>
     );
   };
-
+  
   return (
     <DashboardLayout>
       <div className="p-6">
