@@ -22,7 +22,11 @@ export async function fetchWordsByFilters(
     where("semester", "==", semester.id)
   );
 
-  if (moduleName === "stroke-order" || moduleName === "coloring" || moduleName === "admin") {
+  if (
+    moduleName === "stroke-order" ||
+    moduleName === "coloring" ||
+    moduleName === "admin"
+  ) {
     q = query(q, where("wordType", "==", wordType.id));
   }
 
@@ -125,23 +129,33 @@ async function applyGradeSemesterSplit(
   );
 
   console.log(`Total words fetched: ${allWords.length}`);
+  if (allWords.length < 300) {
+    return allWords;
+  }
 
   // Split words into 85% current and 15% previous
-  const currentWords = allWords.filter(
+  let currentWords = [];
+
+  console.log(`Current Grade: ${currentGrade.id}`);
+  console.log(`Current Semester: ${currentSemester.id}`);
+  console.log(`Current Grade: ${allWords[0].grade}`);
+  console.log(`Current Semester: ${allWords[0].semester}`);
+
+  currentWords = allWords.filter(
     (word) =>
-      word.grade === currentGrade.name && word.semester === currentSemester.name
+      word.grade === currentGrade.id && word.semester === currentSemester.id
   );
 
   const previousWords = allWords.filter(
     (word) =>
-      word.grade !== currentGrade.name || word.semester !== currentSemester.name
+      word.grade !== currentGrade.id || word.semester !== currentSemester.id
   );
 
   const totalTarget = currentWords.length + previousWords.length;
-  const targetCurrentCount = Math.floor(totalTarget * 0.85);
   const targetPreviousCount = Math.ceil(totalTarget * 0.15);
 
-  const selectedCurrentWords = currentWords.slice(0, targetCurrentCount);
+  let selectedCurrentWords = currentWords
+
   const selectedPreviousWords = previousWords.slice(0, targetPreviousCount);
 
   const finalWords = [...selectedCurrentWords, ...selectedPreviousWords];

@@ -22,7 +22,7 @@ export const generateStory = async (prompt) => {
           },
         ],
         max_tokens: 1500, // Increase token limit
-        temperature: 0.8, // Adjust creativity
+        temperature: 0.5, // Adjust creativity
       },
       {
         headers: {

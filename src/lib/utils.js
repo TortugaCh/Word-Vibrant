@@ -103,6 +103,60 @@ export function cleanJSON(input) {
   return jsonMatch ? jsonMatch[0] : null;
 }
 
+
+import React from "react";
+
+
+export const highlightWords = (inputString, validWords, options = {}) => {
+  // Normalize validWords for consistency
+  const wordsSet = new Set(validWords.map((word) => word.trim()));
+
+  // Default options
+  const {
+    validClassName = "",
+    invalidClassName = "underline text-red-500",
+  } = options;
+
+  // inputString=inputString.split(/[\s,，。！？；：“”‘’]/).filter(Boolean); // Split on common punctuation
+  // Initialize an array to hold the highlighted dialogue
+  const highlightedOutput = [];
+  let i = 0;
+
+  // Traverse the string and look for matches
+  while (i < inputString.length) {
+    let foundMatch = false;
+
+    // Check for the longest matching phrase in the wordsSet
+    for (let j = inputString.length; j > i; j--) {
+      const phrase = inputString.slice(i, j); // Extract substring
+      if (wordsSet.has(phrase)) {
+        // If phrase is valid, add it with the valid style
+        highlightedOutput.push(
+          <span key={i} className={validClassName}>
+            {phrase}
+          </span>
+        );
+        i = j; // Move the pointer to the end of the matched phrase
+        foundMatch = true;
+        break;
+      }
+    }
+
+    // If no match found, treat the current character as invalid
+    if (!foundMatch) {
+      highlightedOutput.push(
+        <span key={i} className={invalidClassName}>
+          {inputString[i]}
+        </span>
+      );
+      i++; // Move pointer to the next character
+    }
+  }
+
+  return highlightedOutput;
+};
+
+
 export async function setCredits(creditsToAdd,id) {
   return await axios.put(
     "/api/auth/setCredits",

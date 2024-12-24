@@ -9,6 +9,7 @@ import { GiBookCover } from "react-icons/gi";
 import { useSpeak } from "../../../../hooks/useSpeak";
 import { generateStory } from "../../../../lib/utils/story";
 import { useUserContext } from "../../../../context/UserContext";
+import { highlightWords } from "../../../../lib/utils";
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
@@ -50,14 +51,24 @@ export default function Page() {
         return;
       }
       const prompt = `
-        Write a complete and engaging children's story in Traditional Chinese on the topic: "${topic}".  
-        Use ONLY the following words provided in this array: "${words}".  
-        The story should:
-        1. Have a clear beginning, middle, and a positive ending.
-        2. Include cute and relatable characters like animals, children, or friendly figures.
-        3. Convey a simple and inspirational message suitable for beginners.  
-        4. Be short, engaging, and beginner-friendly in language.
+      Write a complete and engaging children's story in Traditional Chinese on the topic: "${topic}".
+      Use ONLY the words from the following list:
+      "${words.join(", ")}".
+      
+      ### Guidelines:
+      1. STRICTLY use only the words from the list. Do not use any additional words, phrases, or characters outside the list.
+      2. The story should:
+         - Have a clear beginning, middle, and positive ending.
+         - Include relatable characters such as animals, children, or friendly figures.
+         - Convey an inspirational or meaningful message suitable for beginners.
+      3. Ensure that the story flows logically and naturally while adhering to the word list.
+      
+      ### Notes:
+      - Words outside the list are NOT allowed under any circumstances.
+      - If necessary, repeat words from the list to maintain coherence and story structure.
+      - Avoid using any punctuation, symbols, or language constructs that aren't necessary for the story.
       `;
+      
       const resp = await generateStory(prompt);
 
       if (!resp.data) {
@@ -68,7 +79,7 @@ export default function Page() {
 
       // If story generation succeeds
       setStory(resp.data);
-      highlightWords(resp.data, words);
+      highlightWord(resp.data, words);
       await togglePlayback(resp.data);
     } catch (error) {
       // Reverse credits on any error
@@ -82,25 +93,12 @@ export default function Page() {
     }
   };
 
-  const highlightWords = (storyText, validWords) => {
-    // Normalize validWords for consistency
-    const wordsSet = new Set(validWords.map((word) => word.trim())); // No case conversion needed for Chinese
-    console.log("Valid Words:", wordsSet);
-
-    // Split text into individual characters, words, and preserve spaces/punctuation
-    const storyWords = storyText?.split("").map((word, index) => {
-      // const cleanedWord = word.trim(); // No need to clean further since split isolates parts
-      if (word && !wordsSet.has(word)) {
-        return (
-          <span key={index} className="underline text-red-500">
-            {word} {/* Keep the original word for display */}
-          </span>
-        );
-      }
-      return <span key={index}>{word}</span>;
+  const highlightWord = (storyText, validWords) => {
+    const wordToHighlight = highlightWords(storyText, validWords, {
+      validClassName: "text-gray-700", // Custom style for valid words
+      invalidClassName: "underline text-red-500", // Custom style for invalid words
     });
-
-    setHighlightedStory(storyWords);
+    setHighlightedStory(wordToHighlight);
   };
 
   return (
