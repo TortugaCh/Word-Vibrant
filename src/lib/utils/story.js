@@ -1,8 +1,8 @@
 import axios from "axios";
+import { setCredits } from "../utils";
 const API_KEY = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
 export const generateStory = async (prompt) => {
-
   try {
     console.log("Prompt:", prompt);
 
@@ -34,14 +34,24 @@ export const generateStory = async (prompt) => {
 
     const responseData = response.data;
 
-    if (responseData && responseData.choices && responseData.choices.length > 0) {
+    if (
+      responseData &&
+      responseData.choices &&
+      responseData.choices.length > 0
+    ) {
       const storyText = responseData.choices[0].message.content.trim();
+
       return { data: storyText };
     } else {
-      return { error: "Invalid response from OpenAI" };
+      return {
+        error: "Invalid response from OpenAI your credits are added back...",
+      };
     }
   } catch (error) {
     console.error("Error fetching story from OpenAI:", error.message || error);
-    return { error: "An error occurred while generating the story." };
+    return {
+      error:
+        "An error occurred while generating the story your credits are added back...",
+    };
   }
-}
+};

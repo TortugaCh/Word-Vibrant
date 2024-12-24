@@ -1,4 +1,3 @@
-
 import axios from "axios";
 
 // Function to get default icons based on module name
@@ -83,7 +82,12 @@ const fetchWithTimeout = async (resource, options = {}, timeout = 10000) => {
   );
 };
 
-export const fetchWithRetry = async (url, options, retries = 3, timeout = 30000) => {
+export const fetchWithRetry = async (
+  url,
+  options,
+  retries = 3,
+  timeout = 30000
+) => {
   for (let i = 0; i < retries; i++) {
     try {
       const response = await fetchWithTimeout(url, options, timeout);
@@ -97,4 +101,12 @@ export const fetchWithRetry = async (url, options, retries = 3, timeout = 30000)
 export function cleanJSON(input) {
   const jsonMatch = input.match(/\[.*\]/s); // Matches JSON array inside square brackets
   return jsonMatch ? jsonMatch[0] : null;
+}
+
+export async function setCredits(creditsToAdd,id) {
+  return await axios.put(
+    "/api/auth/setCredits",
+    {  creditsToAdd,id },
+    { withCredentials: true }
+  );
 }

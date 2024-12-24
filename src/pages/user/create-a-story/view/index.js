@@ -8,6 +8,7 @@ import { FaVolumeUp, FaPauseCircle } from "react-icons/fa";
 import { GiBookCover } from "react-icons/gi";
 import { useSpeak } from "../../../../hooks/useSpeak";
 import { generateStory } from "../../../../lib/utils/story";
+import { useUserContext } from "../../../../context/UserContext";
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,7 @@ export default function Page() {
   const [words, setWords] = useState([]);
   const [topic, setTopic] = useState("");
   const { audioSrc, loadingAudio, isPlaying, togglePlayback } = useSpeak();
+  const { reverseCredits, deductCredits } = useUserContext();
 
   // Fetch words and topic from sessionStorage
   useEffect(() => {
@@ -41,6 +43,12 @@ export default function Page() {
   const genStory = async (words, topic) => {
     try {
       setLoading(true);
+      // Deduct credits before generating the story
+      const creditsDeducted = await deductCredits("create-a-story");
+      if (!creditsDeducted) {
+        message.error("Not enough credits to generate a story.");
+        return;
+      }
       const prompt = `
         Write a complete and engaging children's story in Traditional Chinese on the topic: "${topic}".  
         Use ONLY the following words provided in this array: "${words}".  
@@ -52,89 +60,48 @@ export default function Page() {
       `;
       const resp = await generateStory(prompt);
 
-      if (resp.data !== null) {
-        setStory(resp.data);
-        highlightWords(resp.data, words);
-        await togglePlayback(resp.data);
+      if (!resp.data) {
+        throw new Error(
+          "Failed to generate a story. Credits have been refunded."
+        );
       }
+
+      // If story generation succeeds
+      setStory(resp.data);
+      highlightWords(resp.data, words);
+      await togglePlayback(resp.data);
     } catch (error) {
-      message.error(t("dialogueError"));
+      // Reverse credits on any error
+      await reverseCredits("create-a-story");
+      console.error("Error generating the story:", error.message || error);
+      message.error(
+        error.message || "An error occurred. Credits have been refunded."
+      );
     } finally {
       setLoading(false);
     }
   };
-  // const genStory = async (words, topic) => {
-  //   try {
-  //     setLoading(true);
-  //     const prompt = `
-  //       Write a complete and engaging children's story in Traditional Chinese on the topic: "${topic}".
-  //       Use ONLY the following words provided in this array: "${words}".
-  //       The story should:
-  //       1. Have a clear beginning, middle, and a positive ending.
-  //       2. Include cute and relatable characters like animals, children, or friendly figures.
-  //       3. Convey a simple and inspirational message suitable for beginners.
-  //       4. Be short, engaging, and beginner-friendly in language.
-  //     `;
-  //     const resp = await axios.post("/api/getStory", { prompt });
 
-  //     if (resp.status === 200) {
-  //       setStory(resp.data.data);
-  //       highlightWords(resp.data.data, words);
-  //       await togglePlayback(resp.data.data);
-  //     }
-  //   } catch (error) {
-  //     message.error(t("dialogueError"));
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const highlightWords = (storyText, validWords) => {
+    // Normalize validWords for consistency
+    const wordsSet = new Set(validWords.map((word) => word.trim())); // No case conversion needed for Chinese
+    console.log("Valid Words:", wordsSet);
 
-  // Highlight unmatched words
-//   const highlightWords = (storyText, validWords) => {
-//     validWords.push("a");
-//     const wordsSet = new Set(validWords.map((word) => word.trim())); // Trim validWords for consistency
-//     console.log("Valid Words:", wordsSet);
-// const newStoryTxt= storyText.split(/(\s+)/);
-// newStoryTxt.push("a");
-//     const storyWords =newStoryTxt.map((word, index) => {
-//       const cleanedWord = word.trim().replace(/[^\p{Script=Han}\w]/gu, ""); // Use Unicode property escapes
-//       console.log("Word:", word);
-//       console.log("Cleaned Word:", cleanedWord);
-//       if (cleanedWord && !wordsSet.has(word)) {
-//         console.log("Highlighting:", word);
-//         return (
-//           <span key={index} className="underline text-red-500">
-//             {word}
-//           </span>
-//         );
-//       }
-//       return <span key={index}>{word}</span>;
-//     });
+    // Split text into individual characters, words, and preserve spaces/punctuation
+    const storyWords = storyText?.split("").map((word, index) => {
+      // const cleanedWord = word.trim(); // No need to clean further since split isolates parts
+      if (word && !wordsSet.has(word)) {
+        return (
+          <span key={index} className="underline text-red-500">
+            {word} {/* Keep the original word for display */}
+          </span>
+        );
+      }
+      return <span key={index}>{word}</span>;
+    });
 
-//     setHighlightedStory(storyWords);
-//   };
-
-const highlightWords = (storyText, validWords) => {
-  // Normalize validWords for consistency
-  const wordsSet = new Set(validWords.map((word) => word.trim())); // No case conversion needed for Chinese
-  console.log("Valid Words:", wordsSet);
-
-  // Split text into individual characters, words, and preserve spaces/punctuation
-  const storyWords = storyText.split("").map((word, index) => {
-    // const cleanedWord = word.trim(); // No need to clean further since split isolates parts
-    if (word && !wordsSet.has(word)) {
-      return (
-        <span key={index} className="underline text-red-500">
-          {word} {/* Keep the original word for display */}
-        </span>
-      );
-    }
-    return <span key={index}>{word}</span>;
-  });
-
-  setHighlightedStory(storyWords);
-};
-
+    setHighlightedStory(storyWords);
+  };
 
   return (
     <DashboardLayout>

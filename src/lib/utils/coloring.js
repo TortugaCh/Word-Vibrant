@@ -1,5 +1,5 @@
 import jsPDF from "jspdf";
-import { fetchWithRetry } from "../utils";
+import { fetchWithRetry, setCredits } from "../utils";
 import { Canvg } from "canvg";
 
 const API_KEY =

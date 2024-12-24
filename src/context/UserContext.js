@@ -1,9 +1,8 @@
-import { createContext, useState, useContext, useEffect, useRef } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { fetchModules } from "../lib/utils/modules";
-import { checkCredits } from "../lib/utils";
-import { getAction } from "../lib/utils";
+import { checkCredits, setCredits } from "../lib/utils";
 import { message } from "antd";
 
 const UserContext = createContext();
@@ -14,36 +13,19 @@ export const UserState = ({ children }) => {
   const [userData, setUserData] = useState(null);
   const [userCredits, setUserCredits] = useState(0);
   const [modules, setModules] = useState([]);
-  const [isInitialized, setIsInitialized] = useState(false);
   const [userProgress, setUserProgress] = useState([]);
   const router = useRouter();
 
-  const isNavigatingRef = useRef(false); // Flag to prevent duplicate calls
-  const pendingUrl = useRef(null); // To store the next intended URL
-
-  const protectedPaths = [
-    "/user/stroke-order/practice",
-    "/user/coloring-page/download",
-    "/user/create-a-story/view",
-    "/user/create-a-dialogue/view",
-  ];
-
-  // Step 1: Fetch modules once
   useEffect(() => {
     const initializeModules = async () => {
       try {
         const moduleData = await fetchModules();
         setModules(moduleData);
-        setIsInitialized(true);
       } catch (error) {
         console.error("Error fetching modules:", error);
       }
     };
-    initializeModules();
-  }, []);
 
-  // Step 2: Fetch user data once
-  useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("tokenExists");
       if (!token) {
@@ -61,94 +43,63 @@ export const UserState = ({ children }) => {
         setUserCredits(res.data.userData.credits);
         setUserProgress(res.data.userData.deductedActions);
       } catch (error) {
+        console.error("Error fetching user data:", error);
         if (error.response?.status === 401) {
-          console.warn("Unauthorized: Token invalid or expired.");
-          localStorage.removeItem("tokenExists");
           message.error("Session expired. Please login again.");
+          localStorage.removeItem("tokenExists");
           router.push("/auth");
-        } else {
-          console.error("Error fetching user data:", error);
-          message.error("An unexpected error occurred.");
         }
       }
     };
+
+    initializeModules();
     fetchUserData();
   }, []);
 
-  // Step 3: Handle route protection
-  useEffect(() => {
-    const handleRouteChange = async (url) => {
-      if (isNavigatingRef.current) {
-        pendingUrl.current = url; // Store the URL to navigate after processing
-        return;
-      }
-
-      isNavigatingRef.current = true;
-
-      try {
-        if (!isInitialized || !userData) return;
-
-        const isProtected = protectedPaths.some((path) => url.startsWith(path));
-        if (!isProtected) return;
-
-        const action = getAction(url);
-        const pathnameParts = url.split("/");
-        const selectedWord = decodeURIComponent(
-          pathnameParts[pathnameParts.length - 1]
-        );
-
-        const wordExists =
-          action === "create-a-dialogue" || action === "create-a-story"
-            ? false
-            : containsActionWord(userProgress, action, selectedWord);
-
-        const requiredCredits = getRequiredCredits(action) || 0;
-
-        if (userCredits < requiredCredits && !wordExists) {
-          console.log("Not enough credits.");
-          router.push("/no-credits");
-          return;
-        }
-
-        const creditData = await checkCredits(
-          action,
-          selectedWord,
-          userCredits - requiredCredits
-        );
-        if (!creditData.success) {
-          router.push("/no-credits");
-          return;
-        }
-
-        if (creditData.creditsDeducted) {
-          setUserCredits(creditData.remainingCredits);
-          if (userProgress && userProgress.length > 0)
-            setUserProgress([...userProgress, `${action}-${selectedWord}`]);
-        }
-      } catch (error) {
-        console.error("Error handling route change:", error);
-      } finally {
-        isNavigatingRef.current = false;
-
-        // Navigate to pending URL if any
-        if (pendingUrl.current) {
-          router.push(pendingUrl.current);
-          pendingUrl.current = null;
-        }
-      }
-    };
-
-    router.events.on("routeChangeStart", handleRouteChange);
-    return () => router.events.off("routeChangeStart", handleRouteChange);
-  }, [isInitialized, userData]);
-
+  // Helper function to get required credits for an action
   const getRequiredCredits = (action) => {
     const moduleData = modules.find((module) => module.value === action);
     return moduleData?.creditCost || 0;
   };
 
-  const containsActionWord = (actions, targetAction, targetWord,moduleName) => {
-    return actions?.includes(`${targetAction}-${targetWord}`);
+  // Deduct credits and update user progress
+  const deductCredits = async (action, targetWord = "") => {
+    const requiredCredits = getRequiredCredits(action);
+    if (userCredits < requiredCredits) {
+      router.push("/no-credits");
+      return false;
+    }
+
+    try {
+      const creditData = await checkCredits(
+        action,
+        targetWord,
+        userCredits - requiredCredits
+      );
+      if (creditData.success) {
+        console.log(creditData);
+        setUserCredits(creditData.remainingCredits);
+        if (creditData.creditsDeducted) {
+          setUserProgress([...userProgress, `${action}-${targetWord}`]);
+        }
+        return true;
+      } else {
+        message.error("Unable to deduct credits.");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error deducting credits:", error);
+      return false;
+    }
+  };
+
+  // Reverse the deduction of credits
+  const reverseCredits = async (action) => {
+    const creditsToAddBack = getRequiredCredits(action);
+    const resp = await setCredits(creditsToAddBack, userData.id);
+    if (resp.status === 200) {
+      setUserCredits(resp.data.updatedCredits);
+    }
   };
 
   return (
@@ -157,8 +108,12 @@ export const UserState = ({ children }) => {
         userData,
         setUserData,
         userCredits,
-        modules,
         setUserCredits,
+        userProgress,
+        setUserProgress,
+        getRequiredCredits,
+        deductCredits,
+        reverseCredits,
       }}
     >
       {children}

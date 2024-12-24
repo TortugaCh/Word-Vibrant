@@ -5,9 +5,14 @@ import { Canvg } from "canvg";
 import DashboardLayout from "../../../layout";
 import { DollarCircleOutlined, DownloadOutlined } from "@ant-design/icons";
 import ReusableButton from "../../../../../components/Buttons/gradientButton";
-import { generateColoringPDF, getColoringPage } from "../../../../../lib/utils/coloring";
+import {
+  generateColoringPDF,
+  getColoringPage,
+} from "../../../../../lib/utils/coloring";
 import { withMessages } from "../../../../../lib/getMessages";
 import { useTranslations } from "next-intl";
+import { useUserContext } from "../../../../../context/UserContext";
+import { message } from "antd";
 export default function DownloadPage() {
   const router = useRouter();
   const t = useTranslations("strokeOrder");
@@ -15,6 +20,7 @@ export default function DownloadPage() {
   const downloadContainerRef = useRef(null);
   const coloringPageContainerRef = useRef(null);
   const [backgroundImage, setBackgroundImage] = useState(null);
+  const { deductCredits, reverseCredits } = useUserContext();
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -26,19 +32,22 @@ export default function DownloadPage() {
 
   const fetchBackgroundImage = async (word, description) => {
     try {
-      // const response = await fetch("/api/dalle", {
-      //   method: "POST",
-      //   body: JSON.stringify({ word: description }),
-      // });
-
+      const creditsDeducted = await deductCredits("coloring-page",selectedWord);
+      if (!creditsDeducted) {
+        message.error("Not enough credits to generate a story.");
+        return;
+      }
       const resp = await getColoringPage(word);
-      // const data = await response.json();
+      if (!resp)
+        throw new Error(
+          "Failed to generate a backgroundImage. Credits have been refunded."
+        );
       setBackgroundImage(resp.imageUrl);
-
       if (coloringPageContainerRef.current) {
         coloringPageContainerRef.current.style.backgroundImage = `url(data:image/png;base64,${resp.imageUrl})`;
       }
     } catch (error) {
+      await reverseCredits("coloring-page");
       console.error("Error fetching background image:", error);
     }
   };

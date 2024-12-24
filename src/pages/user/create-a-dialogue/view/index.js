@@ -10,6 +10,7 @@ import { generateDialogue } from "../../../../lib/utils/dialogue";
 import { withMessages } from "../../../../lib/getMessages";
 import { useSpeak } from "../../../../hooks/useSpeak";
 import { FaPauseCircle, FaVolumeUp } from "react-icons/fa";
+import { useUserContext } from "../../../../context/UserContext";
 
 export default function Page() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function Page() {
   const [wordNames, setWordNames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogue, setDialogue] = useState([]);
-
+  const { reverseCredits, deductCredits } = useUserContext();
   useEffect(() => {
     if (typeof window !== "undefined") {
       // Access sessionStorage safely
@@ -76,7 +77,12 @@ export default function Page() {
   const fetchDialogue = async (words) => {
     try {
       setLoading(true);
-
+      // Deduct credits before generating the dialigue
+      const creditsDeducted = await deductCredits("create-a-dialogue");
+      if (!creditsDeducted) {
+        message.error("Not enough credits to generate a dialogue.");
+        return;
+      }
       const prompt = `
       Create a short and engaging dialogue using ONLY the following words: "${words}".  
       The dialogue must strictly follow these rules:  
@@ -102,30 +108,33 @@ export default function Page() {
       - Do not deviate from the word list or logical relationships under any circumstances.
       `;
 
-      console.log("Prompt:", prompt);
-
       // Call OpenAI dialogue generator
       const response = await generateDialogue(prompt);
       console.log("API Response:", response);
 
-      if (response?.data) {
+      if (response.data) {
         const parsedData = response.data;
 
+        // Validate the response format
         if (Array.isArray(parsedData)) {
           setDialogue(parsedData);
           message.success(
             t("dialogueSuccess") || "Dialogue fetched successfully!"
           );
         } else {
-          console.error("Invalid dialogue format:", parsedData);
-          message.error("Received invalid dialogue format.");
+          throw new Error("Received invalid dialogue format.");
         }
       } else {
         throw new Error(response.error || "Unknown error occurred.");
       }
     } catch (error) {
-      console.error("Error fetching dialogue:", error.message);
-      message.error(t("dialogueError") || "Failed to fetch dialogue.");
+      // Reverse credits on any error
+      await reverseCredits("create-a-dialogue");
+      console.error("Error fetching dialogue:", error.message || error);
+      message.error(
+        t("dialogueError") ||
+          "Failed to fetch dialogue. Your credits have been refunded."
+      );
     } finally {
       setLoading(false);
     }
@@ -209,14 +218,14 @@ export default function Page() {
   const DialogueCard = ({ dialogue, index }) => {
     const { loadingAudio, isPlaying, togglePlayback } = useSpeak();
     const [highlightedDialogue, setHighlighedDialogue] = useState("");
-  
+
     useEffect(() => {
       if (!dialogue?.traditionalChinese || !wordNames) return;
-  
+
       const highlightedWords = (tradionalDialogue, validWords) => {
         // Normalize validWords for consistency
         const wordsSet = new Set(validWords.map((word) => word.trim()));
-  
+
         // Split text into individual characters, words, and preserve spaces/punctuation
         const dialogueWords = tradionalDialogue.split("").map((word, index) => {
           if (word && !wordsSet.has(word)) {
@@ -228,18 +237,18 @@ export default function Page() {
           }
           return <span key={index}>{word}</span>;
         });
-  
+
         setHighlighedDialogue(dialogueWords);
       };
-  
+
       highlightedWords(dialogue.traditionalChinese, wordNames);
     }, [dialogue?.traditionalChinese, wordNames]); // Add dependencies to avoid unnecessary calls
-  
+
     const role = dialogue?.role;
     const englishDialogue = dialogue?.english;
     const tradionalDialogue = dialogue?.traditionalChinese;
     const isEven = index % 2 === 0;
-  
+
     return (
       <div
         className={`p-6 mb-6 rounded-xl shadow-lg max-w-4xl mx-auto ${
@@ -285,7 +294,7 @@ export default function Page() {
       </div>
     );
   };
-  
+
   return (
     <DashboardLayout>
       <div className="p-6">
