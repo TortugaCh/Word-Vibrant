@@ -4,11 +4,16 @@ import { FcGoogle } from "react-icons/fc";
 import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../lib/getMessages";
-import { handleEmailAuth, handleGoogleAuth } from "../../lib/utils/auth";
+import {
+  handleEmailAuth,
+  handleFacebookAuth,
+  handleGoogleAuth,
+} from "../../lib/utils/auth";
 import { useUserContext } from "../../context/UserContext";
 import { Input, Button, Form, Alert, Typography } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import Image from "next/image";
+import { FaFacebook } from "react-icons/fa6";
 
 const { Title } = Typography;
 
@@ -47,6 +52,24 @@ export default function AuthPage() {
     setError("");
     try {
       const user = await handleGoogleAuth();
+      if (user) {
+        if (user.role === "Admin") router.push("/admin");
+        else router.push("/user/dashboard");
+        setUserData(user.userData);
+        setUserCredits(user.userData.credits);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFacebookSignIn = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const user = await handleFacebookAuth();
       if (user) {
         if (user.role === "Admin") router.push("/admin");
         else router.push("/user/dashboard");
@@ -100,6 +123,16 @@ export default function AuthPage() {
           className="flex items-center justify-center mb-4 w-full border border-gray-300 hover:border-[#7e57c2] hover:text-[#7e57c2] transition-transform transform hover:scale-105"
         >
           {t("Google")}
+        </Button>
+
+        {/* Facebook Sign-In */}
+        <Button
+          onClick={handleFacebookSignIn}
+          type="default"
+          className="flex items-center justify-center mb-4 w-full border border-gray-300 hover:border-[#7e57c2] hover:text-[#7e57c2] transition-transform transform hover:scale-105"
+          icon={<FaFacebook />}
+        >
+          {t("Facebook")}
         </Button>
 
         {/* Email & Password Form */}

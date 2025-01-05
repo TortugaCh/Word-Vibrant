@@ -7,6 +7,10 @@ export default {
   forgotPassword: "忘記密碼？",
   Switch: "切換至",
   Google: "使用 Google 繼續",
+  Facebook: "使用 Facebook 繼續",
   switchToSignUp: "切換至註冊",
   switchToLogin: "切換至登入",
+  emailRequired: "請輸入您的電子郵件",
+  passwordRequired: "請輸入您的密碼",
+  userNameRequired: "請輸入您的使用者名稱",
 };

@@ -4,7 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { auth, googleProvider } from "../firebaseConfig";
+import { auth, googleProvider, facebookProvider } from "../firebaseConfig";
 import { checkUserExists, createUserInDB, setAuthCookie } from "./user";
 import axios from "axios";
 // Handle email and password authentication
@@ -26,6 +26,23 @@ export const handleEmailAuth = async (email, password, isLogin, username) => {
 // Handle Google Authentication
 export const handleGoogleAuth = async () => {
   const result = await signInWithPopup(auth, googleProvider);
+  let userExists = await checkUserExists(result.user.email);
+  if (!userExists) {
+    userExists = await createUserInDB(
+      result.user.email,
+      result.user.displayName,
+      result.user.uid
+    );
+  }
+  const token = await result.user.getIdToken();
+  await setAuthCookie(token);
+  return userExists;
+};
+
+// Handle Facebook Authentication
+export const handleFacebookAuth = async () => {
+  const result = await signInWithPopup(auth, facebookProvider);
+  console.log(result)
   let userExists = await checkUserExists(result.user.email);
   if (!userExists) {
     userExists = await createUserInDB(

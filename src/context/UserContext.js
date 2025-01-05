@@ -43,11 +43,17 @@ export const UserState = ({ children }) => {
         setUserCredits(res.data.userData.credits);
         setUserProgress(res.data.userData.deductedActions);
       } catch (error) {
+        // Prevent Next.js from showing an internal error page
         console.error("Error fetching user data:", error);
+
         if (error.response?.status === 401) {
+          // Handle 401 Unauthorized error specifically
           message.error("Session expired. Please login again.");
           localStorage.removeItem("tokenExists");
           router.push("/auth");
+        } else {
+          // Handle other errors gracefully
+          message.error("An error occurred. Please try again later.");
         }
       }
     };
