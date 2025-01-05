@@ -13,6 +13,7 @@ import { withMessages } from "../../../../../lib/getMessages";
 import { useTranslations } from "next-intl";
 import { useUserContext } from "../../../../../context/UserContext";
 import { message } from "antd";
+import Loader from "../../../../../components/Loader";
 export default function DownloadPage() {
   const router = useRouter();
   const t = useTranslations("strokeOrder");
@@ -32,7 +33,10 @@ export default function DownloadPage() {
 
   const fetchBackgroundImage = async (word, description) => {
     try {
-      const creditsDeducted = await deductCredits("coloring-page",selectedWord);
+      const creditsDeducted = await deductCredits(
+        "coloring-page",
+        selectedWord
+      );
       if (!creditsDeducted) {
         message.error("Not enough credits to generate a story.");
         return;
@@ -140,22 +144,18 @@ export default function DownloadPage() {
             <div
               ref={coloringPageContainerRef}
               className="p-4 rounded-lg shadow-lg mb-6 bg-white w-[500px] h-[500px] bg-contain bg-center flex items-center justify-center"
-            />
+            >
+              {backgroundImage ? (
+                <img
+                  src={`data:image/png;base64,${backgroundImage}`}
+                  alt="Coloring Page"
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <Loader /> // Show loader when backgroundImage is not available
+              )}
+            </div>
             {backgroundImage ? (
-              // <ReusableButton
-              //   onClick={() => {
-              //     const link = document.createElement("a");
-              //     link.href = backgroundImage;
-              //     link.download = `${selectedWord}_coloring_page.png`;
-              //     link.target = "_blank";
-              //     document.body.appendChild(link);
-              //     link.click();
-              //     document.body.removeChild(link);
-              //   }}  // Passing onClick function to navigate
-              //   icon={DownloadOutlined}  // Pass the icon (with appropriate styles)
-              //   text={`Download Coloring Page`}  // Correct string concatenation with interpolation
-              //   isDisabled={false}  // Button is enabled by default
-              // />
               <ReusableButton
                 onClick={handleDownloadPDF}
                 icon={DownloadOutlined}

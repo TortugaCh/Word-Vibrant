@@ -116,7 +116,7 @@ async function handleCheckoutSessionCompleted(session) {
   }
 
   const plan = planSnapshot.data();
-  const creditsToAdd = plan.credits || 0;
+  const creditsToAdd = Number(plan.credits || 0); // Ensure plan.credits is a number
 
   // Find user by email
   const userRef = collection(db, "persons");
@@ -131,9 +131,12 @@ async function handleCheckoutSessionCompleted(session) {
   const userData = userDoc.data();
   const userDocRef = doc(db, "persons", userDoc.id);
 
+  // Safely parse userData.credits to a number
+  const currentCredits = Number(userData.credits || 0);
+
   // Update user credits
   await updateDoc(userDocRef, {
-    credits: (userData.credits || 0) + creditsToAdd,
+    credits: currentCredits + creditsToAdd, // Add as numbers
     plan: plan.name,
   });
 }
