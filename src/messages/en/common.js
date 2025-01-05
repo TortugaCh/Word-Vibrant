@@ -38,4 +38,10 @@ export default {
     description:
       "Words Action is a platform that provides an interactive Chinese character learning experience.",
   },
+  noCredits:{
+    goToDashboard: "Go to Dashboard",
+    upgradePlan: "Upgrade Your Plan",
+    insufficientCredits:"Insufficient Credits",
+    heading:"It seems like you don't have enough credits to access this module. You can go back or upgrade your plan to continue."
+  }
 };

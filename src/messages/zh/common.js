@@ -36,4 +36,10 @@ export default {
     termsOfService: "服務條款",
     description: "語動是一個提供互動式漢字學習體驗的平台。",
   },
+  noCredits:{
+    goToDashboard: "前往工具頁",
+    upgradePlan: "升級您的計劃",
+    insufficientCredits:"點數不足",
+    heading:"您的積分似乎不足以存取此模組。您可以返回或升級您的計劃以繼續"
+  }
 };

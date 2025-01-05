@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { FcGoogle } from "react-icons/fc";
-import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, MailOutlined, LockOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../lib/getMessages";
 import {
@@ -11,11 +11,33 @@ import {
 } from "../../lib/utils/auth";
 import { useUserContext } from "../../context/UserContext";
 import { Input, Button, Form, Alert, Typography } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { FaFacebook } from "react-icons/fa6";
 
 const { Title } = Typography;
+
+// Reusable Button Component
+const SocialButton = ({ onClick, icon, text }) => (
+  <Button
+    onClick={onClick}
+    icon={icon}
+    type="default"
+    className="flex items-center justify-center mb-4 w-full border border-gray-300 hover:border-[#7e57c2] hover:text-[#7e57c2] transition-transform transform hover:scale-105"
+  >
+    {text}
+  </Button>
+);
+
+// Reusable Form Field Component
+const FormField = ({ label, name, prefix, type = "text", rules, placeholder }) => (
+  <Form.Item label={label} name={name} rules={rules}>
+    {type === "password" ? (
+      <Input.Password prefix={prefix} placeholder={placeholder} />
+    ) : (
+      <Input prefix={prefix} placeholder={placeholder} type={type} />
+    )}
+  </Form.Item>
+);
 
 export default function AuthPage() {
   const router = useRouter();
@@ -26,20 +48,15 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Handle authentication logic
   const handleAuth = async (values) => {
     const { email, password, username } = values;
     setLoading(true);
     setError("");
 
     try {
-      let user = await handleEmailAuth(email, password, isLogin, username);
-      if (user) {
-        user = user.userData;
-        if (user.role === "Admin") router.push("/admin");
-        else router.push("/user/dashboard");
-        setUserData(user);
-        setUserCredits(user.credits);
-      }
+      const user = await handleEmailAuth(email, password, isLogin, username);
+      processUser(user);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -47,17 +64,16 @@ export default function AuthPage() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSignIn = async () => handleSocialAuth(handleGoogleAuth);
+  const handleFacebookSignIn = async () => handleSocialAuth(handleFacebookAuth);
+
+  const handleSocialAuth = async (authHandler) => {
     setLoading(true);
     setError("");
+
     try {
-      const user = await handleGoogleAuth();
-      if (user) {
-        if (user.role === "Admin") router.push("/admin");
-        else router.push("/user/dashboard");
-        setUserData(user.userData);
-        setUserCredits(user.userData.credits);
-      }
+      const user = await authHandler();
+      processUser(user);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -65,21 +81,13 @@ export default function AuthPage() {
     }
   };
 
-  const handleFacebookSignIn = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const user = await handleFacebookAuth();
-      if (user) {
-        if (user.role === "Admin") router.push("/admin");
-        else router.push("/user/dashboard");
-        setUserData(user.userData);
-        setUserCredits(user.userData.credits);
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+  const processUser = (user) => {
+    if (user) {
+      const userData = user.userData;
+      const dashboard = userData.role === "Admin" ? "/admin" : "/user/dashboard";
+      router.push(dashboard);
+      setUserData(userData);
+      setUserCredits(userData.credits);
     }
   };
 
@@ -115,25 +123,9 @@ export default function AuthPage() {
           {t(isLogin ? "login" : "signUp")}
         </Title>
 
-        {/* Google Sign-In */}
-        <Button
-          onClick={handleGoogleSignIn}
-          icon={<FcGoogle />}
-          type="default"
-          className="flex items-center justify-center mb-4 w-full border border-gray-300 hover:border-[#7e57c2] hover:text-[#7e57c2] transition-transform transform hover:scale-105"
-        >
-          {t("Google")}
-        </Button>
-
-        {/* Facebook Sign-In */}
-        <Button
-          onClick={handleFacebookSignIn}
-          type="default"
-          className="flex items-center justify-center mb-4 w-full border border-gray-300 hover:border-[#7e57c2] hover:text-[#7e57c2] transition-transform transform hover:scale-105"
-          icon={<FaFacebook />}
-        >
-          {t("Facebook")}
-        </Button>
+        {/* Social Sign-In Buttons */}
+        <SocialButton onClick={handleGoogleSignIn} icon={<FcGoogle />} text={t("Google")} />
+        <SocialButton onClick={handleFacebookSignIn} icon={<FaFacebook />} text={t("Facebook")} />
 
         {/* Email & Password Form */}
         <Form
@@ -142,40 +134,32 @@ export default function AuthPage() {
           initialValues={{ email: "", password: "", username: "" }}
         >
           {!isLogin && (
-            <Form.Item
+            <FormField
               label={t("userName")}
               name="username"
+              prefix={<UserOutlined className="text-[#7e57c2]" />}
               rules={[{ required: true, message: t("userNameRequired") }]}
-            >
-              <Input
-                prefix={<UserOutlined className="text-[#7e57c2]" />}
-                placeholder={t("userName")}
-              />
-            </Form.Item>
+              placeholder={t("userName")}
+            />
           )}
 
-          <Form.Item
+          <FormField
             label={t("email")}
             name="email"
+            prefix={<MailOutlined className="text-[#7e57c2]" />}
             rules={[{ required: true, message: t("emailRequired") }]}
-          >
-            <Input
-              prefix={<MailOutlined className="text-[#7e57c2]" />}
-              placeholder={t("email")}
-              type="email"
-            />
-          </Form.Item>
+            placeholder={t("email")}
+            type="email"
+          />
 
-          <Form.Item
+          <FormField
             label={t("password")}
             name="password"
+            prefix={<LockOutlined className="text-[#7e57c2]" />}
             rules={[{ required: true, message: t("passwordRequired") }]}
-          >
-            <Input.Password
-              prefix={<LockOutlined className="text-[#7e57c2]" />}
-              placeholder={t("password")}
-            />
-          </Form.Item>
+            placeholder={t("password")}
+            type="password"
+          />
 
           {/* Forgot Password */}
           {isLogin && (
@@ -197,15 +181,8 @@ export default function AuthPage() {
               block
               loading={loading}
               className="relative overflow-hidden rounded-lg bg-gradient-to-r from-[#7e57c2] to-[#b74fae] text-white font-semibold py-3 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-              style={{
-                backgroundImage:
-                  "linear-gradient(to right, #7e57c2, #b74fae, #eea72e)", // Gradient background
-              }}
             >
-              <span className="relative z-10">
-                {t(isLogin ? "login" : "signUp")}
-              </span>
-              <div className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-300"></div>
+              {t(isLogin ? "login" : "signUp")}
             </Button>
           </Form.Item>
         </Form>
@@ -216,22 +193,13 @@ export default function AuthPage() {
             type="default"
             onClick={() => setIsLogin(!isLogin)}
             className="relative overflow-hidden rounded-lg bg-gradient-to-r from-[#eea72e] to-[#b74fae] text-white font-semibold py-3 px-6 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, #eea72e, #b74fae, #7e57c2)", // Gradient background
-            }}
           >
-            <span className="relative z-10">
-              {t(isLogin ? "switchToSignUp" : "switchToLogin")}
-            </span>
-            <div className="absolute inset-0 bg-white opacity-0 hover:opacity-10 transition-opacity duration-300"></div>
+            {t(isLogin ? "switchToSignUp" : "switchToLogin")}
           </Button>
         </div>
 
         {/* Error Message */}
-        {error && (
-          <Alert message={error} type="error" showIcon className="mt-4" />
-        )}
+        {error && <Alert message={error} type="error" showIcon className="mt-4" />}
       </div>
     </div>
   );
