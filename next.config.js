@@ -12,8 +12,10 @@ const nextConfig= withTM({
     return config;
   },
   i18n: {
-    defaultLocale: "en",
-    locales: ["en", "zh"],
+    defaultLocale: "zh",
+    locales: ["zh", "en"],
+    localeDetection: false
+
   },
   eslint: {
     ignoreDuringBuilds: true,

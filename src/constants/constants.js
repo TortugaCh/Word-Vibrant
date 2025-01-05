@@ -22,7 +22,7 @@ export const wordInputs = (
       name: "curriculum",
       label: "Curriculum",
       placeholder: "Select Curriculum",
-      placeholderZh: "选择课程",
+      placeholderZh: "選擇課程",
       type: "select",
       options: curriculumOptions,
       required: true,
@@ -31,7 +31,7 @@ export const wordInputs = (
       name: "grade",
       label: "Grade",
       placeholder: "Select Grade",
-      placeholderZh: "选择年级",
+      placeholderZh: "選擇年級",
       type: "select",
       options: gradeOptions,
       required: true,
@@ -40,7 +40,7 @@ export const wordInputs = (
       name: "semester",
       label: "Semester",
       placeholder: "Select Semester",
-      placeholderZh: "选择学期",
+      placeholderZh: "選擇學期",
       type: "select",
       options: semesterOptions,
       required: true,
@@ -49,7 +49,7 @@ export const wordInputs = (
       name: "wordType",
       label: "Word Type",
       placeholder: "Select Word Type",
-      placeholderZh: "选择词汇类型",
+      placeholderZh: "選擇詞彙類型",
       type: "select",
       options: wordTypeOptions,
       required: true,
@@ -58,7 +58,7 @@ export const wordInputs = (
       name: "topic",
       label: "Topic",
       placeholder: "Write Topic",
-      placeholderZh: "写主题",
+      placeholderZh: "寫主題",
       type: "text",
       required: true,
     },
@@ -68,7 +68,7 @@ export const wordInputs = (
 export const adminMenuItems = [
   {
     name: "Home",
-    nameZh: "首页",
+    nameZh: "首頁",
     link: "/admin",
     icon: <FaHome />, // Icon for Home
   },
@@ -95,19 +95,19 @@ export const adminMenuItems = [
 export const UserMenuItems = [
   {
     name: "Home",
-    nameZh: "首页",
+    nameZh: "首頁",
     link: "/user/dashboard",
     icon: <FaHome />, // Icon for Home
   },
   {
     name: "Stroke Order",
-    nameZh: "筆劃順序",
+    nameZh: "筆順練習",
     link: "/user/stroke-order",
     icon: <FaPen />, // Icon for Stroke Order
   },
   {
     name: "Hanzi coloring page",
-    nameZh: "漢字塗色頁",
+    nameZh: "國字塗色頁",
     link: "/user/coloring-page",
     icon: <FaPaintBrush />, // Icon for Hanzi Coloring Page
   },
@@ -124,3 +124,4 @@ export const UserMenuItems = [
     icon: <FaBookOpen />, // Icon for Create a Short Story
   },
 ];
+

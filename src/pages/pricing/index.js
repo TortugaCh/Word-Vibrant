@@ -87,9 +87,9 @@ export default function Pricing() {
         </h4>
         <p className="text-gray-700 mb-4"> NT${cost}</p>
         <p className="text-gray-700 mb-4">Credits: {credits} </p>
-        <p className="text-sm text-gray-500 mb-6">
+        {/* <p className="text-sm text-gray-500 mb-6">
           {locale === "en" ? description : descriptionZh}
-        </p>
+        </p> */}
         <button
           className={`mt-4 px-6 py-3 rounded-full text-white shadow-lg transition duration-300`}
           style={{
@@ -146,7 +146,7 @@ export default function Pricing() {
           className="bg-blue-500 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition"
           onClick={() => router.push("/user/dashboard")}
         >
-          {t("goToDashboard")}
+          {t("dashboard")}
         </button>
       </div>
     </Template>
