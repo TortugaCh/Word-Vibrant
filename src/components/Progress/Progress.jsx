@@ -259,7 +259,9 @@ const Progress = ({ userId, t }) => {
               <div>
                 <Text className="text-2xl font-semibold my-4">
                   {/* {t("Graph Overview")} */}
-                  Total Credits: {userCredits+ userProgress?.reduce((acc, curr) => acc + curr.creditsSpent, 0)}
+                  {/* Total Credits: {userCredits+ userProgress?.reduce((acc, curr) => acc + curr.creditsSpent, 0)} */}
+                  Remaining Credits: {userCredits}
+
                 </Text>
                 <br />
                 <Text className="text-gray-500">
