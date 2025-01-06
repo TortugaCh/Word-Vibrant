@@ -31,6 +31,7 @@ export default async function handler(req, res) {
     );
     const subscriptionQuerySnapshot = await getDocs(subscriptionQuery);
     let plan = "Free";
+    let planCredits = 5;
     if (!subscriptionQuerySnapshot.empty) {
       const subscriptionSnapshot = await getDocs(subscriptionQuery);
       const subscriptionDoc = subscriptionSnapshot.docs[0];
@@ -41,9 +42,10 @@ export default async function handler(req, res) {
       if (planDoc.exists()) {
         console.log("Plan:", planDoc.data()); // Access the document's data
         plan = planDoc.data().name.split(" ")[0]; 
+        planCredits = planDoc.data().credits;
       }
     }
-    const userData = { id: userDoc.id, ...userDoc.data(), planName: plan };
+    const userData = { id: userDoc.id, ...userDoc.data(), planName: plan,planCredits };
     return res.status(200).json({ valid: true, userData });
   } catch (error) {
     console.error("Invalid token:", error);

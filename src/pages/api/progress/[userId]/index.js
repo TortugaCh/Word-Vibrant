@@ -51,26 +51,26 @@ export default async function handler(req, res) {
   //     console.error("Invalid format: No '%' found in action", action);
   //   }
   // });
-  userProgress?.forEach((action) => {
-    // Split by the last '-' to separate the action from the character
-    const lastDashIndex = action.lastIndexOf('-');
-    const actionName = action.substring(0, lastDashIndex); // Everything before the last '-'
-    const character = action.substring(lastDashIndex + 1); // Everything after the last '-'
+  // userProgress?.name?.forEach((action) => {
+  //   // Split by the last '-' to separate the action from the character
+  //   const lastDashIndex = action.lastIndexOf('-');
+  //   const actionName = action.substring(0, lastDashIndex); // Everything before the last '-'
+  //   const character = action.substring(lastDashIndex + 1); // Everything after the last '-'
 
-    // Initialize the module group if it doesn't exist
-    if (!groupedWords[actionName]) {
-      groupedWords[actionName] = [];
-    }
+  //   // Initialize the module group if it doesn't exist
+  //   if (!groupedWords[actionName]) {
+  //     groupedWords[actionName] = [];
+  //   }
 
-    // Add the character to the action group
-    groupedWords[actionName].push(decodeURIComponent(character));
-  });
+  //   // Add the character to the action group
+  //   groupedWords[actionName].push(decodeURIComponent(character));
+  // });
 
   console.log("Grouped Words:", decodeURI(groupedWords));  
   // Return the grouped words by module
   return res
     .status(201)
-    .json({ message: "Progress fetched successfully", data: groupedWords });
+    .json({ message: "Progress fetched successfully", data: userProgress });
     } catch (error) {
       console.error("Error adding word:", error);
       return res

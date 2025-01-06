@@ -34,15 +34,16 @@ export const getDefaultColor = (name) => {
 
 // check route
 
-export const checkCredits = async (action, word, remainingCredits) => {
+export const checkCredits = async (action, word, remainingCredits,creditsSpent) => {
   try {
-    console.log("Checking credits for:", action, word, remainingCredits);
+    console.log("Checking credits for:", action, word, remainingCredits,creditsSpent);
     const response = await axios.put(
       "/api/auth/checkCredits",
       {
         action,
         word,
         remainingCredits,
+        creditsSpent
       },
       {
         withCredentials: true,

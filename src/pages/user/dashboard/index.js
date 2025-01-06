@@ -43,49 +43,7 @@ export default function Dashboard() {
     fetchData();
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      router.push("/login"); // Redirect to login page after logout
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
-
   return (
-    // <DashboardLayout>
-    //   {/* Header */}
-    //   <header className="flex justify-between items-center bg-gray-200 px-2 py-4 shadow-md mb-4">
-    //     <div>
-    //       <h1 className="text-2xl font-bold text-purple-700">
-    //         {t("dashboardTitle")}
-    //       </h1>
-    //       <p>{t("welcome", { user: userData ? userData.email : "User" })}</p>
-    //     </div>
-    //   </header>
-
-    //   {/* Loader or Content */}
-    //   {loading ? (
-    //     <div className="flex justify-center items-center h-[70vh]">
-    //       <div className="w-16 h-16 border-4 border-purple-400 border-dashed rounded-full animate-spin"></div>
-    //     </div>
-    //   ) : (
-    //     <main className="container mx-auto px-6 py-3">
-    //       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-    //         {modules.map((module) => (
-    //           <DashboardOptionCard
-    //             key={module.id}
-    //             title={module.name}
-    //             description={module.description}
-    //             color={module.color}
-    //             icon={module.icon}
-    //             route={module.value}
-    //           />
-    //         ))}
-    //       </div>
-    //     </main>
-    //   )}
-    // </DashboardLayout>
     <DashboardLayout>
       {userData && <Progress userId={userData?.uid} t={t} />}
     </DashboardLayout>

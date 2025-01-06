@@ -80,13 +80,22 @@ export const UserState = ({ children }) => {
       const creditData = await checkCredits(
         action,
         targetWord,
-        userCredits - requiredCredits
+        userCredits - requiredCredits,
+        requiredCredits
       );
       if (creditData.success) {
         console.log(creditData);
         setUserCredits(creditData.remainingCredits);
         if (creditData.creditsDeducted) {
-          setUserProgress([...userProgress, `${action}-${targetWord}`]);
+          setUserProgress([
+            ...userProgress,
+            {
+              name: action,
+              word: targetWord,
+              creditsSpent: requiredCredits,
+              spentDate: new Date().toISOString(),
+            },
+          ]);
         }
         return true;
       } else {
