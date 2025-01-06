@@ -35,7 +35,7 @@ const getModuleColor = (moduleIndex) =>
 const Progress = ({ userId, t }) => {
   const [modules, setModules] = useState([]);
   const [userProgress, setUserProgress] = useState([]);
-  const { userData } = useUserContext();
+  const { userData,userCredits } = useUserContext();
   const [collapsedModules, setCollapsedModules] = useState({});
   const router = useRouter();
   const { locale } = router;
@@ -253,13 +253,13 @@ const Progress = ({ userId, t }) => {
                 </Text>
                 <br />
                 <Text className="text-gray-500">
-                  Total Credits:{userData?.planCredits}
+                  Plan Credits:{userData?.planCredits}
                 </Text>
               </div>
               <div>
                 <Text className="text-2xl font-semibold my-4">
                   {/* {t("Graph Overview")} */}
-                  Current Credits: {userData?.credits}
+                  Total Credits: {userCredits+ userProgress?.reduce((acc, curr) => acc + curr.creditsSpent, 0)}
                 </Text>
                 <br />
                 <Text className="text-gray-500">

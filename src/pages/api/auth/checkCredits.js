@@ -68,7 +68,6 @@
 //         credits: remainingCredits,
 //       });
 //     }
-   
 
 //     // Fetch the updated user data correctly
 //     const updatedUserDoc = await getDoc(userDocRef); // Use getDoc instead of getDocs
@@ -85,7 +84,6 @@
 //     return res.status(500).json({ success: false, message: "Server error" });
 //   }
 // }
-
 
 import { db } from "../../../lib/firebaseConfig";
 import {
@@ -154,7 +152,7 @@ export default async function handler(req, res) {
     // Create the new action object
     const newAction = {
       name: action,
-      word,
+      word: word ? word : "",
       creditsSpent,
       spentDate: Timestamp.now(),
     };
@@ -164,9 +162,9 @@ export default async function handler(req, res) {
       credits: remainingCredits,
     };
 
-    if (action === "stroke-order" || action === "coloring-page") {
+    // if (action === "stroke-order" || action === "coloring-page") {
       updatePayload.deductedActions = arrayUnion(newAction);
-    }
+    // }
 
     await updateDoc(userDocRef, updatePayload);
 
