@@ -94,18 +94,34 @@ async function handleCheckoutSessionCompleted(session) {
     );
   }
 
-  // let subscription
+  // Check if subscription already exists
+  const subscriptionRef = collection(db, "subscriptions");
+  const subscriptionQuery = query(subscriptionRef, where("userId", "==", userId));
+  const subscriptionSnapshot = await getDocs(subscriptionQuery);
 
-  // Store subscription details in Firestore
-  const subscriptionRef = doc(db, "subscriptions", subscriptionId);
-  await setDoc(subscriptionRef, {
-    userId,
-    planId,
-    subscriptionId,
-    email,
-    status: "active",
-    createdAt: new Date(),
-  });
+  if (!subscriptionSnapshot.empty) {
+    // Update existing subscription
+    const existingSubscriptionDoc = subscriptionSnapshot.docs[0];
+    const existingSubscriptionRef = doc(db, "subscriptions", existingSubscriptionDoc.id);
+
+    await updateDoc(existingSubscriptionRef, {
+      planId,
+      subscriptionId,
+      status: "active",
+      updatedAt: new Date(),
+    });
+  } else {
+    // Create a new subscription
+    const newSubscriptionRef = doc(db, "subscriptions", subscriptionId);
+    await setDoc(newSubscriptionRef, {
+      userId,
+      planId,
+      subscriptionId,
+      email,
+      status: "active",
+      createdAt: new Date(),
+    });
+  }
 
   // Retrieve plan details
   const planRef = doc(db, "pricingplans", planId);
@@ -116,9 +132,9 @@ async function handleCheckoutSessionCompleted(session) {
   }
 
   const plan = planSnapshot.data();
-  const creditsToAdd = Number(plan.credits || 0); // Ensure plan.credits is a number
+  const creditsToAdd = Number(plan.credits || 0);
 
-  // Find user by email
+  // Find user by userId
   const userRef = collection(db, "persons");
   const q = query(userRef, where("userId", "==", userId));
   const querySnapshot = await getDocs(q);
@@ -131,12 +147,10 @@ async function handleCheckoutSessionCompleted(session) {
   const userData = userDoc.data();
   const userDocRef = doc(db, "persons", userDoc.id);
 
-  // Safely parse userData.credits to a number
+  // Update user credits and plan
   const currentCredits = Number(userData.credits || 0);
-
-  // Update user credits
   await updateDoc(userDocRef, {
-    credits: currentCredits + creditsToAdd, // Add as numbers
+    credits: currentCredits + creditsToAdd,
     plan: plan.name,
   });
 }
@@ -149,23 +163,23 @@ async function handleSubscriptionDeleted(subscription) {
 
   if (subscriptionSnapshot.exists()) {
     const subscriptionData = subscriptionSnapshot.data();
+
+    // Update user plan to "free" in persons collection
     const userRef = collection(db, "persons");
     const q = query(userRef, where("userId", "==", subscriptionData.userId));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0];
-      const userData = userDoc.data();
       const userDocRef = doc(db, "persons", userDoc.id);
 
-      // Reduce user credits (optional logic)
-      const updatedCredits = Math.max(
-        (userData.credits || 0) - (subscriptionData.credits || 0),
-        0
-      );
-      await updateDoc(userDocRef, { credits: updatedCredits });
+      await updateDoc(userDocRef, {
+        plan: "Free", // Revert to free plan
+        credits: 0, // Reset credits to zero
+      });
     }
 
+    // Delete subscription from subscriptions collection
     await deleteDoc(subscriptionRef);
   }
 }
@@ -174,9 +188,51 @@ async function handleSubscriptionUpdated(subscription) {
   const subscriptionId = subscription.id;
   const status = subscription.status;
 
+  // Update subscription status in Firestore
   const subscriptionRef = doc(db, "subscriptions", subscriptionId);
   await updateDoc(subscriptionRef, {
     status,
     updatedAt: new Date(),
   });
+
+  // Handle subscription status changes
+  if (status === "canceled" || status === "past_due") {
+    await handleUserPlanUpdate(subscriptionRef, status);
+  }
 }
+
+// Helper function to handle user plan updates
+async function handleUserPlanUpdate(subscriptionRef, status) {
+  const subscriptionSnapshot = await getDoc(subscriptionRef);
+  if (!subscriptionSnapshot.exists()) return;
+
+  const subscriptionData = subscriptionSnapshot.data();
+  const userRef = collection(db, "persons");
+  const q = query(userRef, where("userId", "==", subscriptionData.userId));
+  const querySnapshot = await getDocs(q);
+
+  if (querySnapshot.empty) return;
+
+  const userDoc = querySnapshot.docs[0];
+  const userDocRef = doc(db, "persons", userDoc.id);
+
+  if (status === "canceled") {
+    // Update plan to "Free" and reset credits
+    await updateDoc(userDocRef, {
+      plan: "Free",
+      credits: 0,
+    });
+  } else if (status === "past_due") {
+    // Update subscriptionStatus to "past_due" for the user
+    await updateDoc(userDocRef, {
+      subscriptionStatus: "past_due",
+    });
+
+    // Notify about payment failure (logging for now)
+    console.log(
+      `User with ID ${subscriptionData.userId} has a past_due subscription. Notify them to update payment details.`
+    );
+  }
+}
+
+
