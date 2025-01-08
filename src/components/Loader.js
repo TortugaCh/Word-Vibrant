@@ -1,6 +1,6 @@
 const Loader = () => {
   return (
-    <div className="flex justify-center items-center h-[70vh] bg-gradient-to-b from-blue-50 via-purple-50 to-pink-50">
+    <div className="flex justify-center items-center h-[100vh] ">
       {/* Loader Container */}
       <div className="relative">
         {/* Animated Stars */}

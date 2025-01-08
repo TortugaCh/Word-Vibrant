@@ -34,7 +34,7 @@ const Footer = ({ t }) => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mt-8">
             {[
               { href: "/about", text: t("footer.aboutUs") },
-              { href: "/terms", text: t("footer.termsOfService") },
+
               { href: "/privacy", text: t("footer.termCondition") },
               {
                 href: "mailto:contact@company.com",

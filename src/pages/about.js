@@ -126,7 +126,7 @@ export default function AboutUs() {
                   <div className="relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 transform rotate-3 scale-110 rounded-3xl opacity-50"></div>
                     <img
-                      src="images/vision.png"
+                      src="/images/vision.png"
                       alt="Learning Method"
                       className="relative rounded-3xl shadow-lg w-full h-[400px] object-cover"
                     />
