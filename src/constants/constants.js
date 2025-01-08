@@ -189,7 +189,9 @@ export const modules = [
     description: "Speak Chinese with confidence",
     descriptionZh: "自信說中文",
     icon: <MessageCircle className="w-12 h-12 text-white" />,
-    color: "from-green-500 to-emerald-500",
+    // color: "from-green-500 to-emerald-500",\
+    color: "from-purple-500 to-pink-500",
+
     bgColor: "bg-green-50",
     points: [
       "Fun interactive dialogues",
@@ -207,7 +209,9 @@ export const modules = [
     description: "Learn through magical stories",
     descriptionZh: "通過魔幻故事學習",
     icon: <BookOpen className="w-12 h-12 text-white" />,
-    color: "from-orange-500 to-amber-500",
+    // color: "from-orange-500 to-amber-500",
+    color: "from-blue-500 to-cyan-500",
+
     bgColor: "bg-orange-50",
     points: [
       "Engaging story adventures",
