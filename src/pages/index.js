@@ -77,7 +77,7 @@ export default function HomePage() {
 
         <div className="mb-6 flex justify-center">
           <div
-            className={`p-4 rounded-2xl bg-gradient-to-br ${module.color} bg-opacity-10`}
+            className={`p-4 rounded-2xl bg-gradient-to-br ${module?.color} bg-opacity-10`}
           >
             {module.icon}
           </div>
@@ -95,7 +95,7 @@ export default function HomePage() {
           {(isZh ? module.pointsZh : module.points).map((point, i) => (
             <li key={i} className="flex items-start gap-3">
               <div
-                className={`w-5 h-5 rounded-full bg-gradient-to-r ${module.color} flex items-center justify-center flex-shrink-0 mt-1`}
+                className={`w-5 h-5 rounded-full bg-gradient-to-br ${module.color} flex items-center justify-center flex-shrink-0 mt-1`}
               >
                 <Check className="w-3 h-3 text-white" />
               </div>

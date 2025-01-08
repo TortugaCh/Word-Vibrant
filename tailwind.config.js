@@ -10,7 +10,6 @@ module.exports = {
         "spin-slow": "spin 10s linear infinite",
         bounce: "bounce 2s infinite",
       },
-      
     },
   },
   plugins: [require("tailwind-scrollbar")],
