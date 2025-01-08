@@ -146,6 +146,7 @@ export const UserMenuItems = [
 
 export const modules = [
   {
+    name:"stroke",
     title: "✍️ Hanzi Stroke Practice",
     titleZh: "✍️ 漢字筆劃練習",
     description: "Master the art of Chinese characters",
@@ -163,6 +164,7 @@ export const modules = [
     achievementZh: "筆劃大師 🏆",
   },
   {
+    name:"coloring",
     title: "🎨 Coloring Page Fun",
     titleZh: "🎨 塗色頁樂趣",
     description: "Learn through creative coloring",
@@ -181,6 +183,7 @@ export const modules = [
   },
   
   {
+    name:"dialogue",
     title: "🗨️ Dialogue Practice",
     titleZh: "🗨️ 對話練習",
     description: "Speak Chinese with confidence",
@@ -198,6 +201,7 @@ export const modules = [
     achievementZh: "對話冠軍 🎭",
   },
   {
+    name:"story",
     title: "📚 Story Learning",
     titleZh: "📚 故事學習",
     description: "Learn through magical stories",

@@ -54,8 +54,6 @@ export default function HomePage() {
     else router.push("/auth");
   };
 
-
-
   function ModuleCard({ module, index }) {
     const isZh = locale === "zh"; // Check if the locale is 'zh'
 
@@ -77,7 +75,13 @@ export default function HomePage() {
 
         <div className="mb-6 flex justify-center">
           <div
-            className={`p-4 rounded-2xl bg-gradient-to-br ${module?.color} bg-opacity-10`}
+            className={`p-4 rounded-2xl bg-gradient-to-br ${
+              module.name == "story"
+                ? "from-orange-500 to-amber-500"
+                : module.name == "dialogue"
+                ? "from-green-500 to-emerald-500"
+                : module.color
+            } bg-opacity-10`}
           >
             {module.icon}
           </div>
@@ -105,7 +109,13 @@ export default function HomePage() {
         </ul>
 
         <button
-          className={`w-full py-4 bg-gradient-to-r ${module.color} text-white font-semibold rounded-xl shadow-md hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
+          className={`w-full py-4 bg-gradient-to-br ${
+            module.name == "story"
+              ? "from-orange-500 to-amber-500"
+              : module.name == "dialogue"
+              ? "from-green-500 to-emerald-500"
+              : module.color
+          } text-white font-semibold rounded-xl shadow-md hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
           onClick={handleLearnMore}
         >
           {isZh ? "開始學習" : "Start Learning"}
