@@ -87,15 +87,7 @@ export const UserState = ({ children }) => {
         console.log(creditData);
         setUserCredits(creditData.remainingCredits);
         if (creditData.creditsDeducted) {
-          setUserProgress([
-            ...userProgress,
-            {
-              name: action,
-              word: targetWord,
-              creditsSpent: requiredCredits,
-              spentDate: new Date().toISOString(),
-            },
-          ]);
+          setUserProgress(creditData.userData.deductedActions);
         }
         return true;
       } else {
