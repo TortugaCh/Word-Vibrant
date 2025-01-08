@@ -1,12 +1,10 @@
 export default {
-  welcomeTitle: "Welcome to Words Action",
+  welcomeTitle: "Learning Made Fun & Magical",
   welcomeDescription:
-    "Explore interactive lessons and master the art of Chinese characters. Our curriculum is designed to make learning fun and effective for everyone!",
+    "Embark on an exciting learning journey where education meets imagination. Perfect for young minds to explore, create, and grow!",
   loginSignup: "Login or Sign Up",
   dashboard: "Go to Dashboard",
-  aboutTitle: "About Words Action",
-  aboutDescription:
-    "Our platform provides engaging, interactive learning experiences that make mastering Chinese characters enjoyable for students of all ages.",
+
   choosePlan: "Choose Your Plan",
   freePlan: "Free",
   credits25: "25 Credits",
@@ -38,10 +36,87 @@ export default {
     description:
       "Words Action is a platform that provides an interactive Chinese character learning experience.",
   },
-  noCredits:{
+  noCredits: {
     goToDashboard: "Go to Dashboard",
     upgradePlan: "Upgrade Your Plan",
-    insufficientCredits:"Insufficient Credits",
-    heading:"It seems like you don't have enough credits to access this module. You can go back or upgrade your plan to continue."
-  }
+    insufficientCredits: "Insufficient Credits",
+    heading:
+      "It seems like you don't have enough credits to access this module. You can go back or upgrade your plan to continue.",
+  },
+  about: {
+    title: "About Us",
+    heading: "Our Story",
+    description:
+      "Transforming Chinese language education through innovation and care",
+    moreThanParents: "More Than Just Parent",
+    moreThanParentsDescription:
+      "As a mother of a first-grader and former Chinese teacher at an international school, I noticed a gap in existing educational tools. This inspired me to create this learning platform. While it's still evolving, it's built with love and open to community input for continuous improvement.",
+    teachingMethod: "Our Teaching Method",
+    teachingMethodDescription:
+      "Repetition and visual learning are key to early childhood education. Our tools utilize visual character recognition methods through stroke animation and interactive attempts. Characters appear throughout stories and dialogues, helping children remember character forms while understanding their usage in context.",
+    ourVision: "Our Vision",
+    ourVisionDescription: `In the era of AI advancement, we aim to make "Language in Motion" a starting point for smoother character recognition and AI-enhanced learning experiences, exploring endless possibilities in education technology. We believe in creating an engaging, interactive environment where learning Chinese becomes an adventure rather than a task.`,
+  },
+  chooseSection: {
+    title: "Why Choose Us",
+    description:
+      "Experience learning like never before with our innovative approach to Chinese language education.",
+    personalizedLearning: {
+      title: "Personalized Learning",
+      description:
+        "Adaptive learning paths that evolve with your child's progress, ensuring optimal engagement and development.",
+    },
+    achievementSystem: {
+      title: "Achievement System",
+      description:
+        "Motivating reward system that celebrates every milestone in your child's learning journey.",
+    },
+    interactivePractice: {
+      title: "Interactive Practice",
+      description:
+        "Engaging exercises with real-time feedback to make learning Chinese characters fun and effective.",
+    },
+  },
+  learningSection: {
+    title: "Your Learning Adventure Awaits!",
+    description:
+      "Choose your path and start learning Chinese characters in a fun and interactive way.",
+  },
+  salesPage: {
+    description:
+      "Discover the joy of learning Chinese with our innovative, interactive modules designed to inspire curiosity and creativity. Perfect for young learners ready to explore, create, and grow.",
+    startAdventure: "Start Your Adventure",
+    watchFunDemo:"Watch Fun Demo",
+    interactiveLessons: {
+      title: "Interactive Lessons",
+      description:
+        "Every module is crafted to engage young learners and make education exciting.",
+    },
+    comprehensiveApproach: {
+      title: "Comprehensive Approach",
+      description:
+        "From strokes to storytelling, our modules cover all aspects of Chinese language mastery.",
+    },
+    provenSuccess: {
+      title: "Proven Success",
+      description:
+        "Join thousands of satisfied learners who’ve transformed their language skills with us.",
+    },
+    learningSection: {
+      title: "Learning Chinese is an Adventure!",
+      description: "Discover our magical world of learning",
+      personalizedLearning: {
+        title: "Personalized Learning",
+        description: "Learn through exciting Words and learn cool Dialouges!",
+      },
+      smartLearning: {
+        title: "Smart Learning",
+        description: "Platform that adapt to how you learn best",
+      },
+      interactivePractice: {
+        title: "Interactive Practice",
+        description: "Engaging exercises with real-time feedback",
+      },
+    },
+  },
 };

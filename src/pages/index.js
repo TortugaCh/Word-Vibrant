@@ -30,13 +30,14 @@ import {
   Check,
   ArrowRight,
 } from "lucide-react";
+import { modules } from "../constants/constants";
 
 export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const t = useTranslations("common");
   const { userData } = useUserContext();
-
+  const { locale } = router;
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
@@ -48,60 +49,71 @@ export default function HomePage() {
     return <Loader />;
   }
 
-  const modules = [
-    {
-      title: "✍️ Hanzi Stroke Practice",
-      description: "Master the art of Chinese characters",
-      icon: <PenTool className="w-12 h-12 text-white" />,
-      color: "from-purple-500 to-pink-500",
-      bgColor: "bg-purple-50",
-      points: [
-        "Interactive stroke-by-stroke practice",
-        "Learn proper writing techniques",
-        "Unlock new characters as you progress",
-      ],
-      achievement: "Stroke Master 🏆",
-    },
-    {
-      title: "🎨 Coloring Page Fun",
-      description: "Learn through creative coloring",
-      icon: <Palette className="w-12 h-12 text-white" />,
-      color: "from-blue-500 to-cyan-500",
-      bgColor: "bg-blue-50",
-      points: [
-        "Color and learn characters",
-        "Fun artistic exercises",
-        "Visual memory enhancement",
-      ],
-      achievement: "Creative Artist 🎨",
-    },
-    {
-      title: "🗨️ Dialogue Practice",
-      description: "Speak Chinese with confidence",
-      icon: <MessageCircle className="w-12 h-12 text-white" />,
-      color: "from-green-500 to-emerald-500",
-      bgColor: "bg-green-50",
-      points: [
-        "Fun interactive dialogues",
-        "Real-world conversations",
-        "Perfect pronunciation",
-      ],
-      achievement: "Chat Champion 🎭",
-    },
-    {
-      title: "📚 Story Learning",
-      description: "Learn through magical stories",
-      icon: <BookOpen className="w-12 h-12 text-white" />,
-      color: "from-orange-500 to-amber-500",
-      bgColor: "bg-orange-50",
-      points: [
-        "Engaging story adventures",
-        "Build vocabulary naturally",
-        "Remember through stories",
-      ],
-      achievement: "Story Explorer 📖",
-    },
-  ];
+  const handleLearnMore = () => {
+    if (userData) router.push("/user/dashboard");
+    else router.push("/auth");
+  };
+
+
+
+  function ModuleCard({ module, index }) {
+    const isZh = locale === "zh"; // Check if the locale is 'zh'
+
+    return (
+      <div
+        className={`relative ${
+          module.bgColor
+        } p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-dashed border-opacity-50 border-${
+          module.color.split("-")[1]
+        }`}
+        style={{ animationDelay: `${index * 0.1}s` }}
+      >
+        {/* Achievement Badge */}
+        <div className="absolute -top-4 -right-4 bg-white px-4 py-2 rounded-xl shadow-lg transform rotate-6">
+          <span className="text-sm font-bold text-gray-700">
+            {isZh ? module.achievementZh : module.achievement}
+          </span>
+        </div>
+
+        <div className="mb-6 flex justify-center">
+          <div
+            className={`p-4 rounded-2xl bg-gradient-to-br ${module.color} bg-opacity-10`}
+          >
+            {module.icon}
+          </div>
+        </div>
+
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">
+          {isZh ? module.titleZh : module.title}
+        </h3>
+
+        <p className="text-gray-600 mb-6">
+          {isZh ? module.descriptionZh : module.description}
+        </p>
+
+        <ul className="space-y-3 mb-8">
+          {(isZh ? module.pointsZh : module.points).map((point, i) => (
+            <li key={i} className="flex items-start gap-3">
+              <div
+                className={`w-5 h-5 rounded-full bg-gradient-to-r ${module.color} flex items-center justify-center flex-shrink-0 mt-1`}
+              >
+                <Check className="w-3 h-3 text-white" />
+              </div>
+              <span className="text-gray-700">{point}</span>
+            </li>
+          ))}
+        </ul>
+
+        <button
+          className={`w-full py-4 bg-gradient-to-r ${module.color} text-white font-semibold rounded-xl shadow-md hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
+          onClick={handleLearnMore}
+        >
+          {isZh ? "開始學習" : "Start Learning"}
+          <ArrowRight className="w-5 h-5" />
+        </button>
+      </div>
+    );
+  }
 
   const features = [
     {
@@ -123,59 +135,6 @@ export default function HomePage() {
     },
   ];
 
-  function ModuleCard({ module, index }) {
-    return (
-      <div
-        className={`relative ${
-          module.bgColor
-        } p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-dashed border-opacity-50 border-${
-          module.color.split("-")[1]
-        }`}
-        style={{ animationDelay: `${index * 0.1}s` }}
-      >
-        {/* Achievement Badge */}
-        <div className="absolute -top-4 -right-4 bg-white px-4 py-2 rounded-xl shadow-lg transform rotate-6">
-          <span className="text-sm font-bold text-gray-700">
-            {module.achievement}
-          </span>
-        </div>
-
-        <div className="mb-6 flex justify-center">
-          <div
-            className={`p-4 rounded-2xl bg-gradient-to-br ${module.color} bg-opacity-10`}
-          >
-            {module.icon}
-          </div>
-        </div>
-
-        <h3 className="text-2xl font-bold text-gray-800 mb-4">
-          {module.title}
-        </h3>
-
-        <p className="text-gray-600 mb-6">{module.description}</p>
-
-        <ul className="space-y-3 mb-8">
-          {module.points.map((point, i) => (
-            <li key={i} className="flex items-start gap-3">
-              <div
-                className={`w-5 h-5 rounded-full bg-gradient-to-r ${module.color} flex items-center justify-center flex-shrink-0 mt-1`}
-              >
-                <Check className="w-3 h-3 text-white" />
-              </div>
-              <span className="text-gray-700">{point}</span>
-            </li>
-          ))}
-        </ul>
-
-        <button
-          className={`w-full py-4 bg-gradient-to-r ${module.color} text-white font-semibold rounded-xl shadow-md hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2`}
-        >
-          Start Learning
-          <ArrowRight className="w-5 h-5" />
-        </button>
-      </div>
-    );
-  }
   return (
     <>
       <Template t={t}>
@@ -187,16 +146,14 @@ export default function HomePage() {
                 <div className="flex-1 text-center lg:text-left">
                   <h1 className="text-5xl lg:text-7xl font-bold mb-8">
                     <span className="block bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                      Learning Made
+                      {locale !== "zh" ? "Learning Made" : "學習變得"}{" "}
                     </span>
                     <span className="block bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-                      Fun & Magical
+                      {locale !== "zh" ? "Fun & Easy" : "有趣且輕鬆"}
                     </span>
                   </h1>
                   <p className="text-xl text-gray-600 mb-10">
-                    Embark on an exciting learning journey where education meets
-                    imagination. Perfect for young minds to explore, create, and
-                    grow!
+                    {t("welcomeDescription")}
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                     {!userData && (
@@ -211,7 +168,7 @@ export default function HomePage() {
                       onClick={() =>
                         userData
                           ? router.push("/user/dashboard")
-                          : router.push("/user/dashboard")
+                          : router.push("/auth")
                       }
                       className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold rounded-xl text-lg transform transition-all hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2"
                     >
@@ -226,25 +183,25 @@ export default function HomePage() {
                       {
                         icon: <Users className="w-8 h-8" />,
                         stat: "10K+",
-                        label: "Students",
+                        label: locale === "zh" ? "學生" : "Students",
                         color: "bg-blue-50",
                       },
                       {
                         icon: <Star className="w-8 h-8" />,
                         stat: "4.9",
-                        label: "Rating",
+                        label: locale === "zh" ? "評分" : "Rating",
                         color: "bg-yellow-50",
                       },
                       {
                         icon: <Trophy className="w-8 h-8" />,
                         stat: "1M+",
-                        label: "Awards",
+                        label: locale === "zh" ? "獎勵" : "Rewards",
                         color: "bg-green-50",
                       },
                       {
                         icon: <BookOpen className="w-8 h-8" />,
                         stat: "500+",
-                        label: "Lessons",
+                        label: locale === "zh" ? "故事" : "Stories",
                         color: "bg-purple-50",
                       },
                     ].map((item, index) => (
@@ -285,11 +242,10 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-                  Your Learning Adventure Awaits! 🚀
+                  {t("learningSection.title")} 🚀
                 </h2>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  Choose your path and start learning Chinese in the most fun
-                  and engaging way!
+                  {t("learningSection.description")}
                 </p>
               </div>
 
@@ -312,16 +268,15 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
               <div className="text-center mb-20">
                 <span className="text-purple-600 font-semibold tracking-wider uppercase mb-4 block">
-                  Our Story
+                  {t("about.heading")}
                 </span>
                 <h2 className="text-4xl md:text-6xl font-bold mb-6">
                   <span className="block bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                    About Us
+                    {t("about.title")}
                   </span>
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                  Transforming Chinese language education through innovation and
-                  care
+                  {t("about.description")}
                 </p>
               </div>
 
@@ -344,15 +299,10 @@ export default function HomePage() {
                           <Heart className="w-8 h-8" />
                         </div>
                         <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                          More Than Just a Parent
+                          {t("about.moreThanParents")}
                         </h3>
                         <p className="text-gray-600 leading-relaxed">
-                          As a mother of a first-grader and former Chinese
-                          teacher at an international school, I noticed a gap in
-                          existing educational tools. This inspired me to create
-                          this learning platform. While it's still evolving,
-                          it's built with love and open to community input for
-                          continuous improvement.
+                          {t("about.moreThanParentsDescription")}
                         </p>
                       </div>
                     </div>
@@ -365,15 +315,10 @@ export default function HomePage() {
                       <Lightbulb className="w-8 h-8" />
                     </div>
                     <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                      Our Teaching Method
+                      {t("about.teachingMethod")}
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Repetition and visual learning are key to early childhood
-                      education. Our tools utilize visual character recognition
-                      methods through stroke animation and interactive attempts.
-                      Characters appear throughout stories and dialogues,
-                      helping children remember character forms while
-                      understanding their usage in context.
+                      {t("about.teachingMethodDescription")}
                     </p>
                   </div>
                 </div>
@@ -384,16 +329,10 @@ export default function HomePage() {
                       <Rocket className="w-8 h-8" />
                     </div>
                     <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                      Our Vision
+                      {t("about.ourVision")}
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
-                      In the era of AI advancement, we aim to make "Language in
-                      Motion" a starting point for smoother character
-                      recognition and AI-enhanced learning experiences,
-                      exploring endless possibilities in education technology.
-                      We believe in creating an engaging, interactive
-                      environment where learning Chinese becomes an adventure
-                      rather than a task.
+                      {t("about.ourVisionDescription")}
                     </p>
                     <div className="mt-6 grid grid-cols-3 gap-4">
                       <div className="bg-purple-50 rounded-xl p-4 text-center">
@@ -401,7 +340,7 @@ export default function HomePage() {
                           100+
                         </div>
                         <div className="text-sm text-gray-600">
-                          Interactive Lessons
+                          {locale === "zh" ? "滿意學生" : "Satisfied Students"}
                         </div>
                       </div>
                       <div className="bg-blue-50 rounded-xl p-4 text-center">
@@ -409,7 +348,7 @@ export default function HomePage() {
                           5000+
                         </div>
                         <div className="text-sm text-gray-600">
-                          Active Students
+                          {locale === "zh" ? "學習時數" : "Learning Hours"}
                         </div>
                       </div>
                       <div className="bg-pink-50 rounded-xl p-4 text-center">
@@ -417,7 +356,9 @@ export default function HomePage() {
                           98%
                         </div>
                         <div className="text-sm text-gray-600">
-                          Satisfaction Rate
+                          {locale === "zh"
+                            ? "學生滿意度"
+                            : "Student Satisfaction"}
                         </div>
                       </div>
                     </div>
@@ -436,11 +377,10 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500 mb-6">
-                Why Choose Us
+                {t("chooseSection.title")}
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Experience learning like never before with our innovative
-                approach to Chinese language education
+                {t("chooseSection.description")}
               </p>
             </div>
 
@@ -448,23 +388,24 @@ export default function HomePage() {
               {[
                 {
                   icon: <Target className="w-12 h-12" />,
-                  title: "Personalized Learning",
-                  description:
-                    "Adaptive learning paths that evolve with your child's progress, ensuring optimal engagement and development",
+                  title: t("chooseSection.personalizedLearning.title"),
+                  description: t(
+                    "chooseSection.personalizedLearning.description"
+                  ),
                   color: "from-purple-500 to-indigo-500",
                 },
                 {
                   icon: <Trophy className="w-12 h-12" />,
-                  title: "Achievement System",
-                  description:
-                    "Motivating reward system that celebrates every milestone in your child's learning journey",
+                  title: t("chooseSection.achievementSystem.title"),
+                  description: t("chooseSection.achievementSystem.description"),
                   color: "from-blue-500 to-cyan-500",
                 },
                 {
                   icon: <Star className="w-12 h-12" />,
-                  title: "Interactive Practice",
-                  description:
-                    "Engaging exercises with real-time feedback to make learning Chinese characters fun and effective",
+                  title: t("chooseSection.interactivePractice.title"),
+                  description: t(
+                    "chooseSection.interactivePractice.description"
+                  ),
                   color: "from-pink-500 to-rose-500",
                 },
               ].map((feature, index) => (

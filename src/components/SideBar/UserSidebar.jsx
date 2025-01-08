@@ -18,10 +18,11 @@ const SideBar = ({ setMenuOpen }) => {
         return (
           <li
             key={index}
-            className={`text-lg px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 ${isActive
-              ? "bg-purple-600 text-white font-bold"
-              : "hover:bg-gray-200 text-gray-700"
-              }`}
+            className={`text-lg px-4 py-2 rounded-lg cursor-pointer transition-all duration-300 ${
+              isActive
+                ? "bg-purple-600 text-white font-bold"
+                : "hover:bg-gray-200 text-gray-700"
+            }`}
           >
             <Link href={option.link} passHref>
               <span className="flex items-center gap-4">
@@ -41,11 +42,13 @@ const SideBar = ({ setMenuOpen }) => {
       <div className="flex flex-col gap-3 items-center">
         {/* Logo */}
         <div className="mt-2 sm:mt-4 md:mt-6 lg:mt-8 xl:mt-10">
-          <img
-            src="/images/logo3.png" // Update this with your logo's path
-            alt="Logo"
-            className="w-24 sm:w-28 md:w-32 lg:w-36 xl:w-40 h-auto"
-          />
+          <Link href="/salespage">
+            <img
+              src="/images/logo3.png" // Update this with your logo's path
+              alt="Logo"
+              className="w-24 sm:w-28 md:w-32 lg:w-36 xl:w-40 h-auto"
+            />
+          </Link>
         </div>
 
         {/* Dashboard Title */}

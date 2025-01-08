@@ -119,9 +119,10 @@ export default function Page() {
         // Validate the response format
         if (Array.isArray(parsedData)) {
           setDialogue(parsedData);
-          message.success(
-            t("dialogueSuccess") || "Dialogue fetched successfully!"
-          );
+          message.success("Dialogue fetched successfully!");
+          // message.success(
+          //   t("dialogueSuccess") || "Dialogue fetched successfully!"
+          // );
         } else {
           throw new Error("Received invalid dialogue format.");
         }
@@ -132,9 +133,12 @@ export default function Page() {
       // Reverse credits on any error
       await reverseCredits("create-a-dialogue");
       console.error("Error fetching dialogue:", error.message || error);
+      // message.error(
+      //   t("dialogueError") ||
+      //     "Failed to fetch dialogue. Your credits have been refunded."
+      // );
       message.error(
-        t("dialogueError") ||
-          "Failed to fetch dialogue. Your credits have been refunded."
+        "Failed to fetch dialogue. Your credits have been refunded."
       );
     } finally {
       setLoading(false);
@@ -147,63 +151,6 @@ export default function Page() {
 
     useEffect(() => {
       if (!dialogue?.traditionalChinese || !wordNames) return;
-
-      // const highlightedWords = (tradionalDialogue, validWords) => {
-      //   // Normalize validWords for consistency
-      //   const wordsSet = new Set(validWords.map((word) => word.trim()));
-
-      //   // Split text into individual characters, words, and preserve spaces/punctuation
-      //   const dialogueWords = tradionalDialogue.split("").map((word, index) => {
-      //     if (word && !wordsSet.has(word)) {
-      //       return (
-      //         <span key={index} className="underline text-red-500">
-      //           {word}
-      //         </span>
-      //       );
-      //     }
-      //     return <span key={index}>{word}</span>;
-      //   });
-
-      //   setHighlighedDialogue(dialogueWords);
-      // };
-      // const highlightedWords = (traditionalDialogue, validWords) => {
-      //   // Normalize validWords for consistency
-      //   const wordsSet = new Set(validWords.map((word) => word.trim()));
-
-      //   // Initialize an array to hold the highlighted dialogue
-      //   const dialogueWords = [];
-      //   let i = 0;
-
-      //   // Traverse the dialogue string and look for matches
-      //   while (i < traditionalDialogue.length) {
-      //     let foundMatch = false;
-
-      //     // Check for the longest matching phrase in the wordsSet
-      //     for (let j = traditionalDialogue.length; j > i; j--) {
-      //       const phrase = traditionalDialogue.slice(i, j); // Extract substring
-      //       if (wordsSet.has(phrase)) {
-      //         // If phrase is valid, add it without underline
-      //         dialogueWords.push(<span key={i}>{phrase}</span>);
-      //         i = j; // Move the pointer to the end of the matched phrase
-      //         foundMatch = true;
-      //         break;
-      //       }
-      //     }
-
-      //     // If no match found, treat the current character as invalid
-      //     if (!foundMatch) {
-      //       dialogueWords.push(
-      //         <span key={i} className="underline text-red-500">
-      //           {traditionalDialogue[i]}
-      //         </span>
-      //       );
-      //       i++; // Move pointer to the next character
-      //     }
-      //   }
-
-      //   // Update the highlighted dialogue state
-      //   setHighlighedDialogue(dialogueWords);
-      // };
 
       setHighlighedDialogue(
         highlightWords(dialogue.traditionalChinese, wordNames, {
@@ -275,7 +222,8 @@ export default function Page() {
           ))
         ) : (
           <p className="text-center text-gray-500">
-            {t("noDialogue") || "No dialogue available."}
+            {/* {t("noDialogue") || "No dialogue available."} */}
+            No dialogue available.
           </p>
         )}
       </div>
