@@ -236,7 +236,7 @@ const Progress = ({ userId, t }) => {
               </Col>
             );
           })}
-        <Col xs={24} sm={12} md={12} lg={10}>
+        <Col xs={24} sm={24} md={24} lg={12}>
           <div
             style={{
               backgroundColor: "#f0f2f5",
