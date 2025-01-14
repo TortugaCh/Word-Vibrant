@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Drawer, Menu, Button, Dropdown } from "antd";
 import { useUserContext } from "../context/UserContext";
+import { handleLogout } from "../lib/utils/auth";
 
-export default function Header({ logoSrc = "/images/logo3.png", onLogout, t }) {
+export default function Header({ logoSrc = "/images/logo3.png", t }) {
+
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { userData } = useUserContext();
@@ -41,7 +43,7 @@ export default function Header({ logoSrc = "/images/logo3.png", onLogout, t }) {
       <Menu.Divider />
       <Menu.Item
         onClick={() => {
-          onLogout();
+          handleLogout();
         }}
       >
         <div className="flex items-center gap-2 text-red-500">
