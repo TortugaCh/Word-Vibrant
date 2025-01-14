@@ -29,6 +29,7 @@ import {
   Lightbulb,
   Check,
   ArrowRight,
+  Music,
 } from "lucide-react";
 import { modules } from "../constants/constants";
 
@@ -75,8 +76,7 @@ export default function HomePage() {
 
         <div className="mb-6 flex justify-center">
           <div
-            className={`p-4 rounded-2xl bg-gradient-to-br ${module.color
-            } bg-opacity-10`}
+            className={`p-4 rounded-2xl bg-gradient-to-br ${module.color} bg-opacity-10`}
           >
             {module.icon}
           </div>
@@ -175,7 +175,35 @@ export default function HomePage() {
                     </button>{" "}
                   </div>
                 </div>
+                <div className="flex-1 relative">
+                  {/* Main animated scene */}
+                  <div className="relative w-full aspect-square bg-white rounded-[2rem] shadow-2xl p-6 transform hover:rotate-2 transition-transform duration-300">
+                    <img
+                      src="/images/hero.png"
+                      alt="Happy kids learning"
+                      className="w-full h-full object-cover rounded-2xl"
+                    />
 
+                    {/* Floating elements */}
+                    <div className="absolute -top-8 -left-8 bg-[#FFD5E5] p-5 rounded-2xl shadow-lg transform rotate-6 animate-[bounce_2s_infinite]">
+                      <Music className="w-8 h-8 text-[#FF6B9C]" />
+                    </div>
+                    <div className="absolute -bottom-8 -right-8 bg-[#E2F0FF] p-5 rounded-2xl shadow-lg transform -rotate-12 animate-[bounce_2s_infinite_0.5s]">
+                      <Heart className="w-8 h-8 text-[#7C3AED]" />
+                    </div>
+                  </div>
+
+                  {/* Fun facts overlay */}
+                  <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg">
+                    <div className="flex gap-8">
+                      <div className="text-center">
+                        <div className="text-1xl font-bold text-[#FF6B9C]">
+                          透過我們串接AI創建的模組
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 {/* <div className="flex-1">
                   <div className="grid grid-cols-2 gap-6">
                     {[
