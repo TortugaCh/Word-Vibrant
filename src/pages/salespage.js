@@ -133,7 +133,7 @@ export default function AboutUs() {
                 <h1 className="text-4xl lg:text-6xl font-bold text-[#2D3648] mb-6 leading-tight">
                   {locale !== "zh" ? "Make Learning Chinese" : "學習中文"}{" "}
                   <span className="block text-[#42A5F5] mt-2">
-                    {locale !== "zh" ? "Super Fun" : "超級好玩"} 🎮
+                    {locale !== "zh" ? "Super Fun" : "超級好玩"} 🏫
                   </span>
                 </h1>
                 <p className="text-xl text-[#4A5567] mb-8 leading-relaxed">
