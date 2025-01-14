@@ -19,7 +19,7 @@ export default {
     home: "首頁",
     aboutUs: "關於我們",
     contactUs: "聯絡",
-    pricingPlan: "條款與條件",
+    pricingPlan: "價格方案",
     login: "登入",
     signup: "註冊",
     logout: "登出",
@@ -77,35 +77,35 @@ export default {
   },
   salesPage: {
     description:
-      "透過我們創新且互動的模組，激發好奇心與創造力，享受學習中文的樂趣。完美適合準備探索、創造和成長的年輕學習者。",
+      "透過我們串接AI創建的模組，讓孩子在學生字時能激發好奇心與創造力，享受學習認字寫字的樂趣。專為學齡前 ~ 小學提供.",
     startAdventure: "開始您的冒險",
     watchFunDemo:"觀看有趣的演示",
     interactiveLessons: {
       title: "互動式課程",
-      description: "每個模組都專為吸引年輕學習者設計，使教育變得充滿樂趣。",
+      description: "每個模組都是專為學齡前和小學生設計的，操作簡單，學習不複雜。",
     },
     comprehensiveApproach: {
       title: "全面性方法",
       description: "從筆劃到故事，我們的模組涵蓋了中文掌握的各個方面。",
     },
     provenSuccess: {
-      title: "成功的證明",
-      description: "加入數千名滿意的學習者，他們已經通過我們提升了語言技能。",
+      title: "免除紙筆抄寫",
+      description: "過度重複的抄寫與雕字可能會損傷小肌肉或學習興趣，休息一下，讓我們用AI小工具學習吧。",
     },
     learningSection: {
-      title: "學習中文是一場冒險！",
-      description: "探索我們充滿魔力的學習世界",
+      title: "認字寫字變好玩了!",
+      description: "探索我們創新的學習方式",
       personalizedLearning: {
-        title: "個性化學習",
-        description: "通過有趣的詞彙和酷炫的對話進行學習！",
+        title: "步驟一",
+        description: "註冊帳號即享5個免費點數試用",
       },
       smartLearning: {
-        title: "智慧學習",
-        description: "平台根據您的最佳學習方式進行調整",
+        title: "步驟二",
+        description: "開始使用模組學習生字",
       },
       interactivePractice: {
-        title: "互動練習",
-        description: "即時反饋的有趣練習",
+        title: "步驟三",
+        description: "購買更多點數使用",
       },
     },
   },

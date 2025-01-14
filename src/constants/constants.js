@@ -177,7 +177,7 @@ export const modules = [
       "Fun artistic exercises",
       "Visual memory enhancement",
     ],
-    pointsZh: ["塗色並學習漢字", "有趣的藝術練習", "增強視覺記憶"],
+    pointsZh: ["下載列印並塗色", "有趣的藝術練習", "增強視覺記憶"],
     achievement: "Creative Artist 🎨",
     achievementZh: "創意藝術家 🎨",
   },
@@ -187,7 +187,7 @@ export const modules = [
     title: "🗨️ Dialogue Practice",
     titleZh: "🗨️ 對話練習",
     description: "Speak Chinese with confidence",
-    descriptionZh: "自信說中文",
+    descriptionZh: "有上下文的語言環境",
     icon: <MessageCircle className="w-12 h-12 text-white" />,
     // color: "from-green-500 to-emerald-500",\
     color: "from-purple-500 to-pink-500",

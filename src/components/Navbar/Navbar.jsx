@@ -36,7 +36,7 @@ export default function Navbar({
       label: (
         <span>
           <DollarCircleOutlined style={{ marginRight: 8, color: "#FFD700" }} />
-          {locale === "zh" ? "學分:" : "Credits:"} {userCredits}
+          {locale === "zh" ? "點數:" : "Credits:"} {userCredits}
         </span>
       ),
     },

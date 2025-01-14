@@ -26,11 +26,13 @@ import { FiMail, FiBook, FiStar, FiAward } from "react-icons/fi";
 import { FiEdit, FiBrush, FiMessageSquare, FiBookOpen } from "react-icons/fi";
 import { modules } from "../constants/constants";
 import { useRouter } from "next/router";
+import { useUserContext } from "../context/UserContext";
 
 export default function AboutUs() {
   const t = useTranslations("common");
   const router = useRouter();
   const { locale } = router;
+  const { userData } = useUserContext();
   const handleLearnMore = () => {
     if (userData) router.push("/user/dashboard");
     else router.push("/auth");
@@ -162,7 +164,7 @@ export default function AboutUs() {
                     <p className="text-sm text-[#4A5567]">
                       {locale !== "zh"
                         ? "My kids love learning Chinese now!"
-                        : "我的孩子現在喜歡學中文了！"}
+                        : "我的孩子現在喜歡學認字寫字了"}
                     </p>
                   </div>
                 </div>
@@ -178,7 +180,7 @@ export default function AboutUs() {
                   <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl p-3 flex items-center gap-2">
                     <Medal className="w-5 h-5 text-[#FF8534]" />
                     <span className="text-sm font-semibold text-[#2D3648]">
-                      {locale !== "zh" ? "Learn While Playing" : "玩遊戲學習"}
+                      {locale !== "zh" ? "Learn While Playing" : "用AI工具學習"}
                     </span>
                   </div>
                 </div>
