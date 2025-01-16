@@ -1,37 +1,46 @@
 import nodemailer from "nodemailer";
 
 export default async function handler(req, res) {
-  if (req.method === "POST") {
-    const { name, email, message } = req.body;
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+  console.log("req.body", req.body);
 
-    // Configure your email transport
-    const transporter = nodemailer.createTransport({
-      host: "smtp.example.com", // Replace with your SMTP host
-      port: 587, // Port for SMTP
-      auth: {
-        user: "your-email@example.com", // Your email
-        pass: "your-email-password", // Your email password or app password
-      },
+  const { email, subject, message } = req.body;
+
+  if (!email || !subject || !message) {
+    console.log(email, subject, message);
+    console.log("Missing required fields");
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  const { SMTP_EMAIL, SMTP_PASSWORD } = process.env;
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: SMTP_EMAIL,
+      pass: SMTP_PASSWORD,
+    },
+  });
+
+  try {
+    // Verify the transporter
+    await transporter.verify();
+    console.log("Email server is ready to send messages.");
+
+    // Send the email
+    const sendResult = await transporter.sendMail({
+      from: SMTP_EMAIL,
+      to: email,
+      subject,
+      html: message,
     });
 
-    try {
-      // Send email
-      await transporter.sendMail({
-        from: email, // Sender's email
-        to: "chiahuammx@gmail.com", // Your email
-        subject: `New Message from ${name}`,
-        text: message,
-      });
-
-      res
-        .status(200)
-        .json({ success: true, message: "Email sent successfully!" });
-    } catch (error) {
-      res
-        .status(500)
-        .json({ success: false, message: "Failed to send email.", error });
-    }
-  } else {
-    res.status(405).json({ message: "Method Not Allowed" });
+    console.log("Email sent successfully", sendResult);
+    return res.status(200).json({ message: "Email sent successfully" });
+  } catch (error) {
+    console.error("Error sending mail:", error);
+    return res.status(500).json({ error: "Failed to send email" });
   }
 }
+

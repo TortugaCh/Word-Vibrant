@@ -5,6 +5,8 @@ import { withMessages } from "../lib/getMessages";
 import { useTranslations } from "next-intl";
 import { Heart, Lightbulb, Rocket, BookOpen, Target, Mail } from "lucide-react";
 import { FiMail } from "react-icons/fi";
+import { sendMail } from "../lib/utils/mail";
+import { message } from "antd";
 
 export default function AboutUs() {
   const t = useTranslations("common");
@@ -13,32 +15,65 @@ export default function AboutUs() {
     email: "",
     message: "",
   });
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const response = await fetch("/api/send-email", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(formData),
+  //     });
+
+  //     if (response.ok) {
+  //       alert("Email sent successfully!");
+  //       setFormData({ name: "", email: "", message: "" });
+  //     } else {
+  //       alert("Failed to send email. Please try again.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error sending email:", error);
+  //     alert("An error occurred while sending the email.");
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      // Sending email to the user
+      const res = await sendMail({
+        name: formData.name,
+        subject: "New Message from WordVibrant",
+        email: formData.email,
+        message: "Thank you for your message! We will get back to you soon.",
       });
-
-      if (response.ok) {
-        alert("Email sent successfully!");
+  
+      // Sending email to admin (chiahuammx@gmail.com)
+      const res1 = await sendMail({
+        name: "Tortuga Ch",
+        subject: "New Message from WordVibrant",
+        email: "chiahuammx@gmail.com",
+        message: `You have received the message "${formData.message}" from ${formData.email}`,
+      });
+  
+      // Handle responses from both emails
+      if (res.status === 200 && res1.status === 200) {
+        message.success("Email sent successfully!");
         setFormData({ name: "", email: "", message: "" });
       } else {
-        alert("Failed to send email. Please try again.");
+        throw new Error("Failed to send email. Please try again.");
       }
     } catch (error) {
       console.error("Error sending email:", error);
-      alert("An error occurred while sending the email.");
+      message.error("An error occurred while sending the email.");
     }
   };
-
+  
   const handleChange = (e) => {
-    setFormData({
+    setFormData({                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
       ...formData,
       [e.target.name]: e.target.value,
     });
