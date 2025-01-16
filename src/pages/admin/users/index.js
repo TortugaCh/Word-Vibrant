@@ -9,13 +9,10 @@ import {
 } from "../../../lib/utils/user";
 import AdminLayout from "../layout";
 import { message } from "antd";
-import {
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../lib/firebaseConfig";
 
 const Page = () => {
-
   const handleSave = async (editingItem, values) => {
     if (editingItem) {
       const res = await updateUserData(editingItem.email, values);
@@ -85,6 +82,12 @@ const Page = () => {
         handleDelete={handleDelete}
         columnsToFilter={["id", "createdAt"]}
         modalTitle={"User"}
+        searchBy={{ label: "Name", key: "name" }}
+        sortingOptions={[
+          { label: "Credits", value: "credits", orderBy: "none" },
+          { label: "Max Credits", value: "maxCredits", orderBy: "desc" },
+          { label: "Min Credits", value: "minCredits", orderBy: "asc" },
+        ]}
       />
     </AdminLayout>
   );

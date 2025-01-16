@@ -9,7 +9,6 @@ import {
 } from "../../../lib/pricing";
 
 const Page = () => {
-
   const handleSave = async (editingItem, values) => {
     if (editingItem) {
       await updatePricingPlan(editingItem.id, values);
@@ -22,7 +21,12 @@ const Page = () => {
   };
   const formConfig = [
     { name: "name", label: "Name", type: "text", rules: [{ required: true }] },
-    { name: "nameZh", label: "NameZh", type: "text", rules: [{ required: true }] },
+    {
+      name: "nameZh",
+      label: "NameZh",
+      type: "text",
+      rules: [{ required: true }],
+    },
     {
       name: "priceId",
       label: "PriceId",
@@ -47,18 +51,6 @@ const Page = () => {
       type: "number",
       rules: [{ required: true }],
     },
-    {
-      name: "description",
-      label: "Description",
-      type: "text",
-      rules: [{ required: true }],
-    },
-    {
-      name: "descriptionZh",
-      label: "DescriptionZh",
-      type: "text",
-      rules: [{ required: true }],
-    },
   ];
 
   return (
@@ -74,8 +66,20 @@ const Page = () => {
           "id",
           "updatedAt",
           "createdAt",
+          "description",
+          "descriptionZh",
         ]}
         modalTitle={"Plan"}
+        searchBy={{ label: "Name", key: "name" }}
+        sortingOptions={[
+          {
+            label: "Cost",
+            value: "cost",
+            orderBy: "none",
+          },
+          { label: "Min Cost", value: "minCost", orderBy: "asc" },
+          { label: "Max Cost", value: "maxCost", orderBy: "desc" },
+        ]}
       />
     </AdminLayout>
   );

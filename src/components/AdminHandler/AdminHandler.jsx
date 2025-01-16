@@ -132,6 +132,7 @@ const AdminLookupManager = () => {
         data={lookupData}
         onEdit={openModal}
         onDelete={handleDeleteItem}
+        searchBy={{ label: "Name", key: "name" }}
       />
 
 <FloatingButton onClick={() => openModal()} />

@@ -14,6 +14,8 @@ const AdminPanel = ({
   handleDelete,
   columnsToFilter,
   modalTitle,
+  searchBy,
+  sortingOptions,
 }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState([]);
@@ -100,7 +102,7 @@ const AdminPanel = ({
   };
   console.log(formConfig);
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px",paddingTop:"100px" }}>
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
 
       <CustomTable
@@ -108,6 +110,9 @@ const AdminPanel = ({
         data={data}
         onEdit={openModal}
         onDelete={onDelete}
+        searchBy={searchBy}
+        sortingOptions={sortingOptions}
+        sortBy={sortingOptions?.[0]?.value}
       />
 
       <FloatingButton onClick={() => openModal()} />

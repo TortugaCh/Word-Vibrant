@@ -34,16 +34,27 @@ export const getDefaultColor = (name) => {
 
 // check route
 
-export const checkCredits = async (action, word, remainingCredits,creditsSpent) => {
+export const checkCredits = async (
+  action,
+  word,
+  remainingCredits,
+  creditsSpent
+) => {
   try {
-    console.log("Checking credits for:", action, word, remainingCredits,creditsSpent);
+    console.log(
+      "Checking credits for:",
+      action,
+      word,
+      remainingCredits,
+      creditsSpent
+    );
     const response = await axios.put(
       "/api/auth/checkCredits",
       {
         action,
         word,
         remainingCredits,
-        creditsSpent
+        creditsSpent,
       },
       {
         withCredentials: true,
@@ -104,19 +115,15 @@ export function cleanJSON(input) {
   return jsonMatch ? jsonMatch[0] : null;
 }
 
-
 import React from "react";
-
 
 export const highlightWords = (inputString, validWords, options = {}) => {
   // Normalize validWords for consistency
   const wordsSet = new Set(validWords.map((word) => word.trim()));
 
   // Default options
-  const {
-    validClassName = "",
-    invalidClassName = "underline text-red-500",
-  } = options;
+  const { validClassName = "", invalidClassName = "underline text-red-500" } =
+    options;
 
   // inputString=inputString.split(/[\s,，。！？；：“”‘’]/).filter(Boolean); // Split on common punctuation
   // Initialize an array to hold the highlighted dialogue
@@ -157,11 +164,44 @@ export const highlightWords = (inputString, validWords, options = {}) => {
   return highlightedOutput;
 };
 
-
-export async function setCredits(creditsToAdd,id) {
+export async function setCredits(creditsToAdd, id) {
   return await axios.put(
     "/api/auth/setCredits",
-    {  creditsToAdd,id },
+    { creditsToAdd, id },
     { withCredentials: true }
   );
 }
+
+export const handleSearch = (value, setSearch, setData, data) => {
+  setSearch(value);
+  const filteredData = data.filter((item) => {
+    return Object.keys(item).some((key) =>
+      item[key].toString().toLowerCase().includes(value.toLowerCase())
+    );
+  });
+  setData(filteredData);
+};
+
+export const sortData = (sortingOptions, setData, data, sortingKey) => {
+  // Make a copy of the original array to prevent mutation
+  const dataCopy = [...data];
+
+  if (sortingOptions.orderBy === "none") {
+    // If orderBy is "none", reset the data without sorting
+    setData(dataCopy);
+    return;
+  }
+
+  const sortedData = dataCopy.sort((a, b) => {
+    if (sortingOptions.orderBy === "asc") {
+      return a[sortingKey] - b[sortingKey];
+    } else if (sortingOptions.orderBy === "desc") {
+      console.log("orderBy", sortingOptions.orderBy);
+      return b[sortingKey] - a[sortingKey];
+    }
+  });
+
+  // Update the state with the sorted data
+  setData([...sortedData]);
+};
+
