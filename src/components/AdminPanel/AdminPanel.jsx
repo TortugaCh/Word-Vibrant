@@ -102,7 +102,7 @@ const AdminPanel = ({
   };
   console.log(formConfig);
   return (
-    <div style={{ padding: "20px",paddingTop:"100px" }}>
+    <div style={{ padding: "20px", paddingTop: "100px" }}>
       <h1 className="text-2xl font-bold mb-4">{title}</h1>
 
       <CustomTable
@@ -113,6 +113,7 @@ const AdminPanel = ({
         searchBy={searchBy}
         sortingOptions={sortingOptions}
         sortBy={sortingOptions?.[0]?.value}
+        tableTitle={title}
       />
 
       <FloatingButton onClick={() => openModal()} />

@@ -1,5 +1,12 @@
 import { db } from "../../../../../lib/firebaseConfig";
-import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 export default async function handler(req, res) {
   // Only allow GET requests
   if (req.method !== "PUT") {
@@ -27,6 +34,9 @@ export default async function handler(req, res) {
 
     // Extract user data from the first matching document
     const userDoc = querySnapshot.docs[0];
+    if (req.body?.credits && req.body?.credits < 0) {
+      req.body.credits = 0;
+    }
     const updatedData = { ...userDoc.data(), ...req.body };
     await updateDoc(doc(db, "persons", userDoc.id), updatedData);
     const userData = { id: userDoc.id, ...updatedData };

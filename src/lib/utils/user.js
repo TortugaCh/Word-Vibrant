@@ -56,24 +56,36 @@ export const getUsers = async () => {
 
 // Update user data
 export const updateUserData = async (email, data) => {
-    try {
-      await axios.put(`${API_LINK}/person/update-person/${email}`, {
-        ...data,
-      });
-    } catch (error) {
-      console.error("Error updating user data:", error);
-    }
-  };
-  
-  // Delete user data
-  export const deleteUserData = async (email) => {
-    try {
-      await axios.delete(`${API_LINK}/person/delete-person/${email}`);
-    } catch (error) {
-      console.error("Error deleting user data:", error);
-    }
-  };
+  try {
+    const resp = await axios.put(`${API_LINK}/person/update-person/${email}`, {
+      ...data,
+    });
+    return resp;
+  } catch (error) {
+    console.error("Error updating user data:", error);
+  }
+};
 
+// // Update User Credits
+
+// export const updateUserCredits = async (email, credits) => {
+//   try {
+//     await axios.put(`${API_LINK}/person/update-person/${email}`, {
+//       credits,
+//     });
+//   } catch (error) {
+//     console.error("Error updating user credits:", error);
+//   }
+// };
+
+// Delete user data
+export const deleteUserData = async (email) => {
+  try {
+    await axios.delete(`${API_LINK}/person/delete-person/${email}`);
+  } catch (error) {
+    console.error("Error deleting user data:", error);
+  }
+};
 
 // Function to set the cookie
 export const setAuthCookie = async (token) => {
