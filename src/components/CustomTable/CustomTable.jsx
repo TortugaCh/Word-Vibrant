@@ -15,7 +15,30 @@ const CustomTable = ({
 }) => {
   const [search, setSearch] = useState("");
   const [updatedData, setUpdatedData] = useState(data);
-
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const start = () => {
+    setLoading(true);
+    // ajax request after empty completing
+    setTimeout(() => {
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
+  };
+  const onSelectChange = (newSelectedRowKeys) => {
+    console.log("selectedRowKeys changed: ", newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+    selections: [
+      Table.SELECTION_ALL,
+      Table.SELECTION_INVERT,
+      Table.SELECTION_NONE,
+    ],
+  };
+  const hasSelected = selectedRowKeys.length > 0;
   useEffect(() => {
     setUpdatedData(data);
   }, [data]);
@@ -45,6 +68,16 @@ const CustomTable = ({
       </div>
     ),
   };
+  const handleBulkDelete = () => {
+    start();
+    selectedRowKeys.forEach((key) => {
+      console.log("Deleting", key);
+      onDelete(key);
+      setUpdatedData((prevData) => prevData.filter((data) => data.id !== key));
+
+    });
+    setSelectedRowKeys([]);
+  }
 
   return !updatedData ? (
     <Loader />
@@ -89,9 +122,29 @@ const CustomTable = ({
             }}
           />
         )}
+      {hasSelected &&selectedRowKeys.length>1&& (
+          <Popconfirm
+            title="Are you sure to delete selected rows?"
+            onConfirm={handleBulkDelete}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              type="primary"
+              danger
+              icon={<DeleteOutlined />}
+              loading={loading}
+              disabled={!hasSelected}
+            >
+              Delete Selected
+            </Button>
+          </Popconfirm>
+        )}
       </div>
+
       <Table
         columns={[...columns, actionColumn]}
+        rowSelection={rowSelection}
         dataSource={updatedData}
         rowKey="id"
         bordered
