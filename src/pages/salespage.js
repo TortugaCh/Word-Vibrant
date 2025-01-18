@@ -21,9 +21,14 @@ import {
   Heart,
   MessageCircle,
   Check,
+  PenOff,
 } from "lucide-react";
-import { FiMail, FiBook, FiStar, FiAward } from "react-icons/fi";
-import { FiEdit, FiBrush, FiMessageSquare, FiBookOpen } from "react-icons/fi";
+import {
+  PiNumberCircleOneDuotone,
+  PiNumberCircleTwoDuotone,
+  PiNumberCircleThreeDuotone,
+} from "react-icons/pi";
+
 import { modules } from "../constants/constants";
 import { useRouter } from "next/router";
 import { useUserContext } from "../context/UserContext";
@@ -126,7 +131,8 @@ export default function AboutUs() {
                 {/* Decorative Badge */}
                 <div className="absolute -top-6 -left-6 bg-[#FF8534] text-white px-4 py-2 rounded-lg rotate-[-6deg] shadow-lg">
                   <span className="flex items-center gap-2">
-                    <Crown className="w-4 h-4" /> {locale !== "zh" ? "For Ages 5-12" : "5-12歲"}
+                    <Crown className="w-4 h-4" />{" "}
+                    {locale !== "zh" ? "For Ages 5-12" : "5-12歲"}
                   </span>
                 </div>
 
@@ -140,7 +146,10 @@ export default function AboutUs() {
                   {t("salesPage.description")}
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <button className="px-8 py-4 bg-[#42A5F5] text-white rounded-xl font-semibold hover:bg-[#FF8534] transition-all flex items-center gap-2 shadow-lg shadow-orange-200 transform hover:scale-105" onClick={handleLearnMore}>
+                  <button
+                    className="px-8 py-4 bg-[#42A5F5] text-white rounded-xl font-semibold hover:bg-[#FF8534] transition-all flex items-center gap-2 shadow-lg shadow-orange-200 transform hover:scale-105"
+                    onClick={handleLearnMore}
+                  >
                     {t("salesPage.startAdventure")}{" "}
                     <Rocket className="w-5 h-5" />
                   </button>
@@ -258,9 +267,12 @@ export default function AboutUs() {
 
                   {/* Proven Success */}
                   <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-2 border-t-4 border-yellow-500">
-                    <h3 className="text-2xl font-bold text-[#2D3648]">
-                      🏆 {t("salesPage.provenSuccess.title")}
-                    </h3>
+                    <div className="flex items-center justify-center gap-4">
+                      <PenOff className="text-red-500" />
+                      <h3 className="text-2xl font-bold text-[#2D3648]">
+                        {t("salesPage.provenSuccess.title")}
+                      </h3>
+                    </div>
                     <p className="text-gray-600 mt-2">
                       {t("salesPage.provenSuccess.description")}
                     </p>
@@ -283,25 +295,34 @@ export default function AboutUs() {
                 {t("salesPage.learningSection.description")}
               </p>
             </div>
-
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
-                  icon: <Gamepad className="w-8 h-8" />,
-                  title: t("salesPage.learningSection.personalizedLearning.title"),
-                  description: t("salesPage.learningSection.personalizedLearning.description"),
+                  Icon: PiNumberCircleOneDuotone,
+                  title: `${t(
+                    "salesPage.learningSection.personalizedLearning.title"
+                  )}`,
+                  description: t(
+                    "salesPage.learningSection.personalizedLearning.description"
+                  ),
                   color: "bg-purple-100 text-purple-500",
                 },
                 {
-                  icon: <Brain className="w-8 h-8" />,
+                  Icon: PiNumberCircleTwoDuotone,
                   title: t("salesPage.learningSection.smartLearning.title"),
-                  description: t("salesPage.learningSection.smartLearning.description"),
+                  description: t(
+                    "salesPage.learningSection.smartLearning.description"
+                  ),
                   color: "bg-blue-100 text-blue-500",
                 },
                 {
-                  icon: <Medal className="w-8 h-8" />,
-                  title: t("salesPage.learningSection.interactivePractice.title"),
-                  description: t("salesPage.learningSection.interactivePractice.description"),
+                  Icon: PiNumberCircleThreeDuotone,
+                  title: t(
+                    "salesPage.learningSection.interactivePractice.title"
+                  ),
+                  description: t(
+                    "salesPage.learningSection.interactivePractice.description"
+                  ),
                   color: "bg-yellow-100 text-yellow-500",
                 },
               ].map((feature, index) => (
@@ -310,9 +331,11 @@ export default function AboutUs() {
                   className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 border-2 border-dashed border-[#EEDDFD]"
                 >
                   <div
-                    className={`inline-flex items-center justify-center w-16 h-16 rounded-xl ${feature.color} mb-6`}
+                    className={`inline-flex items-center justify-center    mb-6`}
                   >
-                    {feature.icon}
+                    <feature.Icon
+                      className={`w-12 h-12 ${feature.color} rounded-full`}
+                    />
                   </div>
                   <h3 className="text-2xl font-bold text-[#2D3648] mb-4">
                     {feature.title}
