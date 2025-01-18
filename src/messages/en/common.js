@@ -98,24 +98,24 @@ export default {
         "From strokes to storytelling, our modules cover all aspects of Chinese language mastery.",
     },
     provenSuccess: {
-      title: "Proven Success",
+      title: "No Pen or Paper",
       description:
-        "Join thousands of satisfied learners who’ve transformed their language skills with us.",
+        "Excessively repetitive copying and engraving may damage your small muscles or your interest in learning. Take a break and let's learn with AI gadgets.",
     },
     learningSection: {
       title: "Learning Chinese is an Adventure!",
       description: "Discover our magical world of learning",
       personalizedLearning: {
-        title: "Personalized Learning",
-        description: "Learn through exciting Words and learn cool Dialouges!",
+        title: "Step 1",
+        description: "Register an account and enjoy 5 free credits for trial",
       },
       smartLearning: {
-        title: "Smart Learning",
-        description: "Platform that adapt to how you learn best",
+        title: "Step 2",
+        description: "Start learning new words using modules",
       },
       interactivePractice: {
-        title: "Interactive Practice",
-        description: "Engaging exercises with real-time feedback",
+        title: "Step 3",
+        description: "Buy more credits to use",
       },
     },
   },
