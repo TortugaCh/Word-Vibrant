@@ -77,7 +77,7 @@ export default {
   },
   salesPage: {
     description:
-      "透過我們串接AI創建的模組，讓孩子在學生字時能激發好奇心與創造力，享受學習認字寫字的樂趣。專為學齡前 ~ 小學提供.",
+      "透過我們串接AI創建的模組，讓孩子在學生字時能激發好奇心與創造力，享受學習認字寫字的樂趣。專為學齡前到小學生提供.",
     startAdventure: "開始您的冒險",
     watchFunDemo:"觀看有趣的演示",
     interactiveLessons: {

@@ -112,7 +112,7 @@ export default function AboutUs() {
                   <div className="lg:w-1/2 relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 transform -rotate-3 scale-105"></div>
                     <img
-                      src="/images/mother.png"
+                      src="/images/moom_2.jpg"
                       alt="Teaching"
                       className="relative w-full h-full object-cover"
                     />
@@ -149,12 +149,7 @@ export default function AboutUs() {
                     <p className="text-lg text-gray-700 leading-relaxed mb-6">
                       「重複」和「視覺」是幼兒學習的兩大關鍵。我們的工具利用了視覺化的識字方法：通過筆順動畫病互動嘗試，以及讓這些生字在一整篇故事或對話中出現，這些一直複現的方法不但可以幫助小朋友們記住生字的字形，還能讓他們在語境中理解和應用，增加更多連結。
                     </p>
-                    <a
-                      href="#"
-                      className="inline-block px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-medium rounded-lg shadow hover:shadow-lg hover:from-blue-600 hover:to-purple-700 transition-all"
-                    >
-                      Learn More
-                    </a>
+                    
                   </div>
 
                   {/* Right Image */}
