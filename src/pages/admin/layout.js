@@ -1,4 +1,3 @@
-import { handleLogout } from "../../lib/utils"; // Adjust the path as needed
 import { Drawer, Layout, Button } from "antd";
 import { MenuOutlined, LogoutOutlined } from "@ant-design/icons";
 import SideBar from "../../components/SideBar/SideBar";
