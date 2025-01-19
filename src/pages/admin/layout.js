@@ -4,7 +4,7 @@ import { MenuOutlined, LogoutOutlined } from "@ant-design/icons";
 import SideBar from "../../components/SideBar/SideBar";
 import { useState, useEffect } from "react";
 import Loader from "../../components/Loader"; // Import your existing Loader component
-
+import { handleLogout } from "../../lib/utils/auth";
 const { Sider, Content } = Layout;
 
 export default function DashboardLayout({ children }) {
@@ -115,7 +115,7 @@ export default function DashboardLayout({ children }) {
         <Button
           type="default"
           icon={<LogoutOutlined />}
-          onClick={handleLogoutWithLoader} // Use the modified logout function
+          onClick={handleLogout} // Use the modified logout function
           style={{
             position: "absolute",
             top: 16,
