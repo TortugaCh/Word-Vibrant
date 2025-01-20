@@ -128,7 +128,7 @@ export default function Header({ logoSrc = "/images/logo3.png", t }) {
               </Menu.Item>
               <Menu.Item
                 onClick={() => {
-                  onLogout();
+                 handleLogout()
                   toggleSidebar();
                 }}
               >
