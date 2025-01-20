@@ -80,7 +80,7 @@ const Page = () => {
         formConfig={formConfig}
         handleSave={handleSave}
         handleDelete={handleDelete}
-        columnsToFilter={["id", "createdAt","userId"]}
+        columnsToFilter={["id", "createdAt","userId","deductedActions"]}
         modalTitle={"User"}
         searchBy={{ label: "Name", key: "name" }}
         sortingOptions={[
