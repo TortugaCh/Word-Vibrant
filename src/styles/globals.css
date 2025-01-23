@@ -1,4 +1,5 @@
 /* src/styles/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&family=Onest:wght@100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,11 +7,18 @@
 /* Global Styles */
 body,
 html {
-  font-family: "Inter", sans-serif;
+  /* font-family: "Inter", sans-serif; */
   background: #ffffff;
   margin: 0;
   padding: 0;
   scroll-behavior: smooth;
+}
+html.en {
+  font-family: "Inter", sans-serif;
+}
+
+html.zh {
+  font-family: "Noto Sans CT", sans-serif; /* Replace with your desired Chinese font */
 }
 
 /* Decorative Elements for Background */

@@ -6,6 +6,9 @@ import { ConfigProvider } from "antd";
 import theme from "../theme/themeConfig";
 import { UserState } from "../context/UserContext";
 import Head from "next/head";
+import enUS from "antd/lib/locale/en_US";
+import zhCN from "antd/lib/locale/zh_CN";
+import { useEffect } from "react";
 
 const App = ({ Component, pageProps }) => {
   const { locale, push, asPath, pathname } = useRouter(); // Get router methods and current path
@@ -18,6 +21,13 @@ const App = ({ Component, pageProps }) => {
     }
   };
 
+  useEffect(() => {
+    // Dynamically add locale as a class to the <html> tag
+    document.documentElement.lang = locale;
+    document.documentElement.classList.remove("en", "zh");
+    document.documentElement.classList.add(locale);
+  }, [locale]);
+
   // Exclude Layout for specific routes like /loading
   const isStandalonePage = ["/loading"].includes(pathname);
 
@@ -26,10 +36,18 @@ const App = ({ Component, pageProps }) => {
       {/* SEO Meta Tags */}
       <Head>
         <link rel="icon" href="/favicon.ico" />
-        <title>語動 - 國小識字網 | 一站式小學識字平台</title>
+        <title>
+          {locale === "en"
+            ? "Word Vibrant - Primary Literacy Platform"
+            : "語動 - 國小識字網 | 一站式小學識字平台"}
+        </title>
         <meta
           name="description"
-          content="語動專為一到六年級學生和家長設計，提供互動筆順練習、生字創意著色紙、生字AI故事及對話模組，讓學習生字變得有趣且有效！"
+          content={
+            locale === "en"
+              ? "Word Vibrant is designed for grades 1 to 6, providing interactive stroke order practice, creative character coloring sheets, and AI stories to make literacy fun and effective!"
+              : "語動專為一到六年級學生和家長設計，提供互動筆順練習、生字創意著色紙、生字AI故事及對話模組，讓學習生字變得有趣且有效！"
+          }
         />
         <meta
           name="keywords"
@@ -50,7 +68,7 @@ const App = ({ Component, pageProps }) => {
         <link rel="canonical" href="https://wordvibrant.com.tw" />
       </Head>
       <NextIntlClientProvider locale={locale} messages={messages}>
-        <ConfigProvider theme={theme}>
+        <ConfigProvider locale={locale === "zh" ? zhCN : enUS} theme={theme}>
           <UserState>
             {isStandalonePage ? (
               <Component {...pageProps} />
@@ -62,13 +80,19 @@ const App = ({ Component, pageProps }) => {
                 <div className="fixed bottom-4 right-4 flex gap-4 z-10">
                   <button
                     onClick={() => changeLanguage("en")}
-                    className="px-4 py-2 bg-gray-200 rounded"
+                    className={`px-4 py-2 ${
+                      locale === "en" ? "bg-blue-500 text-white" : "bg-gray-200"
+                    } rounded`}
+                    aria-label="Switch to English"
                   >
                     EN
                   </button>
                   <button
                     onClick={() => changeLanguage("zh")}
-                    className="px-4 py-2 bg-gray-200 rounded"
+                    className={`px-4 py-2 ${
+                      locale === "zh" ? "bg-blue-500 text-white" : "bg-gray-200"
+                    } rounded`}
+                    aria-label="Switch to Chinese"
                   >
                     中文
                   </button>

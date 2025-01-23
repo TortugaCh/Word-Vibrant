@@ -68,7 +68,7 @@ export default function Page() {
       - If necessary, repeat words from the list to maintain coherence and story structure.
       - Avoid using any punctuation, symbols, or language constructs that aren't necessary for the story.
       `;
-      
+
       const resp = await generateStory(prompt);
 
       if (!resp.data) {
@@ -96,7 +96,7 @@ export default function Page() {
   const highlightWord = (storyText, validWords) => {
     const wordToHighlight = highlightWords(storyText, validWords, {
       validClassName: "text-gray-700", // Custom style for valid words
-      invalidClassName: "underline text-red-500", // Custom style for invalid words
+      invalidClassName: "text-red-500", // Custom style for invalid words
     });
     setHighlightedStory(wordToHighlight);
   };
@@ -121,7 +121,7 @@ export default function Page() {
 
             <div className="flex flex-col items-center gap-4">
               {/* Highlighted Story */}
-              <p className="text-center text-lg text-gray-700 leading-relaxed">
+              <p className="text-center text-xl text-gray-700 leading-loose ">
                 {highlightedStory.length > 0 ? highlightedStory : story}
               </p>
               <button

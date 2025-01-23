@@ -7,24 +7,12 @@ import { withMessages } from "../lib/getMessages";
 import { useUserContext } from "../context/UserContext";
 import Footer from "../components/Footer";
 import PricingSection from "../components/pricing/PricingSection";
-import Image from "next/image";
-import { motion } from "framer-motion";
 import {
-  BookOpen,
-  Brain,
   Rocket,
   Sparkles,
   Star,
   Trophy,
   Target,
-  Users,
-  Zap,
-  PenTool,
-  Brush,
-  Play,
-  Edit3,
-  Palette,
-  MessageCircle,
   Heart,
   Lightbulb,
   Check,

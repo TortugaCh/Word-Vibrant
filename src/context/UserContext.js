@@ -27,7 +27,7 @@ export const UserState = ({ children }) => {
     };
 
     const fetchUserData = async () => {
-      const token = localStorage.getItem("tokenExists");
+      const token = localStorage.getItem("tokenExists") === true;
       if (!token) {
         setUserData(null);
         return;
