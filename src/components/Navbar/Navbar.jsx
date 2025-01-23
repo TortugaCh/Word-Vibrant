@@ -40,17 +40,17 @@ export default function Navbar({
         </span>
       ),
     },
+    // {
+    //   key: "3",
+    //   label: (
+    //     <span>
+    //       <CrownOutlined style={{ marginRight: 8, color: "#a7bace" }} />
+    //       {locale === "zh" ? "計劃:" : "Plan:"} {userData?.planName}
+    //     </span>
+    //   ),
+    // },
     {
       key: "3",
-      label: (
-        <span>
-          <CrownOutlined style={{ marginRight: 8, color: "#a7bace" }} />
-          {locale === "zh" ? "計劃:" : "Plan:"} {userData?.planName}
-        </span>
-      ),
-    },
-    {
-      key: "4",
       label: (
         <Link href="/pricing">
           <CrownOutlined style={{ marginRight: 8, color: "#9333EA" }} />
