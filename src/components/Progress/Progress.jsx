@@ -35,7 +35,9 @@ const getModuleColor = (moduleIndex) =>
 const Progress = ({ userId, t }) => {
   const [modules, setModules] = useState([]);
   const [userProgress, setUserProgress] = useState([]);
-  const { userData,userCredits } = useUserContext();
+  const { userData, userCredits } = useUserContext();
+  const [graphLabels, setGraphLabels] = useState([]);
+  const [graphData, setGraphData] = useState([]);
   const [collapsedModules, setCollapsedModules] = useState({});
   const router = useRouter();
   const { locale } = router;
@@ -70,6 +72,7 @@ const Progress = ({ userId, t }) => {
   useEffect(() => {
     const fetchUserProgress = async () => {
       try {
+        console.log("Fetching user progress for user:", userId);
         const [userProgress, getModules] = await Promise.all([
           axios.get(`/api/progress/${userId}`),
           axios.get(`/api/modules/get-modules`),
@@ -82,6 +85,12 @@ const Progress = ({ userId, t }) => {
     };
     fetchUserProgress();
   }, [userId]);
+
+  useEffect(() => {
+    if (userProgress?.length > 0) {
+      aggregateCreditsByDay(userProgress);
+    }
+  }, [userProgress.length]);
 
   const aggregateCreditsByDay = (progressData) => {
     const daysOfWeek = {
@@ -103,13 +112,14 @@ const Progress = ({ userId, t }) => {
       const dayName = format(spentDate, "EEEE"); // Get the full day name (e.g., "Monday")
       daysOfWeek[dayName] += progress.creditsSpent;
     });
-
-    return {
-      labels: Object.keys(daysOfWeek),
-      data: Object.values(daysOfWeek),
-    };
+    setGraphLabels(Object.keys(daysOfWeek));
+    setGraphData(Object.values(daysOfWeek));
+    // return {
+    //   labels: Object.keys(daysOfWeek),
+    //   data: Object.values(daysOfWeek),
+    // };
   };
-  const { labels, data } = aggregateCreditsByDay(userProgress);
+  // const { labels, data } = aggregateCreditsByDay(userProgress);
 
   return (
     <div
@@ -249,6 +259,7 @@ const Progress = ({ userId, t }) => {
               <div>
                 <Text className="text-2xl font-semibold my-4">
                   {/* {t("Graph Overview")} */}
+                  {console.log(userData)}
                   Plan: {userData?.planName}
                 </Text>
                 <br />
@@ -261,36 +272,43 @@ const Progress = ({ userId, t }) => {
                   {/* {t("Graph Overview")} */}
                   {/* Total Credits: {userCredits+ userProgress?.reduce((acc, curr) => acc + curr.creditsSpent, 0)} */}
                   Remaining Credits: {userCredits}
-
                 </Text>
                 <br />
                 <Text className="text-gray-500">
-                  Credits Spent:{userProgress?.reduce ? userProgress.reduce((acc, curr) => acc + curr.creditsSpent, 0) : 0}
+                  Credits Spent:
+                  {userProgress?.reduce
+                    ? userProgress.reduce(
+                        (acc, curr) => acc + curr.creditsSpent,
+                        0
+                      )
+                    : 0}
                 </Text>
               </div>
             </div>
             {/* Replace this with your actual graph component */}
-            <div
-              style={{
-                height: "200px",
-                backgroundColor: "#e5e7eb",
-                borderRadius: "8px",
-              }}
-            >
-              <SplineChart
-                data={data}
-                labels={[
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday",
-                  "Sunday",
-                ]}
-                label="Credits Spent"
-              />
-            </div>
+            {userProgress && (
+              <div
+                style={{
+                  height: "200px",
+                  backgroundColor: "#e5e7eb",
+                  borderRadius: "8px",
+                }}
+              >
+                <SplineChart
+                  data={graphData}
+                  labels={[
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday",
+                  ]}
+                  label="Credits Spent"
+                />
+              </div>
+            )}
           </div>
         </Col>
       </Row>

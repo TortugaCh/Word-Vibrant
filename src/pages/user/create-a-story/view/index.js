@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../layout";
-import axios from "axios";
 import { useTranslations } from "next-intl";
 import { withMessages } from "../../../../lib/getMessages";
 import { message } from "antd";

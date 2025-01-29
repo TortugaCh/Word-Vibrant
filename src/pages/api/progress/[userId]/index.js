@@ -27,6 +27,7 @@ export default async function handler(req, res) {
   // Get User Progress
   const userDoc = querySnapshot.docs[0];
   const userProgress = userDoc.data().deductedActions;
+  console.log("User Data:", userDoc.data());
   // Process the actions to group words by module
   const groupedWords = {};
 

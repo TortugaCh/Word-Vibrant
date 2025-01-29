@@ -27,7 +27,7 @@ export const UserState = ({ children }) => {
     };
 
     const fetchUserData = async () => {
-      const token = localStorage.getItem("tokenExists") === true;
+      const token = !!localStorage.getItem("tokenExists");  // Best approach
       if (!token) {
         setUserData(null);
         return;
@@ -37,7 +37,10 @@ export const UserState = ({ children }) => {
         const res = await axios.post(
           "/api/auth/verifyToken",
           {},
-          { withCredentials: true }
+          {
+            headers: { Authorization: `Bearer ${token}` }, // Pass token in headers
+            withCredentials: true,
+          }
         );
         setUserData(res.data.userData);
         setUserCredits(res.data.userData.credits);

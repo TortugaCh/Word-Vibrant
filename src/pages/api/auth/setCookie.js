@@ -20,6 +20,7 @@ export default async function handler(req, res) {
     // Verify the Firebase ID token using the Firebase Admin SDK
     const decodedToken = await adminAuth.verifyIdToken(token);
     const uid = decodedToken.uid;
+    console.log(uid)
     const usersRef = collection(db, "persons");
     const q = query(usersRef, where("userId", "==", uid));
     const querySnapshot = await getDocs(q);
