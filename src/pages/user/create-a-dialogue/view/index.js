@@ -155,7 +155,7 @@ export default function Page() {
       setHighlighedDialogue(
         highlightWords(dialogue.traditionalChinese, wordNames, {
           validClassName: "text-gray-800", // Custom style for valid words
-          invalidClassName: "underline text-red-500", // Custom style for invalid words
+          invalidClassName: "underline text-orange-500", // Custom style for invalid words
         })
       );
     }, [dialogue?.traditionalChinese, wordNames]); // Add dependencies to avoid unnecessary calls
