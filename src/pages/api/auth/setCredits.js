@@ -13,14 +13,14 @@ export default async function handler(req, res) {
   if (!userData.exists()) {
     return res.status(404).json({ error: "User not found" });
   }
-  const userCredits = userData.data().credits;
+  const userCredits = Number(userData.data().credits);
   try {
     await setDoc(
       userDocRef,
-      { credits: userCredits + creditsToAdd },
+      { credits: userCredits + Number(creditsToAdd) },
       { merge: true }
     );
-    return res.status(200).json({ message: "Credits updated successfully", updatedCredits: userCredits + creditsToAdd });
+    return res.status(200).json({ message: "Credits updated successfully", updatedCredits: Number(userCredits) + Number(creditsToAdd) });
   } catch (error) {
     return res.status(500).json({ error: "Error updating credits" });
   }
