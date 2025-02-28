@@ -95,7 +95,7 @@ export default function Page() {
   const highlightWord = (storyText, validWords) => {
     const wordToHighlight = highlightWords(storyText, validWords, {
       validClassName: "text-gray-700", // Custom style for valid words
-      invalidClassName: "text-red-500", // Custom style for invalid words
+      invalidClassName: "text-orange-500", // Custom style for invalid words
     });
     setHighlightedStory(wordToHighlight);
   };
